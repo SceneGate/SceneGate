@@ -40,6 +40,11 @@
     <Compile Include="Runner.cs" />
     <Compile Include="VirtualEnvironment.cs" />
     <Compile Include="GetLine.cs" />
+    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\Exit.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

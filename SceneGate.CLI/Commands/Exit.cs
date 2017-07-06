@@ -1,5 +1,5 @@
 ﻿//
-// Environment.cs
+// Exit.cs
 //
 // Author:
 //     Benito Palacios Sanchez <benito356@gmail.com>
@@ -23,31 +23,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace SceneGate.Cli
+namespace SceneGate.Cli.Commands
 {
-    using System;
-    using Libgame.FileSystem;
-    using Mono.Terminal;
-
-    public sealed class VirtualEnvironment
+    public class Exit : ICommand
     {
-        internal VirtualEnvironment(LineEditor editor)
+        public string Name => "exit,quit,gotobed";
+
+        public bool Run(VirtualEnvironment env)
         {
-            Editor = editor;
-            Prompt = "{r} {p}" + Environment.NewLine + "{d} $ ";
-            Root = new Node("root");
-            CurrentNode = Root;
-            RequestStop = false;
+            env.Editor.SaveHistory();
+            env.RequestStop = true;
+            return true;
         }
-
-        public LineEditor Editor { get; private set; }
-
-        public bool RequestStop { get; set; }
-
-        public string Prompt { get; set; }
-
-        public Node Root { get; private set; }
-
-        public Node CurrentNode { get; set; }
     }
 }

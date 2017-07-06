@@ -43,6 +43,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Reflection;
+using System.Linq;
 
 namespace Mono.Terminal {
 
@@ -342,7 +343,9 @@ namespace Mono.Terminal {
 
                 c = (int) text [i];
 
-                if (c < 26){
+                if (c == '\n' || c == '\r') {
+                    p = 0;
+                } else if (c < 26){
                     if (c == 9)
                         p += 4;
                     else
@@ -374,7 +377,7 @@ namespace Mono.Terminal {
         {
             cursor = newpos;
 
-            int actual_pos = shown_prompt.Length + TextToRenderPos (cursor);
+            int actual_pos = shown_prompt.Split('\n').Last().Length + TextToRenderPos (cursor);
             int row = home_row + (actual_pos/Console.WindowWidth);
             int col = actual_pos % Console.WindowWidth;
 

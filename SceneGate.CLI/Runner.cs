@@ -23,41 +23,72 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 namespace SceneGate.Cli
 {
     using System;
     using System.Linq;
+    using System.Text;
     using Mono.Terminal;
+    using Commands;
 
     public class Runner
     {
+        readonly LineEditor editor;
+
         public Runner()
         {
-            Environment = new VirtualEnvironment();
+            editor = new LineEditor("SceneGate", 1000);
+            Environment = new VirtualEnvironment(editor);
         }
 
         public VirtualEnvironment Environment { get; private set; }
 
         public void Run()
         {
-            LineEditor editor = new LineEditor("SceneGate", 1000);
+            ICommand[] commands = { new Exit() };
 
-            bool stop = false;
-            while (!stop) {
-                string command = editor.Edit(Environment.CurrentNode.Path + " $ ", "");
+            bool lastResult = true;
+            while (!Environment.RequestStop) {
+                string prompt = FormatPrompt(lastResult);
+                string command = editor.Edit(prompt, "");
                 if (string.IsNullOrEmpty(command)) {
-                    stop = true;
                     continue;
                 }
 
                 string[] args = command.Split(' ');
-                string id = args[0].ToLower();
-                args = args.Skip(1).ToArray();
+                string name = args[0].ToLower();
+                string[] operands = args.Skip(1).ToArray();
 
-                Console.WriteLine("Running {0} with {1}", id, string.Join(",", args));
+                bool commandFound = false;
+                foreach (var cmd in commands) {
+                    if (!cmd.Name.Split(',').Contains(name))
+                        continue;
+
+                    lastResult = cmd.Run(Environment);
+                    commandFound = true;
+                }
+
+                if (!commandFound) {
+                    Console.WriteLine("Command not found");
+                    lastResult = false;
+                }
             }
+        }
 
-            editor.SaveHistory();
+        string FormatPrompt(bool lastResult)
+        {
+            const string RED = "\x1B[91m";
+            const string GREEN = "\x1B[92m";
+            const string YELLOW = "\x1B[93m";
+            const string END  = "\x1B[0m";
+
+            StringBuilder prompt = new StringBuilder(Environment.Prompt);
+            prompt.Replace("{r}", lastResult ? GREEN + "✔" + END : RED + "✘" + END);
+            prompt.Replace("{p}", YELLOW + Environment.CurrentNode.Path + END);
+            prompt.Replace("{d}", DateTime.Now.ToShortTimeString());
+
+            return prompt.ToString();
         }
     }
 }
