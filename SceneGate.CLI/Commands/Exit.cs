@@ -29,7 +29,7 @@ namespace SceneGate.Cli.Commands
     {
         public string Name => "exit,quit,gotobed";
 
-        public bool Run(VirtualEnvironment env)
+        public bool Run(VirtualEnvironment env, string[] args)
         {
             env.Editor.SaveHistory();
             env.RequestStop = true;

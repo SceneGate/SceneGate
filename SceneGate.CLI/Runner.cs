@@ -46,12 +46,13 @@ namespace SceneGate.Cli
 
         public void Run()
         {
-            ICommand[] commands = { new Exit() };
+            ICommand[] commands = {
+                new Exit(), new Add(), new List(), new ChangeDir(), new Transform() };
 
             bool lastResult = true;
             while (!Environment.RequestStop) {
                 string prompt = FormatPrompt(lastResult);
-                string command = editor.Edit(prompt, "");
+                string command = editor.Edit(prompt, string.Empty);
                 if (string.IsNullOrEmpty(command)) {
                     continue;
                 }
@@ -65,7 +66,7 @@ namespace SceneGate.Cli
                     if (!cmd.Name.Split(',').Contains(name))
                         continue;
 
-                    lastResult = cmd.Run(Environment);
+                    lastResult = cmd.Run(Environment, operands);
                     commandFound = true;
                 }
 

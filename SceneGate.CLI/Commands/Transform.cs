@@ -1,5 +1,5 @@
 ﻿//
-// ICommand.cs
+// Transform.cs
 //
 // Author:
 //     Benito Palacios Sanchez <benito356@gmail.com>
@@ -25,10 +25,39 @@
 // THE SOFTWARE.
 namespace SceneGate.Cli.Commands
 {
-    public interface ICommand
-    {
-        string Name { get; }
+    using System;
 
-        bool Run(VirtualEnvironment env, string[] args);
+    public class Transform : ICommand
+    {
+        public string Name => "transform,tf";
+
+        public bool Run(VirtualEnvironment env, string[] args)
+        {
+            if (args.Length != 2) {
+                Console.WriteLine("Error: Missing node and/or format");
+                return false;
+            }
+
+            string path = args[0];
+            string typeName = args[1];
+
+            var nodeTransform = env.CurrentNode.Children[path];
+            if (nodeTransform == null) {
+                Console.WriteLine("Error: Node doesn't exist");
+                return false;
+            }
+
+            if (typeName.StartsWith("Libgame.", StringComparison.InvariantCulture))
+                typeName += ", libgame, Version=1.0.0.2125, Culture=neutral, PublicKeyToken=null";
+
+            try {
+                nodeTransform.Transform(Type.GetType(typeName));
+            } catch (Exception ex) {
+                Console.WriteLine(ex);
+                return false;
+            }
+
+            return true;
+        }
     }
 }

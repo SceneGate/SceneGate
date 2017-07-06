@@ -1,5 +1,5 @@
 ﻿//
-// ICommand.cs
+// ChangeDir.cs
 //
 // Author:
 //     Benito Palacios Sanchez <benito356@gmail.com>
@@ -25,10 +25,38 @@
 // THE SOFTWARE.
 namespace SceneGate.Cli.Commands
 {
-    public interface ICommand
-    {
-        string Name { get; }
+    using System;
 
-        bool Run(VirtualEnvironment env, string[] args);
+    public class ChangeDir : ICommand
+    {
+        public string Name => "cd";
+
+        public bool Run(VirtualEnvironment env, string[] args)
+        {
+            if (args.Length != 1) {
+                Console.WriteLine("Error: Missing path");
+                return false;
+            }
+
+            string path = args[0];
+            if (path == "..") {
+                if (env.CurrentNode.Parent == null) {
+                    Console.WriteLine("Error: This is the root node!");
+                    return false;;
+                }
+
+                env.CurrentNode = env.CurrentNode.Parent;
+            } else {
+                var nextNode = env.CurrentNode.Children[path];
+                if (nextNode == null) {
+                    Console.WriteLine("Error: Node doesn't exist");
+                    return false;
+                }
+
+                env.CurrentNode = nextNode;
+            }
+
+            return true;
+        }
     }
 }

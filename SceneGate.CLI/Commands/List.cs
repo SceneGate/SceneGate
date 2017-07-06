@@ -1,5 +1,5 @@
 ﻿//
-// ICommand.cs
+// List.cs
 //
 // Author:
 //     Benito Palacios Sanchez <benito356@gmail.com>
@@ -25,10 +25,18 @@
 // THE SOFTWARE.
 namespace SceneGate.Cli.Commands
 {
-    public interface ICommand
-    {
-        string Name { get; }
+    using System;
 
-        bool Run(VirtualEnvironment env, string[] args);
+    public class List : ICommand
+    {
+        public string Name => "ls";
+
+        public bool Run(VirtualEnvironment env, string[] args)
+        {
+            foreach (var child in env.CurrentNode.Children)
+                Console.WriteLine("{0} [{1}]", child.Name, child.Format.GetType().Name);
+
+            return true;
+        }
     }
 }

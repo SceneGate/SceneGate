@@ -1,5 +1,5 @@
 ﻿//
-// ICommand.cs
+// Add.cs
 //
 // Author:
 //     Benito Palacios Sanchez <benito356@gmail.com>
@@ -25,10 +25,33 @@
 // THE SOFTWARE.
 namespace SceneGate.Cli.Commands
 {
-    public interface ICommand
-    {
-        string Name { get; }
+    using System;
+    using System.IO;
+    using Libgame.FileSystem;
 
-        bool Run(VirtualEnvironment env, string[] args);
+    public class Add : ICommand
+    {
+        public string Name => "add";
+
+        public bool Run(VirtualEnvironment env, string[] args)
+        {
+            if (args.Length != 1) {
+                Console.WriteLine("Error: Missing path argument");
+                return false;
+            }
+
+            string path = args[0];
+            bool result = true;
+            if (Directory.Exists(path)) {
+                env.CurrentNode.Add(NodeFactory.FromDirectory(path));
+            } else if (File.Exists(path)) {
+                env.CurrentNode.Add(NodeFactory.FromFile(path));
+            } else {
+                Console.WriteLine("Error: Path doesn't exist");
+                result = false;
+            }
+
+            return result;
+        }
     }
 }
