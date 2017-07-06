@@ -78,9 +78,9 @@ namespace SceneGate.Cli
 
         string FormatPrompt(bool lastResult)
         {
-            const string RED = "\x1B[91m";
-            const string GREEN = "\x1B[92m";
-            const string YELLOW = "\x1B[93m";
+            const string RED = "\x1B[31m";
+            const string GREEN = "\x1B[32m";
+            const string YELLOW = "\x1B[33m";
             const string END  = "\x1B[0m";
 
             StringBuilder prompt = new StringBuilder(Environment.Prompt);
