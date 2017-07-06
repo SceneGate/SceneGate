@@ -1,5 +1,5 @@
 ﻿//
-// Program.cs
+// Environment.cs
 //
 // Author:
 //     Benito Palacios Sanchez <benito356@gmail.com>
@@ -23,19 +23,20 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 namespace SceneGate.Cli
 {
-    using System;
+    using Libgame.FileSystem;
 
-    static class Program
+    public class VirtualEnvironment
     {
-        public static void Main()
+        public VirtualEnvironment()
         {
-            Console.WriteLine("Welcome to SceneGate. Have a nice ROM Hacking!");
-
-            Runner runner = new Runner();
-            runner.Run();
+            Root = new Node("root");
+            CurrentNode = Root;
         }
+
+        public Node Root { get; private set; }
+
+        public Node CurrentNode { get; set; }
     }
 }
