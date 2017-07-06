@@ -1,0 +1,3 @@
+[submodule "libgame"]
+	path = libgame
+	url = https://github.com/SceneGate/libgame
