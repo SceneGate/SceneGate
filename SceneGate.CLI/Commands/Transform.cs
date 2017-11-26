@@ -47,8 +47,8 @@ namespace SceneGate.Cli.Commands
                 return false;
             }
 
-            if (typeName.StartsWith("Libgame.", StringComparison.InvariantCulture))
-                typeName += ", libgame, Version=1.0.0.2125, Culture=neutral, PublicKeyToken=null";
+            if (typeName.StartsWith("Yarhl.", StringComparison.InvariantCulture))
+                typeName += ", Yarhl, Version=1.0.0.2125, Culture=neutral, PublicKeyToken=null";
 
             try {
                 nodeTransform.Transform(Type.GetType(typeName));
