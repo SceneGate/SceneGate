@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>SceneGate.UI</RootNamespace>
+    <Title>SceneGate.UI</Title>
+    <Copyright>Copyright © 2020</Copyright>
+    <Description>Description of SceneGate.UI</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Eto.Forms" Version="2.5.0" />
+    <PackageReference Include="Yarhl" Version="3.0.0-alpha10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Lemon">
+      <HintPath>..\..\..\Lemon\src\Lemon\bin\Debug\netstandard2.0\Lemon.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
