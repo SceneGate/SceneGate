@@ -8,10 +8,12 @@ namespace SceneGate.UI.Views
     using Yarhl;
     using Yarhl.FileFormat;
     using Yarhl.FileSystem;
+    using Yarhl.IO;
 
     public class AnalyzeView : Panel
     {
         TreeGridView tree;
+        TextArea textArea;
         ListBox converterList;
         ConverterMetadata[] converters;
 
@@ -22,11 +24,17 @@ namespace SceneGate.UI.Views
 
         void CreateControls()
         {
+            textArea = new TextArea();
+            textArea.ReadOnly = true;
+            textArea.Width = 200;
+            textArea.Text = "Hello world!";
+
             var splitterRight = new Splitter {
                 Position = 1000,
-                FixedPanel = SplitterFixedPanel.Panel2,
+                FixedPanel = SplitterFixedPanel.Panel1,
+                Panel1MinimumSize = 100,
                 Panel2MinimumSize = 150,
-                Panel1 = new DocumentControl(),
+                Panel1 = textArea,
                 Panel2 = CreateRightPanel(),
             };
 
@@ -116,6 +124,20 @@ namespace SceneGate.UI.Views
                 };
                 menu.Items.Add(item2);
 
+                var item3 = new ButtonMenuItem { Text = "View as text" };
+                item3.Click += delegate {
+                    if (tree.SelectedItems.Any()) {
+                        var selected = tree.SelectedItem as TreeGridItem;
+                        var node = selected.GetValue(0) as Node;
+
+                        var reader = new TextReader(node.Stream);
+                        node.Stream.Position = 0;
+                        textArea.Text = reader.ReadToEnd();
+                        textArea.Invalidate();
+                    }
+                };
+                menu.Items.Add(item3);
+
                 tree.ContextMenu = menu;
             }
 
@@ -140,7 +162,9 @@ namespace SceneGate.UI.Views
             if (dialog.ShowDialog(ParentWindow) == DialogResult.Ok)
             {
                 Node n = NodeFactory.FromFile(dialog.FileName);
-                ContainerManager.Unpack3DSNode(n);
+                if (n.Name.EndsWith(".3ds")) {
+                    ContainerManager.Unpack3DSNode(n);
+                }
                 AppendNodeToTree(n);
             }
         }
