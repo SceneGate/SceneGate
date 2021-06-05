@@ -1,7 +1,7 @@
 
 namespace SceneGate.UI.Views
 {
-    using System;
+    using System.IO;
     using System.Reflection;
     using Eto.Forms;
     using Eto.Drawing;
@@ -9,6 +9,7 @@ namespace SceneGate.UI.Views
     public class MainWindow : Form
     {
         Panel contentPanel;
+        AnalyzeView analyzeView;
 
         public MainWindow()
         {
@@ -39,6 +40,13 @@ namespace SceneGate.UI.Views
             };
             aboutCommand.Executed += (sender, e) => new AboutDialog().ShowDialog(this);
 
+            var toggleAction = new Command
+            {
+                MenuText = "Toggle action panel",
+                Shortcut = Application.Instance.CommonModifier | Keys.T,
+            };
+            toggleAction.Executed += (sender, e) => analyzeView.ToggleActionPanel();
+
             Menu = new MenuBar
             {
                 Items = {
@@ -46,10 +54,16 @@ namespace SceneGate.UI.Views
                 },
                 ApplicationItems = {
                     new ButtonMenuItem { Text = "&Preferences..." },
+                    toggleAction,
                 },
                 QuitItem = quitCommand,
                 AboutItem = aboutCommand
             };
+        }
+
+        static Stream GetResource(string name)
+        {
+            return typeof(MainWindow).Assembly.GetManifestResourceStream("SceneGate.UI.Resources." + name);
         }
 
         void CreateContent()
@@ -61,62 +75,76 @@ namespace SceneGate.UI.Views
             };
 
             var exploreView = new ExploreView();
-            var analyzeView = new AnalyzeView();
+            analyzeView = new AnalyzeView();
             var automatizeView = new AutomatizeView();
 
-            var exploreButton = new LinkButton
-            {
-                TextColor = Colors.Gray,
-                Text = "Explore",
-                Font = Fonts.Fantasy(20, FontStyle.None, FontDecoration.None)
+            var exploreButton = new ToggleButton {
+                Image = Icon.FromResource("SceneGate.UI.Resources.Shutter.png").WithSize(32, 32),
+                //Visible = false,
             };
-
-            var analyzeButton = new LinkButton
-            {
-                TextColor = Colors.Gray,
-                Text = "Analyze",
-                Font = Fonts.Cursive(20, FontStyle.None, FontDecoration.None)
+            var analyzeButton = new ToggleButton {
+                Image = Icon.FromResource("SceneGate.UI.Resources.Script.png").WithSize(32, 32),
             };
-
-
-            var automatizeButton = new LinkButton
-            {
-                TextColor = Colors.Gray,
-                Text = "Automatize",
-                Font = Fonts.Monospace(20, FontStyle.None, FontDecoration.None)
+            var automatizeButton = new ToggleButton {
+                Image = Icon.FromResource("SceneGate.UI.Resources.Carpool.png").WithSize(32, 32),
+                //Visible = false,
+            };
+            var settingsButton = new ToggleButton {
+                Image = Icon.FromResource("SceneGate.UI.Resources.Gears.png").WithSize(32, 32),
             };
 
             exploreButton.Click += (sender, e) =>
             {
-                exploreButton.TextColor = Colors.Blue;
-                analyzeButton.TextColor = Colors.Gray;
-                automatizeButton.TextColor = Colors.Gray;
+                exploreButton.Checked = true;
+                analyzeButton.Checked = false;
+                automatizeButton.Checked = false;
+                settingsButton.Checked = false;
                 contentPanel.Content = exploreView;
             };
+
             analyzeButton.Click += (sender, e) =>
             {
-                exploreButton.TextColor = Colors.Gray;
-                analyzeButton.TextColor = Colors.Blue;
-                automatizeButton.TextColor = Colors.Gray;
+                exploreButton.Checked = false;
+                analyzeButton.Checked = true;
+                automatizeButton.Checked = false;
+                settingsButton.Checked = false;
                 contentPanel.Content = analyzeView;
             };
             automatizeButton.Click += (sender, e) =>
             {
-                exploreButton.TextColor = Colors.Gray;
-                analyzeButton.TextColor = Colors.Gray;
-                automatizeButton.TextColor = Colors.Blue;
+                exploreButton.Checked = false;
+                analyzeButton.Checked = false;
+                automatizeButton.Checked = true;
+                settingsButton.Checked = false;
                 contentPanel.Content = automatizeView;
             };
+            settingsButton.Click += (sender, e) =>
+            {
+                exploreButton.Checked = false;
+                analyzeButton.Checked = false;
+                automatizeButton.Checked = false;
+                settingsButton.Checked = true;
+                contentPanel.Content = new TextArea { Text = "Not implemented" };
+            };
+
+            analyzeButton.PerformClick();
+
+            var viewModeBar = new StackLayout
+            {
+                Orientation = Orientation.Vertical,
+                BackgroundColor = Colors.Gray,
+            };
+            viewModeBar.Items.Add(exploreButton);
+            viewModeBar.Items.Add(analyzeButton);
+            viewModeBar.Items.Add(automatizeButton);
+            viewModeBar.Items.Add(new StackLayoutItem(null, true));
+            viewModeBar.Items.Add(new StackLayoutItem(settingsButton, VerticalAlignment.Bottom));
 
             var mainLayout = new DynamicLayout();
             mainLayout.BackgroundColor = Colors.White;
 
-            mainLayout.BeginVertical(padding: new Padding(10, 10), xscale: true);
-            mainLayout.AddRow(null, exploreButton, null, analyzeButton, null, automatizeButton, null);
-            mainLayout.EndVertical();
-
-            mainLayout.BeginVertical();
-            mainLayout.AddRow(contentPanel);
+            mainLayout.BeginVertical(yscale: true, xscale: true);
+            mainLayout.AddRow(viewModeBar, contentPanel);
             mainLayout.EndVertical();
 
             Content = mainLayout;

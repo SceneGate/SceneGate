@@ -1,6 +1,7 @@
 ﻿
 namespace SceneGate.UI.Views
 {
+    using Eto.Drawing;
     using Eto.Forms;
     using Lemon.Containers;
     using System;
@@ -13,7 +14,8 @@ namespace SceneGate.UI.Views
     public class AnalyzeView : Panel
     {
         TreeGridView tree;
-        TextArea textArea;
+        Splitter contentLayout;
+        Panel contentPanel;
         ListBox converterList;
         ConverterMetadata[] converters;
 
@@ -22,35 +24,43 @@ namespace SceneGate.UI.Views
             CreateControls();
         }
 
+        public void ToggleActionPanel()
+        {
+            contentLayout.Panel2.Visible = !contentLayout.Panel2.Visible;
+        }
+
         void CreateControls()
         {
-            textArea = new TextArea();
-            textArea.ReadOnly = true;
-            textArea.Width = 200;
-            textArea.Text = "Hello world!";
+            contentPanel = new Panel();
+            contentPanel.BackgroundColor = Colors.Blue;
 
-            var splitterRight = new Splitter {
-                Position = 1000,
-                FixedPanel = SplitterFixedPanel.Panel1,
-                Panel1MinimumSize = 100,
-                Panel2MinimumSize = 150,
-                Panel1 = textArea,
-                Panel2 = CreateRightPanel(),
+            var tabbedPanel = new TabControl();
+            tabbedPanel.Pages.Add(new TabPage(CreateConvertersPanel()) { Text = "Converters" });
+            tabbedPanel.Pages.Add(new TabPage { Text = "Console" });
+
+            contentLayout = new Splitter
+            {
+                Orientation = Orientation.Vertical,
+                FixedPanel = SplitterFixedPanel.Panel2,
+                Panel1 = contentPanel,
+                //Panel1MinimumSize = 50,
+                Panel2 = tabbedPanel,
+                Panel2MinimumSize = 50,
             };
 
             var splitter = new Splitter
             {
-                Position = 300,
+                Orientation = Orientation.Horizontal,
                 FixedPanel = SplitterFixedPanel.Panel1,
                 Panel1MinimumSize = 150,
                 Panel1 = CreateLeftPanel(),
-                Panel2 = splitterRight,
+                Panel2 = contentLayout,
             };
 
             Content = splitter;
         }
 
-        Panel CreateRightPanel()
+        Panel CreateConvertersPanel()
         {
             converters = PluginManager.Instance.GetConverters().Select(x => x.Metadata).ToArray();
             converterList = new ListBox();
@@ -68,8 +78,12 @@ namespace SceneGate.UI.Views
 
         Panel CreateLeftPanel()
         {
-            Button addBtn = new Button(AddRootNode);
-            addBtn.Text = "Add";
+            var addBtn = new Button(AddRootNode)
+            {
+                ImagePosition = ButtonImagePosition.Overlay,
+                Image = Icon.FromResource("SceneGate.UI.Resources.folder_add.png").WithSize(16, 16),
+                Size = new Size(20, 20),
+            };
 
             tree = new TreeGridView();
             tree.ShowHeader = false;
@@ -130,8 +144,10 @@ namespace SceneGate.UI.Views
                         var selected = tree.SelectedItem as TreeGridItem;
                         var node = selected.GetValue(0) as Node;
 
-                        var reader = new TextReader(node.Stream);
+                        var reader = new TextDataReader(node.Stream);
                         node.Stream.Position = 0;
+                        var textArea = new TextArea { ReadOnly = true };
+                        contentPanel.Content = textArea;
                         textArea.Text = reader.ReadToEnd();
                         textArea.Invalidate();
                     }
@@ -143,9 +159,9 @@ namespace SceneGate.UI.Views
 
             var headerLayout = new DynamicLayout();
             headerLayout.BeginHorizontal();
-            headerLayout.AddRow(new Label { Text = "Nodes" }, null, addBtn, new Button { Text = "Collapse" });
+            headerLayout.AddRow(null, addBtn);
             headerLayout.EndHorizontal();
-            headerLayout.Padding = new Eto.Drawing.Padding(5);
+            headerLayout.Padding = new Padding(5);
 
             var stack = new DynamicLayout();
             stack.BeginHorizontal();
@@ -162,7 +178,8 @@ namespace SceneGate.UI.Views
             if (dialog.ShowDialog(ParentWindow) == DialogResult.Ok)
             {
                 Node n = NodeFactory.FromFile(dialog.FileName);
-                if (n.Name.EndsWith(".3ds")) {
+                if (n.Name.EndsWith(".3ds"))
+                {
                     ContainerManager.Unpack3DSNode(n);
                 }
                 AppendNodeToTree(n);
