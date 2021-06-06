@@ -105,7 +105,7 @@ csharp_prefer_braces = when_multiline:error
 csharp_prefer_simple_using_statement = true:suggestion
 
 ### 'using' directive preferences
-csharp_using_directive_placement = inside_namespace:warning
+csharp_using_directive_placement = outside_namespace:warning
 
 ### Modifier preferences
 csharp_prefer_static_local_function = true:warning
@@ -172,6 +172,12 @@ dotnet_diagnostic.SA1633.severity = none # No XML-format header in source files
 
 ### SonarAnalyzer
 dotnet_diagnostic.S1135.severity = suggestion # It's almost inevitable to have TODO but add bug ID
+
+# Special rules for non-API (executable) projects
+[*UI/**,*CLI/**]
+dotnet_diagnostic.CS1591.severity = none # Disable documentation
+dotnet_diagnostic.SA0001.severity = none # Disable documentation
+dotnet_diagnostic.SA1600.severity = none # Disable documentation
 
 # Special rules for test projects
 [*Tests/**]

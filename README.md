@@ -1,6 +1,7 @@
 # SceneGate [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://choosealicense.com/licenses/mit/) ![build](https://github.com/SceneGate/scenegate/workflows/Build%20and%20release/badge.svg)
 
-**Work-in-progress** tool for reverse engineering, file format analysis, modding and localization.
+**Work-in-progress** tool for reverse engineering, file format analysis, modding
+and localization.
 
 ## Features
 
@@ -13,7 +14,11 @@
 
 ## Installation
 
-The project ships the application as a portable ZIP file that does not require any installation. Just unzip and run!
+Install the `Material Icons` font from
+[here](https://fonts.google.com/download?family=Material+Icons).
+
+The project ships the application as a portable ZIP file that does not require
+any installation. Just unzip and run!
 
 <!-- prettier-ignore -->
 | Release | Package |
@@ -26,8 +31,8 @@ The project ships the application as a portable ZIP file that does not require a
 Feel free to ask any question in the
 [project Discussion site!](https://github.com/SceneGate/scenegate/discussions)
 
-Check our on-line [documentation](https://scenegate.github.io/SceneGate/) for more
-information about the file formats and how to use the tools.
+Check our on-line [documentation](https://scenegate.github.io/SceneGate/) for
+more information about the file formats and how to use the tools.
 
 ## Build
 
@@ -63,4 +68,4 @@ purpose. Please support the original game developers by buying their games.
 Icons:
 
 - [Famfamfam icons](http://www.famfamfam.com/)
-- [Popicon Juice free pack](https://www.popicon.com/pages/free)
+- [Material design icons by Google](https://github.com/google/material-design-icons)

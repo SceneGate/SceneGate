@@ -1,6 +1,7 @@
 
 namespace SceneGate.UI.Views
 {
+    using System;
     using System.IO;
     using System.Reflection;
     using Eto.Forms;
@@ -20,6 +21,7 @@ namespace SceneGate.UI.Views
         {
             Title = $"SceneGate ~~ {Assembly.GetExecutingAssembly().GetName().Version}";
             ClientSize = new Size(1000, 600);
+            Icon = Icon.FromResource("SceneGate.UI.Resources.Icon.png");
 
             CreateMenu();
             CreateContent();
@@ -29,16 +31,25 @@ namespace SceneGate.UI.Views
         {
             var quitCommand = new Command
             {
-                MenuText = "Quit",
+                MenuText = "&Quit",
                 Shortcut = Application.Instance.CommonModifier | Keys.Q,
             };
             quitCommand.Executed += (sender, e) => Application.Instance.Quit();
 
+            var about = new AboutDialog {
+                Logo = Bitmap.FromResource("SceneGate.UI.Resources.Icon.png"),
+                WebsiteLabel = "SceneGate website",
+                Website = new Uri("https://scenegate.github.io/SceneGate/"),
+                Developers = new[] { "SceneGate team and contributors" },
+                License = "MIT License",
+                ProgramName = "SceneGate",
+                ProgramDescription = "Tool for reverse engineering, file format analysis, modding and localization.",
+            };
             var aboutCommand = new Command
             {
                 MenuText = "About..."
             };
-            aboutCommand.Executed += (sender, e) => new AboutDialog().ShowDialog(this);
+            aboutCommand.Executed += (sender, e) => about.ShowDialog(this);
 
             var toggleAction = new Command
             {
@@ -53,7 +64,7 @@ namespace SceneGate.UI.Views
                     new ButtonMenuItem { Text = "&File" },
                 },
                 ApplicationItems = {
-                    new ButtonMenuItem { Text = "&Preferences..." },
+                    new ButtonMenuItem { Text = "&Settings" },
                     toggleAction,
                 },
                 QuitItem = quitCommand,
@@ -68,86 +79,52 @@ namespace SceneGate.UI.Views
 
         void CreateContent()
         {
+            analyzeView = new AnalyzeView();
+
             contentPanel = new Scrollable
             {
-                BackgroundColor = Colors.White,
                 Border = BorderType.Line
             };
 
-            var exploreView = new ExploreView();
-            analyzeView = new AnalyzeView();
-            var automatizeView = new AutomatizeView();
-
-            var exploreButton = new ToggleButton {
-                Image = Icon.FromResource("SceneGate.UI.Resources.Shutter.png").WithSize(32, 32),
-                //Visible = false,
-            };
             var analyzeButton = new ToggleButton {
-                Image = Icon.FromResource("SceneGate.UI.Resources.Script.png").WithSize(32, 32),
-            };
-            var automatizeButton = new ToggleButton {
-                Image = Icon.FromResource("SceneGate.UI.Resources.Carpool.png").WithSize(32, 32),
-                //Visible = false,
+                Text= "\uE50A",
+                Font = new Font("Material Icons", 24),
+                ToolTip = "Analyze",
             };
             var settingsButton = new ToggleButton {
-                Image = Icon.FromResource("SceneGate.UI.Resources.Gears.png").WithSize(32, 32),
+                Text= "\uE8B8",
+                Font = new Font("Material Icons", 24),
+                ToolTip = "Settings",
             };
 
-            exploreButton.Click += (sender, e) =>
-            {
-                exploreButton.Checked = true;
-                analyzeButton.Checked = false;
-                automatizeButton.Checked = false;
-                settingsButton.Checked = false;
-                contentPanel.Content = exploreView;
-            };
-
-            analyzeButton.Click += (sender, e) =>
-            {
-                exploreButton.Checked = false;
+            analyzeButton.Click += (sender, e) => {
                 analyzeButton.Checked = true;
-                automatizeButton.Checked = false;
                 settingsButton.Checked = false;
                 contentPanel.Content = analyzeView;
             };
-            automatizeButton.Click += (sender, e) =>
-            {
-                exploreButton.Checked = false;
+            settingsButton.Click += (sender, e) => {
                 analyzeButton.Checked = false;
-                automatizeButton.Checked = true;
-                settingsButton.Checked = false;
-                contentPanel.Content = automatizeView;
-            };
-            settingsButton.Click += (sender, e) =>
-            {
-                exploreButton.Checked = false;
-                analyzeButton.Checked = false;
-                automatizeButton.Checked = false;
                 settingsButton.Checked = true;
-                contentPanel.Content = new TextArea { Text = "Not implemented" };
+                contentPanel.Content = new Panel();
             };
 
-            analyzeButton.PerformClick();
-
-            var viewModeBar = new StackLayout
-            {
+            var viewModeBar = new StackLayout {
                 Orientation = Orientation.Vertical,
-                BackgroundColor = Colors.Gray,
             };
-            viewModeBar.Items.Add(exploreButton);
             viewModeBar.Items.Add(analyzeButton);
-            viewModeBar.Items.Add(automatizeButton);
             viewModeBar.Items.Add(new StackLayoutItem(null, true));
             viewModeBar.Items.Add(new StackLayoutItem(settingsButton, VerticalAlignment.Bottom));
 
             var mainLayout = new DynamicLayout();
-            mainLayout.BackgroundColor = Colors.White;
 
             mainLayout.BeginVertical(yscale: true, xscale: true);
             mainLayout.AddRow(viewModeBar, contentPanel);
             mainLayout.EndVertical();
 
             Content = mainLayout;
+
+            analyzeButton.Checked = true;
+            contentPanel.Content = analyzeView;
         }
     }
 }

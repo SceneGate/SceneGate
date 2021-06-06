@@ -3,18 +3,18 @@
 <plist version="1.0">
   <dict>
     <key>CFBundleName</key>
-    <string>SceneGate.UI</string>
+    <string>SceneGate</string>
     <key>CFBundleIdentifier</key>
-    <string>com.example.SceneGate.UI</string>
+    <string>com.scenegate.scenegate</string>
     <key>CFBundleShortVersionString</key>
     <string>1.0</string>
     <key>LSMinimumSystemVersion</key>
-    <string>10.7</string>
+    <string>10.12</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>NSHumanReadableCopyright</key>
     <string></string>
     <key>CFBundleIconFile</key>
-    <string>MacIcon.icns</string>
+    <string>Icon.icns</string>
   </dict>
 </plist>

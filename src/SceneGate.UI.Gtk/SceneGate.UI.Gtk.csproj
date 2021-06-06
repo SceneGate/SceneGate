@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>SceneGate</AssemblyName>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>false</PublishSingleFile>
+    <PublishTrimmed>false</PublishTrimmed>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SceneGate.UI\SceneGate.UI.csproj" />
+
+    <PackageReference Include="Eto.Platform.Gtk" />
+  </ItemGroup>
+
+</Project>

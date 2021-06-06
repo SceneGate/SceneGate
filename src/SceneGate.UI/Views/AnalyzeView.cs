@@ -32,7 +32,6 @@ namespace SceneGate.UI.Views
         void CreateControls()
         {
             contentPanel = new Panel();
-            contentPanel.BackgroundColor = Colors.Blue;
 
             var tabbedPanel = new TabControl();
             tabbedPanel.Pages.Add(new TabPage(CreateConvertersPanel()) { Text = "Converters" });
@@ -43,9 +42,7 @@ namespace SceneGate.UI.Views
                 Orientation = Orientation.Vertical,
                 FixedPanel = SplitterFixedPanel.Panel2,
                 Panel1 = contentPanel,
-                //Panel1MinimumSize = 50,
                 Panel2 = tabbedPanel,
-                Panel2MinimumSize = 50,
             };
 
             var splitter = new Splitter
@@ -80,9 +77,11 @@ namespace SceneGate.UI.Views
         {
             var addBtn = new Button(AddRootNode)
             {
-                ImagePosition = ButtonImagePosition.Overlay,
-                Image = Icon.FromResource("SceneGate.UI.Resources.folder_add.png").WithSize(16, 16),
-                Size = new Size(20, 20),
+                Text = "\xE147",
+                Font = new Font("Material Icons", 11),
+                ToolTip = "Add external file",
+                Width = 32,
+                Height = 32,
             };
 
             tree = new TreeGridView();
@@ -95,7 +94,7 @@ namespace SceneGate.UI.Views
                     HeaderText = "Name",
                     AutoSize = true,
                     Resizable = true,
-                    Editable = true
+                    Editable = false
                 });
             tree.DataStore = new TreeGridItem("root");
 
@@ -157,11 +156,10 @@ namespace SceneGate.UI.Views
                 tree.ContextMenu = menu;
             }
 
-            var headerLayout = new DynamicLayout();
-            headerLayout.BeginHorizontal();
-            headerLayout.AddRow(null, addBtn);
-            headerLayout.EndHorizontal();
-            headerLayout.Padding = new Padding(5);
+            var headerLayout = new StackLayout(addBtn) {
+                Orientation = Orientation.Horizontal,
+                Padding = new Padding(5),
+            };
 
             var stack = new DynamicLayout();
             stack.BeginHorizontal();
