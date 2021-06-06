@@ -1,0 +1,5 @@
+apiRules:
+  # Remove object method inheritance
+  - exclude:
+      uidRegex: ^System\.Object
+type: Type

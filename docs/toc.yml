@@ -1,0 +1,11 @@
+- name: Home
+  href: index.md
+
+- name: Guides
+  href: guides/
+
+- name: Changelog
+  href: dev/Changelog.md
+
+- name: GitHub
+  href: https://github.com/scenegate/scenegate

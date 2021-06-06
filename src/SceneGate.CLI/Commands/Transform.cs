@@ -51,7 +51,7 @@ namespace SceneGate.Cli.Commands
                 typeName += ", Yarhl, Version=1.0.0.2125, Culture=neutral, PublicKeyToken=null";
 
             try {
-                nodeTransform.Transform(Type.GetType(typeName));
+                nodeTransform.TransformWith(Type.GetType(typeName));
             } catch (Exception ex) {
                 Console.WriteLine(ex);
                 return false;

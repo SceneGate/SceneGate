@@ -1,0 +1,23 @@
+<Project>
+    <!-- Centralize dependency management -->
+    <ItemGroup>
+        <PackageVersion Include="Yarhl" Version="3.1.1-preview.28" />
+        <PackageVersion Include="SceneGate.Lemon" Version="0.1.0-preview.69" />
+
+        <PackageVersion Include="Eto.Forms" Version="2.5.11" />
+        <PackageVersion Include="Eto.Platform.Gtk" Version="2.5.11" />
+        <PackageVersion Include="Eto.Platform.Wpf" Version="2.5.11" />
+        <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.818.41" />
+
+        <PackageVersion Include="nunit" Version="3.13.1" />
+        <PackageVersion Include="NUnit3TestAdapter" Version="3.17.0" />
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.9.1"/>
+        <PackageVersion Include="coverlet.collector" Version="3.0.3" />
+
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
+
+        <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
+        <PackageVersion Include="SonarAnalyzer.CSharp" Version="8.19.0.28253" />
+        <PackageVersion Include="Roslynator.Analyzers" Version="3.1.0" />
+    </ItemGroup>
+</Project>
