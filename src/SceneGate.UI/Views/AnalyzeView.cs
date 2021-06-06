@@ -32,7 +32,6 @@ namespace SceneGate.UI.Views
         void CreateControls()
         {
             contentPanel = new Panel();
-            contentPanel.BackgroundColor = Colors.Blue;
 
             var tabbedPanel = new TabControl();
             tabbedPanel.Pages.Add(new TabPage(CreateConvertersPanel()) { Text = "Converters" });
@@ -81,8 +80,8 @@ namespace SceneGate.UI.Views
             var addBtn = new Button(AddRootNode)
             {
                 ImagePosition = ButtonImagePosition.Overlay,
-                Image = Icon.FromResource("SceneGate.UI.Resources.folder_add.png").WithSize(16, 16),
-                Size = new Size(20, 20),
+                Image = Icon.FromResource("SceneGate.UI.Resources.outline_add_circle_white_48dp.png").WithSize(16, 16),
+                Size = new Size(16, 16),
             };
 
             tree = new TreeGridView();
@@ -95,7 +94,7 @@ namespace SceneGate.UI.Views
                     HeaderText = "Name",
                     AutoSize = true,
                     Resizable = true,
-                    Editable = true
+                    Editable = false
                 });
             tree.DataStore = new TreeGridItem("root");
 
@@ -157,10 +156,11 @@ namespace SceneGate.UI.Views
                 tree.ContextMenu = menu;
             }
 
-            var headerLayout = new DynamicLayout();
-            headerLayout.BeginHorizontal();
-            headerLayout.AddRow(null, addBtn);
-            headerLayout.EndHorizontal();
+            var headerLayout = new StackLayout {
+                Orientation = Orientation.Horizontal,
+            };
+            headerLayout.Items.Add(addBtn);
+            headerLayout.Items.Add(new StackLayoutItem(null, expand: true));
             headerLayout.Padding = new Padding(5);
 
             var stack = new DynamicLayout();
