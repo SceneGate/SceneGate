@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneGate.CLI", "SceneGate.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneGate.UI", "SceneGate.UI\SceneGate.UI.csproj", "{A721477A-4299-4BFF-99DE-9F184F1BC3E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneGate.UI.Desktop", "SceneGate.UI.Desktop\SceneGate.UI.Desktop.csproj", "{773AD339-775A-4619-A81E-BA50351B5737}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneGate.UI.Wpf", "SceneGate.UI.Wpf\SceneGate.UI.Wpf.csproj", "{773AD339-775A-4619-A81E-BA50351B5737}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

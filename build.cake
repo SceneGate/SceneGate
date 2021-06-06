@@ -6,12 +6,16 @@ Task("Define-Project")
 {
     info.WarningsAsErrors = false;
 
+    info.AddApplicationProjects("SceneGate.CLI");
+
     // https://github.com/dotnet/sdk/issues/3803
     if (IsRunningOnWindows()) {
         info.SolutionFile = "src/SceneGate.Windows.sln";
-        info.AddApplicationProjects("src/SceneGate.UI.Desktop/SceneGate.UI.Desktop.csproj");
+        info.AddApplicationProjects("SceneGate.UI.Wpf");
     } else {
         info.SolutionFile = "src/SceneGate.sln";
+        info.AddApplicationProjects("SceneGate.UI.Gtk");
+        // info.AddApplicationProjects("SceneGate.UI.Mac");
     }
 
     // No libraries to publish
