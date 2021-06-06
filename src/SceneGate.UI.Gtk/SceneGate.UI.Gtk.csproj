@@ -13,7 +13,7 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <SelfContained>true</SelfContained>
-    <PublishSingleFile>true</PublishSingleFile>
+    <PublishSingleFile>false</PublishSingleFile>
     <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 
