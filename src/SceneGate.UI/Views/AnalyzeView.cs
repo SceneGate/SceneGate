@@ -42,9 +42,7 @@ namespace SceneGate.UI.Views
                 Orientation = Orientation.Vertical,
                 FixedPanel = SplitterFixedPanel.Panel2,
                 Panel1 = contentPanel,
-                //Panel1MinimumSize = 50,
                 Panel2 = tabbedPanel,
-                Panel2MinimumSize = 50,
             };
 
             var splitter = new Splitter
@@ -79,9 +77,11 @@ namespace SceneGate.UI.Views
         {
             var addBtn = new Button(AddRootNode)
             {
-                ImagePosition = ButtonImagePosition.Overlay,
-                Image = Icon.FromResource("SceneGate.UI.Resources.outline_add_circle_white_48dp.png").WithSize(16, 16),
-                Size = new Size(16, 16),
+                Text = "\xE147",
+                Font = new Font("Material Icons", 11),
+                ToolTip = "Add external file",
+                Width = 16,
+                Height = 16,
             };
 
             tree = new TreeGridView();
@@ -156,12 +156,10 @@ namespace SceneGate.UI.Views
                 tree.ContextMenu = menu;
             }
 
-            var headerLayout = new StackLayout {
+            var headerLayout = new StackLayout(addBtn) {
                 Orientation = Orientation.Horizontal,
+                Padding = new Padding(5),
             };
-            headerLayout.Items.Add(addBtn);
-            headerLayout.Items.Add(new StackLayoutItem(null, expand: true));
-            headerLayout.Padding = new Padding(5);
 
             var stack = new DynamicLayout();
             stack.BeginHorizontal();

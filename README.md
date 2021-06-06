@@ -14,6 +14,9 @@ and localization.
 
 ## Installation
 
+Install the `Material Icons` font from
+[here](https://fonts.google.com/download?family=Material+Icons).
+
 The project ships the application as a portable ZIP file that does not require
 any installation. Just unzip and run!
 

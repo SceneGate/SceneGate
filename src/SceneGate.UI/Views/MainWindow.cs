@@ -31,7 +31,7 @@ namespace SceneGate.UI.Views
         {
             var quitCommand = new Command
             {
-                MenuText = "Quit",
+                MenuText = "&Quit",
                 Shortcut = Application.Instance.CommonModifier | Keys.Q,
             };
             quitCommand.Executed += (sender, e) => Application.Instance.Quit();
@@ -40,7 +40,7 @@ namespace SceneGate.UI.Views
                 Logo = Bitmap.FromResource("SceneGate.UI.Resources.Icon.png"),
                 WebsiteLabel = "SceneGate website",
                 Website = new Uri("https://scenegate.github.io/SceneGate/"),
-                Developers = new[] { "pleonex" },
+                Developers = new[] { "SceneGate team and contributors" },
                 License = "MIT License",
                 ProgramName = "SceneGate",
                 ProgramDescription = "Tool for reverse engineering, file format analysis, modding and localization.",
@@ -64,7 +64,7 @@ namespace SceneGate.UI.Views
                     new ButtonMenuItem { Text = "&File" },
                 },
                 ApplicationItems = {
-                    new ButtonMenuItem { Text = "&Preferences..." },
+                    new ButtonMenuItem { Text = "&Settings" },
                     toggleAction,
                 },
                 QuitItem = quitCommand,
@@ -79,17 +79,22 @@ namespace SceneGate.UI.Views
 
         void CreateContent()
         {
+            analyzeView = new AnalyzeView();
+
             contentPanel = new Scrollable
             {
                 Border = BorderType.Line
             };
 
-            analyzeView = new AnalyzeView();
             var analyzeButton = new ToggleButton {
-                Image = Icon.FromResource("SceneGate.UI.Resources.outline_hiking_white_48dp.png").WithSize(32, 32),
+                Text= "\uE50A",
+                Font = new Font("Material Icons", 24),
+                ToolTip = "Analyze",
             };
             var settingsButton = new ToggleButton {
-                Image = Icon.FromResource("SceneGate.UI.Resources.outline_settings_white_48dp.png").WithSize(32, 32),
+                Text= "\uE8B8",
+                Font = new Font("Material Icons", 24),
+                ToolTip = "Settings",
             };
 
             analyzeButton.Click += (sender, e) => {
@@ -117,7 +122,9 @@ namespace SceneGate.UI.Views
             mainLayout.EndVertical();
 
             Content = mainLayout;
-            analyzeButton.PerformClick();
+
+            analyzeButton.Checked = true;
+            contentPanel.Content = analyzeView;
         }
     }
 }
