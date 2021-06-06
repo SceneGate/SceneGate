@@ -4,7 +4,7 @@ using SceneGate.UI.Views;
 
 namespace SceneGate.UI.Mac
 {
-    public class MainClass
+    public static class Program
     {
         [STAThread]
         public static void Main(string[] args)

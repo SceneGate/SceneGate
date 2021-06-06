@@ -11,7 +11,10 @@
 
   <ItemGroup>
     <PackageReference Include="Eto.Forms" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" />
+
     <PackageReference Include="Yarhl" />
+    <PackageReference Include="Yarhl.Media" />
     <PackageReference Include="SceneGate.Lemon" />
   </ItemGroup>
 
