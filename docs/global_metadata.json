@@ -1,0 +1,13 @@
+{
+    "_appTitle": "SceneGate - Reverse engineering, modding and localization",
+    "_appFooter": "Copyright (c) 2021 SceneGate",
+    "_appLogoPath": "images/logo_48.png",
+    "_appFaviconPath": "images/favicon.png",
+    "_enableSearch": true,
+    "_enableNewTab": true,
+    "_gitContribute": {
+        "apiSpecFolder": "docs/apidoc",
+        "repo": "https://github.com/scenegate/scenegate",
+        "branch": "main"
+    }
+}

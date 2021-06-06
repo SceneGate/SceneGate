@@ -1,0 +1,46 @@
+<Project>
+    <PropertyGroup>
+        <Product>SceneGate</Product>
+        <Authors>SceneGate</Authors>
+        <Company>None</Company>
+        <Copyright>Copyright (C) 2021 SceneGate</Copyright>
+
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/SceneGate/SceneGate</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/SceneGate/SceneGate</RepositoryUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>reverse-engineering;rom-hacking;localization</PackageTags>
+    </PropertyGroup>
+
+    <!-- Deterministic and source link -->
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <!-- Deterministic and source link -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+        <Deterministic>true</Deterministic>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
+    </ItemGroup>
+
+    <!-- Code analyzers -->
+    <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All"/>
+        <PackageReference Include="SonarAnalyzer.CSharp" PrivateAssets="All"/>
+        <PackageReference Include="Roslynator.Analyzers" PrivateAssets="All"/>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,128 @@
+name: Build and release
+
+on:
+  # Dev
+  workflow_dispatch:
+  pull_request:
+  push:
+    # Preview
+    branches: [ main ]
+    # Stable
+    tags: [ "v*" ]
+  release:
+    types:
+      - published
+
+env:
+  NET_SDK: '5.0.300'
+
+jobs:
+  build_main:
+    name: "[ubuntu-latest] Build, test and stage"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # We need full history for version number
+
+      - name: "Setup .NET SDK"
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.NET_SDK }}
+      - name: "Setup .NET Core 3.1 for Cake dependencies"
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.409'
+
+      - name: "Install build tools"
+        run: dotnet tool restore
+
+      - name: "Generate release notes"
+        run: dotnet cake --target=Generate-ReleaseNotes --verbosity=diagnostic
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Build, test and stage"
+        run: dotnet cake --target=Stage-Artifacts --configuration=Release --verbosity=diagnostic
+
+      - name: "Publish test results"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "Test results"
+          path: "./artifacts/test_results"
+          retention-days: 1
+
+      - name: "Publish artifacts to CI"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "Artifacts"
+          path: |
+            ./artifacts/*.zip
+            ./artifacts/*.nupkg
+            ./artifacts/*.snupkg
+          retention-days: 2
+
+  build_sec:
+    name: "[${{ matrix.os }}] Build and test"
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # We need full history for version number
+
+      - name: "Setup .NET SDK"
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.NET_SDK }}
+      - name: "Setup .NET Core 3.1 for Cake dependencies"
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.409'
+
+      - name: "Install build tools"
+        run: dotnet tool restore
+
+      # No need to stage as one job can create the binaries for all platforms
+      - name: "Build and test"
+        run: dotnet cake --target=BuildTest --configuration=Release --verbosity=diagnostic
+
+  # Preview release on push to develop only
+  # Stable release on version tag push only
+  push_artifacts:
+    name: "Push artifacts"
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    needs: [ "build_main", "build_sec" ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # We need full history for version number
+
+      - name: "Download artifacts"
+        uses: actions/download-artifact@v2
+        with:
+          name: "Artifacts"
+          path: "./artifacts"
+
+      - name: "Setup .NET SDK"
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.NET_SDK }}
+      - name: "Setup .NET Core 3.1 for Cake dependencies"
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.409'
+
+      - name: "Install build tools"
+        run: dotnet tool restore
+
+      - name: "Publish artifacts"
+        run: dotnet cake --target=Push-Artifacts --verbosity=diagnostic
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

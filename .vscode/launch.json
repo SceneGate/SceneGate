@@ -5,11 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Attach",
+            "name": "Launch SceneGate (Windows)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Cake: Run Build",
+            "program": "${workspaceFolder}/src/SceneGate.UI.Desktop/bin/Debug/net5.0/SceneGate.UI.Desktop.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": ".NET Attach",
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickProcess}"
         }
-
     ]
 }

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <UseWpf>true</UseWpf>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SceneGate.UI\SceneGate.UI.csproj" />
+
+    <PackageReference Include="Eto.Platform.Gtk" />
+    <PackageReference Include="Eto.Platform.Wpf" />
+    <PackageReference Include="Microsoft.Web.WebView2" />
+  </ItemGroup>
+
+</Project>
