@@ -22,5 +22,12 @@ Task("Define-Project")
 Task("Default")
     .IsDependentOn("Stage-Artifacts");
 
+Task("Push-ArtifactsWithoutNuGets")
+    .IsDependentOn("Define-Project")
+    .IsDependentOn("Show-Info")
+    .IsDependentOn("Push-Apps")     // only stable builds
+    .IsDependentOn("Push-Doc")      // only preview and stable builds
+    .IsDependentOn("Close-GitHubMilestone");    // only stable builds
+
 string target = Argument("target", "Default");
 RunTarget(target);

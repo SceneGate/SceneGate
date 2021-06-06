@@ -123,6 +123,6 @@ jobs:
         run: dotnet tool restore
 
       - name: "Publish artifacts"
-        run: dotnet cake --target=Push-Artifacts --verbosity=diagnostic
+        run: dotnet cake --target=Push-ArtifactsWithoutNuGets --verbosity=diagnostic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
