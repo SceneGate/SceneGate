@@ -8,15 +8,18 @@ Task("Define-Project")
 
     info.AddApplicationProjects("SceneGate.CLI");
 
-    // https://github.com/dotnet/sdk/issues/3803
+    // Only Windows can build WPF apps: https://github.com/dotnet/sdk/issues/3803
     if (IsRunningOnWindows()) {
         info.SolutionFile = "src/SceneGate.Windows.sln";
         info.AddApplicationProjects("SceneGate.UI.Wpf");
     } else {
         info.SolutionFile = "src/SceneGate.sln";
-        info.AddApplicationProjects("SceneGate.UI.Gtk");
-        // info.AddApplicationProjects("SceneGate.UI.Mac");
     }
+
+    info.AddApplicationProjects("SceneGate.UI.Gtk");
+
+    // Cannot build Mac version due to some issues in the task publish
+    // info.AddApplicationProjects("SceneGate.UI.Mac");
 
     // No libraries to publish
     info.PreviewNuGetFeed = "";
