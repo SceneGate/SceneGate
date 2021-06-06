@@ -80,8 +80,8 @@ namespace SceneGate.UI.Views
                 Text = "\xE147",
                 Font = new Font("Material Icons", 11),
                 ToolTip = "Add external file",
-                Width = 16,
-                Height = 16,
+                Width = 32,
+                Height = 32,
             };
 
             tree = new TreeGridView();
