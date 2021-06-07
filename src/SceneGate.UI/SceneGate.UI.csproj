@@ -15,6 +15,8 @@
 
     <PackageReference Include="Yarhl" />
     <PackageReference Include="Yarhl.Media" />
+    <PackageReference Include="LayTea" />
+    <PackageReference Include="SceneGate.Ekona" />
   </ItemGroup>
 
 </Project>
