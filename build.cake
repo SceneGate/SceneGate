@@ -6,8 +6,6 @@ Task("Define-Project")
 {
     info.WarningsAsErrors = false;
 
-    info.AddApplicationProjects("SceneGate.CLI");
-
     // Only Windows can build WPF apps: https://github.com/dotnet/sdk/issues/3803
     if (IsRunningOnWindows()) {
         info.SolutionFile = "src/SceneGate.Windows.sln";
