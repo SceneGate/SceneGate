@@ -33,7 +33,7 @@ using Yarhl.FileFormat;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 
-namespace SceneGate.UI.ViewModels
+namespace SceneGate.UI.Main
 {
     public sealed class AnalyzeViewModel : ObservableObject
     {

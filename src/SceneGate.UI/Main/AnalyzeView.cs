@@ -21,10 +21,9 @@ using System.Windows.Input;
 using Eto.Drawing;
 using Eto.Forms;
 using SceneGate.UI.Resources;
-using SceneGate.UI.ViewModels;
 using Yarhl.FileFormat;
 
-namespace SceneGate.UI.Views
+namespace SceneGate.UI.Main
 {
     public sealed class AnalyzeView : Panel
     {

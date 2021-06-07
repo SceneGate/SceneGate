@@ -24,7 +24,7 @@ using Yarhl.FileSystem;
 using Yarhl.IO;
 using Yarhl.Media.Text;
 
-namespace SceneGate.UI.ViewModels
+namespace SceneGate.UI.Main
 {
     public class TreeGridNode : TreeGridItem
     {

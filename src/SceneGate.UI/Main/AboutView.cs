@@ -23,7 +23,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using SceneGate.UI.Resources;
 
-namespace SceneGate.UI.Views
+namespace SceneGate.UI.Main
 {
     public sealed class AboutView : AboutDialog
     {

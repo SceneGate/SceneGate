@@ -1,6 +1,6 @@
 ﻿using System;
 using Eto.Forms;
-using SceneGate.UI.Views;
+using SceneGate.UI.Main;
 
 namespace SceneGate.UI.Wpf
 {
