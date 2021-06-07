@@ -85,20 +85,20 @@ namespace SceneGate.UI.Views
         private Control CreateContent()
         {
             analyzeView = new AnalyzeView();
+            viewModel.AttachAnalyzeViewModel(analyzeView.ViewModel);
+
             settingsView = new Panel();
 
             var viewModeBar = CreateViewModeBar();
-            var contentPanel = new Scrollable {
-                Border = BorderType.Line,
-            };
+            var contentPanel = new Panel();
             contentPanel.BindDataContext(
                 s => s.Content,
                 Binding.Property((MainViewModel vm) => vm.ViewKind).Convert(GetView));
 
-            var mainLayout = new DynamicLayout();
-            mainLayout.BeginVertical(yscale: true, xscale: true);
-            mainLayout.AddRow(viewModeBar, contentPanel);
-            mainLayout.EndVertical();
+            var mainLayout = new StackLayout(viewModeBar, new StackLayoutItem(contentPanel, true)) {
+                Orientation = Orientation.Horizontal,
+                VerticalContentAlignment = VerticalAlignment.Stretch,
+            };
 
             return mainLayout;
         }

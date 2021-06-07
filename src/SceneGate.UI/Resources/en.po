@@ -47,3 +47,15 @@ msgstr ""
 
 msgid "Tool for reverse engineering, file format analysis, modding and localization."
 msgstr "Tool for reverse engineering, file format analysis, modding and localization."
+
+msgid "Converters"
+msgstr "Converters"
+
+msgid "Add external file"
+msgstr "Add external file"
+
+msgid "Add external folders"
+msgstr "Add external folders"
+
+msgid "Save to file"
+msgstr "Save to file"

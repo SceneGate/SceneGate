@@ -15,7 +15,6 @@
 
     <PackageReference Include="Yarhl" />
     <PackageReference Include="Yarhl.Media" />
-    <PackageReference Include="SceneGate.Lemon" />
   </ItemGroup>
 
 </Project>

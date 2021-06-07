@@ -24,10 +24,10 @@ using SceneGate.UI.Views;
 
 namespace SceneGate.UI.ViewModels
 {
-    public class MainViewModel : ObservableObject
+    public sealed class MainViewModel : ObservableObject
     {
-        private bool isActionPanelVisible;
         private ViewKind viewKind;
+        private AnalyzeViewModel analyzeViewModel;
 
         public MainViewModel()
         {
@@ -41,9 +41,7 @@ namespace SceneGate.UI.ViewModels
 
         public ViewKind ViewKind {
             get => viewKind;
-            private set {
-                SetProperty(ref viewKind, value);
-            }
+            private set => SetProperty(ref viewKind, value);
         }
 
         public ICommand OpenAnalyzeCommand { get; }
@@ -57,10 +55,19 @@ namespace SceneGate.UI.ViewModels
         public ICommand ToggleActionPanelCommand { get; }
 
         public bool IsActionPanelVisible {
-            get => isActionPanelVisible;
+            get => analyzeViewModel?.IsActionPanelVisible ?? false;
             set {
-                SetProperty(ref isActionPanelVisible, value);
+                if (analyzeViewModel != null) {
+                    analyzeViewModel.IsActionPanelVisible = value;
+                }
+
+                OnPropertyChanged(nameof(IsActionPanelVisible));
             }
+        }
+
+        public void AttachAnalyzeViewModel(AnalyzeViewModel viewModel)
+        {
+            analyzeViewModel = viewModel;
         }
 
         private void OpenAnalyze() => ViewKind = ViewKind.Analyze;
@@ -69,10 +76,7 @@ namespace SceneGate.UI.ViewModels
 
         private void Quit() => Eto.Forms.Application.Instance.Quit();
 
-        private void ToggleActionPanel()
-        {
-            IsActionPanelVisible = !IsActionPanelVisible;
-        }
+        private void ToggleActionPanel() => IsActionPanelVisible = !IsActionPanelVisible;
 
         private void OpenAboutDialog()
         {

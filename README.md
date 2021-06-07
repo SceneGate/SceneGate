@@ -10,7 +10,7 @@ and localization.
 
 ### _Yarhly_ shipped plugins
 
-- [Lemon](https://github.com/SceneGate/Lemon): 3DS formats
+Nothing yet, but should be compatible with Lemon, Ekona and Texim.
 
 ## Installation
 

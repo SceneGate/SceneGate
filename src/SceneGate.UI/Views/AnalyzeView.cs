@@ -1,219 +1,150 @@
-﻿
+﻿// Copyright (c) 2021 SceneGate
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+using System.Linq;
+using Eto.Drawing;
+using Eto.Forms;
+using SceneGate.UI.Resources;
+using SceneGate.UI.ViewModels;
+
 namespace SceneGate.UI.Views
 {
-    using Eto.Drawing;
-    using Eto.Forms;
-    using Lemon.Containers;
-    using System;
-    using System.Linq;
-    using Yarhl;
-    using Yarhl.FileFormat;
-    using Yarhl.FileSystem;
-    using Yarhl.IO;
-
-    public class AnalyzeView : Panel
+    public sealed class AnalyzeView : Panel
     {
-        TreeGridView tree;
-        Splitter contentLayout;
-        Panel contentPanel;
-        ListBox converterList;
-        ConverterMetadata[] converters;
-
         public AnalyzeView()
         {
-            CreateControls();
+            ViewModel = new AnalyzeViewModel();
+            DataContext = ViewModel;
+
+            InitializeComponents();
         }
 
-        public void ToggleActionPanel()
+        public AnalyzeViewModel ViewModel { get; }
+
+        private void InitializeComponents()
         {
-            contentLayout.Panel2.Visible = !contentLayout.Panel2.Visible;
-        }
+            var contentPanel = new Panel();
 
-        void CreateControls()
-        {
-            contentPanel = new Panel();
+            var actionPanel = new TabControl();
+            actionPanel.Bind(p => p.Visible, Binding.Property(ViewModel, vm => vm.IsActionPanelVisible));
+            actionPanel.Pages.Add(CreateConverterTab());
 
-            var tabbedPanel = new TabControl();
-            tabbedPanel.Pages.Add(new TabPage(CreateConvertersPanel()) { Text = "Converters" });
-            tabbedPanel.Pages.Add(new TabPage { Text = "Console" });
-
-            contentLayout = new Splitter
-            {
+            var contentLayout = new Splitter {
                 Orientation = Orientation.Vertical,
                 FixedPanel = SplitterFixedPanel.Panel2,
                 Panel1 = contentPanel,
-                Panel2 = tabbedPanel,
+                Panel2 = actionPanel,
             };
 
-            var splitter = new Splitter
-            {
+            var splitter = new Splitter {
                 Orientation = Orientation.Horizontal,
                 FixedPanel = SplitterFixedPanel.Panel1,
-                Panel1MinimumSize = 150,
-                Panel1 = CreateLeftPanel(),
+                Panel1MinimumSize = 200,
+                Panel1 = CreateTreeBar(),
                 Panel2 = contentLayout,
             };
 
             Content = splitter;
         }
 
-        Panel CreateConvertersPanel()
+        private TabPage CreateConverterTab()
         {
-            converters = PluginManager.Instance.GetConverters().Select(x => x.Metadata).ToArray();
-            converterList = new ListBox();
-            converterList.Items.AddRange(converters.Select(x => new ListItem { Key = x.Type.FullName, Text = x.Name }));
+            var list = new ListBox();
+            list.SelectedIndexBinding.BindDataContext((AnalyzeViewModel vm) => vm.SelectedConverterIndex);
+            list.Items.AddRange(
+                ViewModel
+                .Converters
+                .Select(x => new ListItem { Key = x.Type.FullName, Text = x.Name }));
 
-            var stack = new DynamicLayout();
-            stack.BeginHorizontal();
-            stack.AddRow(converterList);
-            stack.EndHorizontal();
-
-            stack.Invalidate();
-
-            return stack;
+            return new TabPage(list) {
+                Text = L10n.Get("Converters"),
+            };
         }
 
-        Panel CreateLeftPanel()
+        private Panel CreateTreeBar()
         {
-            var addBtn = new Button(AddRootNode)
-            {
-                Text = "\xE147",
+            // Buttons over the treeview
+            var addFileBtn = new Button {
+                Text = "\ue89c",
                 Font = new Font("Material Icons", 11),
-                ToolTip = "Add external file",
+                ToolTip = L10n.Get("Add external files"),
                 Width = 32,
                 Height = 32,
+                Command = ViewModel.AddFileCommand,
             };
-
-            tree = new TreeGridView();
-            tree.ShowHeader = false;
-            tree.Border = BorderType.Line;
-            tree.Columns.Add(
-                new GridColumn
-                {
-                    DataCell = new TextBoxCell(1),
-                    HeaderText = "Name",
-                    AutoSize = true,
-                    Resizable = true,
-                    Editable = false
-                });
-            tree.DataStore = new TreeGridItem("root");
-
-            if (Platform.Supports<ContextMenu>()) {
-                var menu = new ContextMenu();
-                var item = new ButtonMenuItem { Text = "Export to file" };
-                item.Click += delegate
-                {
-                    if (tree.SelectedItems.Any())
-                    {
-                        var selected = tree.SelectedItem as TreeGridItem;
-                        var node = selected.GetValue(0) as Node;
-                        SaveFileDialog dialog = new SaveFileDialog();
-                        if (dialog.ShowDialog(ParentWindow) == DialogResult.Ok)
-                        {
-                            node.Stream.WriteTo(dialog.FileName);
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Click, no item selected");
-                    }
-                };
-                menu.Items.Add(item);
-
-                var item2 = new ButtonMenuItem { Text = "Convert" };
-                item2.Click += delegate {
-                    if (tree.SelectedItems.Any() && converterList.SelectedIndex != -1) {
-                        var selected = tree.SelectedItem as TreeGridItem;
-                        var node = selected.GetValue(0) as Node;
-
-                        try {
-                            node.TransformWith(converters[converterList.SelectedIndex].Type);
-                        } catch (Exception ex) {
-                            MessageBox.Show($"Failed to convert:\n{ex}");
-                        }
-
-                        AppendNodeToTree(node);
-                    }
-                };
-                menu.Items.Add(item2);
-
-                var item3 = new ButtonMenuItem { Text = "View as text" };
-                item3.Click += delegate {
-                    if (tree.SelectedItems.Any()) {
-                        var selected = tree.SelectedItem as TreeGridItem;
-                        var node = selected.GetValue(0) as Node;
-
-                        var reader = new TextDataReader(node.Stream);
-                        node.Stream.Position = 0;
-                        var textArea = new TextArea { ReadOnly = true };
-                        contentPanel.Content = textArea;
-                        textArea.Text = reader.ReadToEnd();
-                        textArea.Invalidate();
-                    }
-                };
-                menu.Items.Add(item3);
-
-                tree.ContextMenu = menu;
-            }
-
-            var headerLayout = new StackLayout(addBtn) {
+            var addFolderButton = new Button {
+                Text = "\ue2cc",
+                Font = new Font("Material Icons", 11),
+                ToolTip = L10n.Get("Add external folders"),
+                Width = 32,
+                Height = 32,
+                Command = ViewModel.AddFolderCommand,
+            };
+            var headerLayout = new StackLayout(null, addFileBtn, addFolderButton) {
                 Orientation = Orientation.Horizontal,
                 Padding = new Padding(5),
+                Spacing = 5,
             };
 
+            // Treeview with just one "column" with icon and name, so the icon is close to the name.
+            var tree = new TreeGridView {
+                ShowHeader = false,
+                Border = BorderType.Line,
+            };
+            tree.Columns.Add(
+                new GridColumn {
+                    DataCell = new TextBoxCell { Binding = Binding.Property((TreeGridNode node) => node.QualifiedName) },
+                    HeaderText = "name",
+                    AutoSize = true,
+                    Resizable = false,
+                    Editable = false,
+                });
+            tree.DataStore = ViewModel.RootNode;
+            tree.SelectedItemBinding.BindDataContext((AnalyzeViewModel vm) => vm.SelectedNode);
+
+            // Eto doesn't implement the binding fully: https://github.com/picoe/Eto/issues/240
+            ViewModel.OnNodeUpdate += (_, node) => {
+                if (node is null) {
+                    tree.ReloadData();
+                } else {
+                    tree.ReloadItem(node);
+                }
+            };
+
+            var saveButton = new ButtonMenuItem {
+                Text = L10n.Get("Save to file"),
+                Command = ViewModel.SaveNodeCommand,
+            };
+            var convertButton = new ButtonMenuItem {
+                Text = "Convert",
+                Command = ViewModel.ConvertNodeCommand,
+            };
+            tree.ContextMenu = new ContextMenu(saveButton, convertButton);
+
+            var scrollableTree = new Scrollable { Content = tree };
             var stack = new DynamicLayout();
             stack.BeginHorizontal();
             stack.AddRow(headerLayout);
-            stack.AddRow(tree);
+            stack.AddRow(scrollableTree);
             stack.EndHorizontal();
 
             return stack;
-        }
-
-        void AddRootNode(object sender, EventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            if (dialog.ShowDialog(ParentWindow) == DialogResult.Ok)
-            {
-                Node n = NodeFactory.FromFile(dialog.FileName);
-                if (n.Name.EndsWith(".3ds"))
-                {
-                    ContainerManager.Unpack3DSNode(n);
-                }
-                AppendNodeToTree(n);
-            }
-        }
-
-        void AppendNodeToTree(Node node)
-        {
-            var item = tree.SelectedItem as TreeGridItem;
-            var parent = (item?.Parent ?? (ITreeGridItem)tree.DataStore) as TreeGridItem;
-            AppendNode(parent, node);
-
-            if (item != null) {
-                parent.Children.Remove(item);
-                tree.ReloadItem(parent);
-            } else {
-                tree.ReloadData();
-            }
-        }
-
-        void AppendNode(TreeGridItem item, Node node)
-        {
-            var current = CreateTreeItem(node);
-            item.Children.Add(current);
-            foreach (var child in node.Children)
-                AppendNode(current, child);
-        }
-
-        TreeGridItem CreateTreeItem(Node node)
-        {
-            string name = node.Name;
-            if (node.Format != null & !node.IsContainer) {
-                name += $" [{node.Format.GetType().Name}]";
-            }
-
-            return new TreeGridItem(node, name);
         }
     }
 }
