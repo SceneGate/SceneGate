@@ -17,6 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+using System.Windows.Input;
 using Eto.Drawing;
 using Eto.Forms;
 using SceneGate.UI.Resources;
@@ -65,13 +66,25 @@ namespace SceneGate.UI.Views
 
         private TabPage CreateConverterTab()
         {
+            var filterBox = new TextBox {
+                PlaceholderText = L10n.Get("Converter name filter..."),
+            };
+            filterBox.TextBinding.BindDataContext((AnalyzeViewModel vm) => vm.ConverterFilter);
+
             var list = new ListBox();
             list.DataStore = ViewModel.CompatibleConverters;
-            list.ItemKeyBinding = Binding.Property((ConverterMetadata meta) => meta.Type.FullName);
+            list.ItemKeyBinding = Binding.Property((ConverterMetadata meta) => meta.Name);
             list.ItemTextBinding = Binding.Property((ConverterMetadata meta) => meta.Name);
             list.SelectedIndexBinding.BindDataContext((AnalyzeViewModel vm) => vm.SelectedConverterIndex);
+            list.MouseDoubleClick += (sender, e) => Binding.ExecuteCommand(
+                list.DataContext,
+                Binding.Property((AnalyzeViewModel vm) => (ICommand)vm.ConvertNodeCommand));
 
-            return new TabPage(list) {
+            var stack = new StackLayout(filterBox, new StackLayoutItem(list, true)) {
+                Orientation = Orientation.Vertical,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            };
+            return new TabPage(stack) {
                 Text = L10n.Get("Converters"),
             };
         }
@@ -131,7 +144,7 @@ namespace SceneGate.UI.Views
                 Command = ViewModel.SaveNodeCommand,
             };
             var convertButton = new ButtonMenuItem {
-                Text = "Convert",
+                Text = L10n.Get("Convert"),
                 Command = ViewModel.ConvertNodeCommand,
             };
             tree.ContextMenu = new ContextMenu(saveButton, convertButton);

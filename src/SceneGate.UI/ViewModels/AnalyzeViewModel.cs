@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace SceneGate.UI.ViewModels
     public sealed class AnalyzeViewModel : ObservableObject
     {
         private readonly ConverterMetadata[] converters;
+        private string converterFilter;
         private TreeGridNode selectedNode;
         private int selectedConverterIndex;
         private bool isActionPanelVisible;
@@ -45,6 +47,7 @@ namespace SceneGate.UI.ViewModels
         {
             converters = PluginManager.Instance.GetConverters().Select(x => x.Metadata).ToArray();
             CompatibleConverters = new ObservableCollection<ConverterMetadata>();
+            converterFilter = string.Empty;
             UpdateCompatibleConverters();
             SelectedConverterIndex = -1;
 
@@ -72,13 +75,22 @@ namespace SceneGate.UI.ViewModels
             }
         }
 
+        public string ConverterFilter {
+            get => converterFilter;
+            set {
+                SetProperty(ref converterFilter, value);
+                UpdateCompatibleConverters();
+                ConvertNodeCommand?.NotifyCanExecuteChanged();
+            }
+        }
+
         public TreeGridNode SelectedNode {
             get => selectedNode;
             set {
                 SetProperty(ref selectedNode, value);
+                UpdateCompatibleConverters();
                 SaveNodeCommand?.NotifyCanExecuteChanged();
                 ConvertNodeCommand?.NotifyCanExecuteChanged();
-                UpdateCompatibleConverters();
             }
         }
 
@@ -106,12 +118,14 @@ namespace SceneGate.UI.ViewModels
             CompatibleConverters.Clear();
 
             var node = SelectedNode;
-            if (node is null) {
-                CompatibleConverters.AddRange(converters);
-                return;
+            IEnumerable<ConverterMetadata> compatible = (node is null)
+                ? converters
+                : converters.Where(c => c.CanConvert(node.Node.Format.GetType()));
+
+            if (!string.IsNullOrWhiteSpace(ConverterFilter)) {
+                compatible = compatible.Where(c => c.Name.Contains(ConverterFilter, StringComparison.OrdinalIgnoreCase));
             }
 
-            var compatible = converters.Where(c => c.CanConvert(node.Node.Format.GetType()));
             CompatibleConverters.AddRange(compatible);
         }
 

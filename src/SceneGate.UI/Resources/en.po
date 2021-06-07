@@ -59,3 +59,9 @@ msgstr "Add external folders"
 
 msgid "Save to file"
 msgstr "Save to file"
+
+msgid "Convert"
+msgstr "Convert"
+
+msgid "Converter name filter..."
+msgstr "Converter name filter..."
