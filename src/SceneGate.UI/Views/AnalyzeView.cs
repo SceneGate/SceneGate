@@ -17,11 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using SceneGate.UI.Resources;
 using SceneGate.UI.ViewModels;
+using Yarhl.FileFormat;
 
 namespace SceneGate.UI.Views
 {
@@ -66,11 +66,10 @@ namespace SceneGate.UI.Views
         private TabPage CreateConverterTab()
         {
             var list = new ListBox();
+            list.DataStore = ViewModel.CompatibleConverters;
+            list.ItemKeyBinding = Binding.Property((ConverterMetadata meta) => meta.Type.FullName);
+            list.ItemTextBinding = Binding.Property((ConverterMetadata meta) => meta.Name);
             list.SelectedIndexBinding.BindDataContext((AnalyzeViewModel vm) => vm.SelectedConverterIndex);
-            list.Items.AddRange(
-                ViewModel
-                .Converters
-                .Select(x => new ListItem { Key = x.Type.FullName, Text = x.Name }));
 
             return new TabPage(list) {
                 Text = L10n.Get("Converters"),

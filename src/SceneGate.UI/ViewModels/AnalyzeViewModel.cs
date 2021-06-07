@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using SceneGate.UI.Extensions;
 using SceneGate.UI.Resources;
 using Yarhl;
 using Yarhl.FileFormat;
@@ -35,17 +36,19 @@ namespace SceneGate.UI.ViewModels
 {
     public sealed class AnalyzeViewModel : ObservableObject
     {
+        private readonly ConverterMetadata[] converters;
         private TreeGridNode selectedNode;
         private int selectedConverterIndex;
         private bool isActionPanelVisible;
 
         public AnalyzeViewModel()
         {
-            IsActionPanelVisible = true;
-            var converters = PluginManager.Instance.GetConverters().Select(x => x.Metadata).ToArray();
-            Converters = new ReadOnlyCollection<ConverterMetadata>(converters);
+            converters = PluginManager.Instance.GetConverters().Select(x => x.Metadata).ToArray();
+            CompatibleConverters = new ObservableCollection<ConverterMetadata>();
+            UpdateCompatibleConverters();
             SelectedConverterIndex = -1;
 
+            IsActionPanelVisible = true;
             AddFileCommand = new RelayCommand(AddFile);
             AddFolderCommand = new RelayCommand(AddFolder);
             SaveNodeCommand = new RelayCommand(SaveNode, () => CanSaveNode);
@@ -56,10 +59,10 @@ namespace SceneGate.UI.ViewModels
 
         public event EventHandler<TreeGridNode> OnNodeUpdate;
 
-        public ReadOnlyCollection<ConverterMetadata> Converters { get; }
+        public ObservableCollection<ConverterMetadata> CompatibleConverters { get; set; }
 
         public ConverterMetadata SelectedConverter =>
-            (SelectedConverterIndex >= 0) ? Converters[SelectedConverterIndex] : null;
+            (SelectedConverterIndex >= 0) ? CompatibleConverters[SelectedConverterIndex] : null;
 
         public int SelectedConverterIndex {
             get => selectedConverterIndex;
@@ -75,6 +78,7 @@ namespace SceneGate.UI.ViewModels
                 SetProperty(ref selectedNode, value);
                 SaveNodeCommand?.NotifyCanExecuteChanged();
                 ConvertNodeCommand?.NotifyCanExecuteChanged();
+                UpdateCompatibleConverters();
             }
         }
 
@@ -96,6 +100,20 @@ namespace SceneGate.UI.ViewModels
         public AsyncRelayCommand ConvertNodeCommand { get; }
 
         public bool CanConvertNode { get => SelectedNode is not null && SelectedConverter is not null; }
+
+        private void UpdateCompatibleConverters()
+        {
+            CompatibleConverters.Clear();
+
+            var node = SelectedNode;
+            if (node is null) {
+                CompatibleConverters.AddRange(converters);
+                return;
+            }
+
+            var compatible = converters.Where(c => c.CanConvert(node.Node.Format.GetType()));
+            CompatibleConverters.AddRange(compatible);
+        }
 
         private void AddFile()
         {
