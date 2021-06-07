@@ -1,0 +1,67 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Attack of Friday Monsters Patcher\n"
+"Report-Msgid-Bugs-To: benito356@gmail.com\n"
+"POT-Creation-Date: 12/22/2020\n"
+"PO-Revision-Date: 2020-12-22 20:17+0000\n"
+"Last-Translator: Benito Palacios <benito356@gmail.com>\n"
+"Language-Team: GradienWords\n"
+"Language: es\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "&File"
+msgstr "&File"
+
+msgid "&Quit"
+msgstr "&Quit"
+
+msgid "About..."
+msgstr "About..."
+
+msgid "&Settings"
+msgstr "&Settings"
+
+msgid "Toggle action panel"
+msgstr "Toggle action panel"
+
+msgid "Analyze"
+msgstr "Analyze"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "SceneGate website"
+msgstr "SceneGate website"
+
+msgid "SceneGate team and contributors"
+msgstr "SceneGate team and contributors"
+
+msgid ""
+"MIT License\n"
+"https://opensource.org/licenses/MIT"
+msgstr ""
+"MIT License\n"
+"https://opensource.org/licenses/MIT"
+
+msgid "Tool for reverse engineering, file format analysis, modding and localization."
+msgstr "Tool for reverse engineering, file format analysis, modding and localization."
+
+msgid "Converters"
+msgstr "Converters"
+
+msgid "Add external file"
+msgstr "Add external file"
+
+msgid "Add external folders"
+msgstr "Add external folders"
+
+msgid "Save to file"
+msgstr "Save to file"
+
+msgid "Convert"
+msgstr "Convert"
+
+msgid "Converter name filter..."
+msgstr "Converter name filter..."

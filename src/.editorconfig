@@ -166,6 +166,7 @@ dotnet_diagnostic.CA1303.severity = none # We don't translate exception and log 
 
 ### StyleCop
 dotnet_diagnostic.SA1101.severity = none # Do not force to prefix local calls with 'this'
+dotnet_diagnostic.SA1200.severity = none # Namespace outside
 dotnet_diagnostic.SA1500.severity = none # Allow inline braces
 dotnet_diagnostic.SA1503.severity = suggestion # Braces can be omitted (guards can)
 dotnet_diagnostic.SA1633.severity = none # No XML-format header in source files
@@ -174,10 +175,11 @@ dotnet_diagnostic.SA1633.severity = none # No XML-format header in source files
 dotnet_diagnostic.S1135.severity = suggestion # It's almost inevitable to have TODO but add bug ID
 
 # Special rules for non-API (executable) projects
-[*UI/**,*CLI/**]
+[{*UI*/**,*CLI/**}]
 dotnet_diagnostic.CS1591.severity = none # Disable documentation
 dotnet_diagnostic.SA0001.severity = none # Disable documentation
 dotnet_diagnostic.SA1600.severity = none # Disable documentation
+dotnet_diagnostic.SA1602.severity = none # Disable documentation
 
 # Special rules for test projects
 [*Tests/**]

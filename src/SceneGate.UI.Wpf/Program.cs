@@ -4,7 +4,7 @@ using SceneGate.UI.Views;
 
 namespace SceneGate.UI.Wpf
 {
-    public class Program
+    public static class Program
     {
         [STAThread]
         static void Main(string[] args)

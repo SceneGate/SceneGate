@@ -11,8 +11,12 @@
 
   <ItemGroup>
     <PackageReference Include="Eto.Forms" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" />
+
     <PackageReference Include="Yarhl" />
-    <PackageReference Include="SceneGate.Lemon" />
+    <PackageReference Include="Yarhl.Media" />
+    <PackageReference Include="LayTea" />
+    <PackageReference Include="SceneGate.Ekona" />
   </ItemGroup>
 
 </Project>

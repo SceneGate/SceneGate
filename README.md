@@ -10,7 +10,10 @@ and localization.
 
 ### _Yarhly_ shipped plugins
 
-- [Lemon](https://github.com/SceneGate/Lemon): 3DS formats
+- [Lemon](https://github.com/SceneGate/Lemon/)
+- [Ekona](https://github.com/SceneGate/Ekona/)
+- [Texim](https://github.com/SceneGate/Texim)
+- [LayTea](https://github.com/pleonex/LayTea)
 
 ## Installation
 

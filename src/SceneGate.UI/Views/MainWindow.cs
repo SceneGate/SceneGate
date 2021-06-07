@@ -1,112 +1,129 @@
+// Copyright (c) 2021 SceneGate
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+using System.Reflection;
+using Eto.Drawing;
+using Eto.Forms;
+using SceneGate.UI.Resources;
+using SceneGate.UI.ViewModels;
 
 namespace SceneGate.UI.Views
 {
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using Eto.Forms;
-    using Eto.Drawing;
-
-    public class MainWindow : Form
+    public sealed class MainWindow : Form
     {
-        Panel contentPanel;
-        AnalyzeView analyzeView;
+        private readonly MainViewModel viewModel;
+        private AnalyzeView analyzeView;
+        private Panel settingsView;
 
         public MainWindow()
         {
-            CreateControls();
+            viewModel = new MainViewModel();
+            DataContext = viewModel;
+
+            InitializeComponents();
         }
 
-        void CreateControls()
+        private void InitializeComponents()
         {
-            Title = $"SceneGate ~~ {Assembly.GetExecutingAssembly().GetName().Version}";
-            ClientSize = new Size(1000, 600);
-            Icon = Icon.FromResource("SceneGate.UI.Resources.Icon.png");
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            Title = $"SceneGate ~~ {version}";
+            Icon = Icon.FromResource(ResourcesName.Icon);
+            ClientSize = new Size(800, 600);
 
-            CreateMenu();
-            CreateContent();
+            Menu = CreateMenuBar();
+            Content = CreateContent();
         }
 
-        void CreateMenu()
+        private MenuBar CreateMenuBar()
         {
-            var quitCommand = new Command
-            {
-                MenuText = "&Quit",
-                Shortcut = Application.Instance.CommonModifier | Keys.Q,
-            };
-            quitCommand.Executed += (sender, e) => Application.Instance.Quit();
-
-            var about = new AboutDialog {
-                Logo = Bitmap.FromResource("SceneGate.UI.Resources.Icon.png"),
-                WebsiteLabel = "SceneGate website",
-                Website = new Uri("https://scenegate.github.io/SceneGate/"),
-                Developers = new[] { "SceneGate team and contributors" },
-                License = "MIT License",
-                ProgramName = "SceneGate",
-                ProgramDescription = "Tool for reverse engineering, file format analysis, modding and localization.",
-            };
-            var aboutCommand = new Command
-            {
-                MenuText = "About..."
-            };
-            aboutCommand.Executed += (sender, e) => about.ShowDialog(this);
-
-            var toggleAction = new Command
-            {
-                MenuText = "Toggle action panel",
-                Shortcut = Application.Instance.CommonModifier | Keys.T,
-            };
-            toggleAction.Executed += (sender, e) => analyzeView.ToggleActionPanel();
-
-            Menu = new MenuBar
-            {
+            return new MenuBar {
                 Items = {
-                    new ButtonMenuItem { Text = "&File" },
+                    new ButtonMenuItem {
+                        Text = L10n.Get("&File"),
+                    },
                 },
                 ApplicationItems = {
-                    new ButtonMenuItem { Text = "&Settings" },
-                    toggleAction,
+                    new Command {
+                        MenuText = L10n.Get("Toggle action panel"),
+                        Shortcut = Application.Instance.CommonModifier | Keys.T,
+                        DelegatedCommand = viewModel.ToggleActionPanelCommand,
+                    },
+                    new Command {
+                        MenuText = L10n.Get("&Settings"),
+                        Shortcut = Application.Instance.CommonModifier | Keys.Comma,
+                        DelegatedCommand = viewModel.OpenSettingsCommand,
+                    },
                 },
-                QuitItem = quitCommand,
-                AboutItem = aboutCommand
+                QuitItem = new Command {
+                    MenuText = L10n.Get("&Quit"),
+                    Shortcut = Application.Instance.CommonModifier | Keys.Q,
+                    DelegatedCommand = viewModel.QuitCommand,
+                },
+                AboutItem = new Command {
+                    MenuText = L10n.Get("About..."),
+                    DelegatedCommand = viewModel.AboutCommand,
+                },
             };
         }
 
-        static Stream GetResource(string name)
-        {
-            return typeof(MainWindow).Assembly.GetManifestResourceStream("SceneGate.UI.Resources." + name);
-        }
-
-        void CreateContent()
+        private Control CreateContent()
         {
             analyzeView = new AnalyzeView();
+            viewModel.AttachAnalyzeViewModel(analyzeView.ViewModel);
 
-            contentPanel = new Scrollable
-            {
-                Border = BorderType.Line
+            settingsView = new Panel();
+
+            var viewModeBar = CreateViewModeBar();
+            var contentPanel = new Panel();
+            contentPanel.BindDataContext(
+                s => s.Content,
+                Binding.Property((MainViewModel vm) => vm.ViewKind).Convert(GetView));
+
+            var mainLayout = new StackLayout(viewModeBar, new StackLayoutItem(contentPanel, true)) {
+                Orientation = Orientation.Horizontal,
+                VerticalContentAlignment = VerticalAlignment.Stretch,
             };
 
+            return mainLayout;
+        }
+
+        private Control CreateViewModeBar()
+        {
             var analyzeButton = new ToggleButton {
-                Text= "\uE50A",
+                Text = "\uE50A",
                 Font = new Font("Material Icons", 24),
-                ToolTip = "Analyze",
+                ToolTip = L10n.Get("Analyze"),
+                Command = viewModel.OpenAnalyzeCommand,
             };
-            var settingsButton = new ToggleButton {
-                Text= "\uE8B8",
-                Font = new Font("Material Icons", 24),
-                ToolTip = "Settings",
-            };
+            analyzeButton.Bind(
+                b => b.Checked,
+                Binding.Property(viewModel, vm => vm.ViewKind).Convert(k => k == ViewKind.Analyze));
 
-            analyzeButton.Click += (sender, e) => {
-                analyzeButton.Checked = true;
-                settingsButton.Checked = false;
-                contentPanel.Content = analyzeView;
+            var settingsButton = new ToggleButton {
+                Text = "\uE8B8",
+                Font = new Font("Material Icons", 24),
+                ToolTip = L10n.Get("Settings"),
+                Command = viewModel.OpenSettingsCommand,
             };
-            settingsButton.Click += (sender, e) => {
-                analyzeButton.Checked = false;
-                settingsButton.Checked = true;
-                contentPanel.Content = new Panel();
-            };
+            settingsButton.Bind(
+                b => b.Checked,
+                Binding.Property(viewModel, vm => vm.ViewKind).Convert(k => k == ViewKind.Settings));
 
             var viewModeBar = new StackLayout {
                 Orientation = Orientation.Vertical,
@@ -115,16 +132,14 @@ namespace SceneGate.UI.Views
             viewModeBar.Items.Add(new StackLayoutItem(null, true));
             viewModeBar.Items.Add(new StackLayoutItem(settingsButton, VerticalAlignment.Bottom));
 
-            var mainLayout = new DynamicLayout();
-
-            mainLayout.BeginVertical(yscale: true, xscale: true);
-            mainLayout.AddRow(viewModeBar, contentPanel);
-            mainLayout.EndVertical();
-
-            Content = mainLayout;
-
-            analyzeButton.Checked = true;
-            contentPanel.Content = analyzeView;
+            return viewModeBar;
         }
+
+        private Control GetView(ViewKind kind) =>
+            kind switch {
+                ViewKind.Analyze => analyzeView,
+                ViewKind.Settings => settingsView,
+                _ => null,
+            };
     }
 }
