@@ -217,7 +217,7 @@ namespace SceneGate.UI.Main
 
         private void ShowViewer()
         {
-            var formatView = UiPluginManager.GetCompatibleView(SelectedNode?.Node.Format).FirstOrDefault();
+            var formatView = UiPluginManager.Instance.GetCompatibleView(SelectedNode?.Node.Format).FirstOrDefault();
             if (formatView is not null) {
                 formatView.ViewModel.Show(SelectedNode?.Node.Format);
                 Viewer = formatView;
