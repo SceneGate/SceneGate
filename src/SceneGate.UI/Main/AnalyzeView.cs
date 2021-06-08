@@ -40,6 +40,7 @@ namespace SceneGate.UI.Main
         private void InitializeComponents()
         {
             var contentPanel = new Panel();
+            contentPanel.BindDataContext(p => p.Content, (AnalyzeViewModel vm) => vm.Viewer);
 
             var actionPanel = new TabControl();
             actionPanel.Bind(p => p.Visible, Binding.Property(ViewModel, vm => vm.IsActionPanelVisible));
@@ -128,6 +129,9 @@ namespace SceneGate.UI.Main
                 });
             tree.DataStore = ViewModel.RootNode;
             tree.SelectedItemBinding.BindDataContext((AnalyzeViewModel vm) => vm.SelectedNode);
+            tree.MouseDoubleClick += (sender, e) => Binding.ExecuteCommand(
+                ViewModel,
+                Binding.Property((AnalyzeViewModel vm) => (ICommand)vm.ShowViewerCommand));
 
             // Eto doesn't implement the binding fully: https://github.com/picoe/Eto/issues/240
             ViewModel.OnNodeUpdate += (_, node) => {
@@ -146,7 +150,11 @@ namespace SceneGate.UI.Main
                 Text = L10n.Get("Convert"),
                 Command = ViewModel.ConvertNodeCommand,
             };
-            tree.ContextMenu = new ContextMenu(saveButton, convertButton);
+            var showButton = new ButtonMenuItem {
+                Text = L10n.Get("Show"),
+                Command = ViewModel.ShowViewerCommand,
+            };
+            tree.ContextMenu = new ContextMenu(saveButton, convertButton, showButton);
 
             var scrollableTree = new Scrollable { Content = tree };
             var stack = new DynamicLayout();

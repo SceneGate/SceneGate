@@ -13,4 +13,7 @@
         "editor.formatOnType": true
     },
     "prettier.proseWrap": "always",
+    "cSpell.words": [
+        "Texim"
+    ],
 }

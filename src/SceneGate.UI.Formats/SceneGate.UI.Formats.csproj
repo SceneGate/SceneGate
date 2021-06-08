@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Description>API for UI components of SceneGate.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Yarhl" />
+    <PackageReference Include="Eto.Forms" />
+  </ItemGroup>
+
+</Project>
