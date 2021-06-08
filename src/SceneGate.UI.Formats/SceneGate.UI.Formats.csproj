@@ -8,6 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Yarhl" />
     <PackageReference Include="Eto.Forms" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" />
+    <PackageReference Include="YamlDotNet" />
   </ItemGroup>
 
 </Project>

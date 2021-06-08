@@ -32,7 +32,7 @@ namespace SceneGate.UI
 {
     public sealed class UiPluginManager
     {
-       static readonly string[] IgnoredLibraries = {
+        private static readonly string[] IgnoredLibraries = {
             "System.",
             "Microsoft.",
             "netstandard",
@@ -41,15 +41,15 @@ namespace SceneGate.UI
             "testhost",
         };
 
-        static readonly object LockObj = new object();
-        static UiPluginManager singleInstance;
+        private static readonly object LockObj = new object();
+        private static UiPluginManager singleInstance;
 
-        CompositionHost container;
+        private CompositionHost container;
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the <see cref="UiPluginManager" /> class.
         /// </summary>
-        UiPluginManager()
+        private UiPluginManager()
         {
             InitializeContainer();
         }
@@ -87,7 +87,7 @@ namespace SceneGate.UI
             return views.Where(v => v.ViewModel.CanShow(format));
         }
 
-        static void DefineFormatViewsConventions(ConventionBuilder conventions)
+        private static void DefineFormatViewsConventions(ConventionBuilder conventions)
         {
             conventions
                 .ForTypesDerivedFrom<BaseFormatView>()
@@ -104,7 +104,7 @@ namespace SceneGate.UI
                     .First());
         }
 
-        static IEnumerable<Assembly> FilterAndLoadAssemblies(IEnumerable<string> paths)
+        private static IEnumerable<Assembly> FilterAndLoadAssemblies(IEnumerable<string> paths)
         {
             // Skip libraries that match the ignored libraries because
             // MEF would try to load its dependencies.
@@ -116,7 +116,7 @@ namespace SceneGate.UI
                 .Select(LoadAssemblies);
         }
 
-       static Assembly LoadAssemblies(string path)
+        private static Assembly LoadAssemblies(string path)
         {
             try {
                 return AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
@@ -126,7 +126,7 @@ namespace SceneGate.UI
             }
         }
 
-        void InitializeContainer()
+        private void InitializeContainer()
         {
             var conventions = new ConventionBuilder();
             DefineFormatViewsConventions(conventions);

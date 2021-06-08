@@ -5,8 +5,6 @@ Task("Define-Project")
     .IsDependeeOf("Build")
     .Does<BuildInfo>(info =>
 {
-    info.WarningsAsErrors = false;
-
     info.AddLibraryProjects("SceneGate.UI.Formats");
 
     // Only Windows can build WPF apps: https://github.com/dotnet/sdk/issues/3803
