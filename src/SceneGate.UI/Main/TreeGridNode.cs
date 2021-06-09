@@ -17,17 +17,22 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-using System;
 using System.Linq;
+using System.Text;
 using Eto.Forms;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 using Yarhl.Media.Text;
 
-namespace SceneGate.UI.ViewModels
+namespace SceneGate.UI.Main
 {
     public class TreeGridNode : TreeGridItem
     {
+        private static readonly Encoding Ascii = Encoding.GetEncoding(
+            "ASCII",
+            EncoderFallback.ExceptionFallback,
+            DecoderFallback.ExceptionFallback);
+
         public TreeGridNode(Node node)
             : base()
         {
@@ -56,15 +61,20 @@ namespace SceneGate.UI.ViewModels
         public string FormatName {
             get {
                 if (Node.Format == null && Node.IsContainer) {
-                    return "container";
+                    return "Container";
                 }
 
-                string formatName = Node.Format.GetType().Name;
-                if (formatName.EndsWith("Format", StringComparison.Ordinal)) {
-                    formatName = formatName.Remove(formatName.Length - "Format".Length);
+                if (Node.Format is IBinary) {
+                    try {
+                        Node.Stream.Position = 0;
+                        string stamp = new DataReader(Node.Stream).ReadString(4, Ascii);
+                        return $"%{stamp}%";
+                    } catch {
+                        return "Binary";
+                    }
                 }
 
-                return formatName;
+                return Node.Format.GetType().Name;
             }
         }
 

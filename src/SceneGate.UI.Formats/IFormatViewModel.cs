@@ -17,11 +17,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace SceneGate.UI.ViewModels
+using Yarhl.FileFormat;
+
+namespace SceneGate.UI.Formats
 {
-    public enum ViewKind
+    /// <summary>
+    /// View model for a format view.
+    /// </summary>
+    public interface IFormatViewModel
     {
-        Analyze,
-        Settings,
+        /// <summary>
+        /// Returns a value indicating whether the view model support the given format.
+        /// </summary>
+        /// <param name="format">The format to check.</param>
+        /// <returns>Value indicating if the view model supports the format.</returns>
+        bool CanShow(IFormat format);
+
+        /// <summary>
+        /// Show the given format.
+        /// </summary>
+        /// <param name="format">The format to show.</param>
+        void Show(IFormat format);
     }
 }

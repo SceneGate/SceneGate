@@ -17,26 +17,18 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-using System;
-using System.Diagnostics.CodeAnalysis;
-using Eto.Drawing;
 using Eto.Forms;
-using SceneGate.UI.Resources;
 
-namespace SceneGate.UI.Views
+namespace SceneGate.UI.Formats
 {
-    public sealed class AboutView : AboutDialog
+    /// <summary>
+    /// Abstract panel control for format views.
+    /// </summary>
+    public abstract class BaseFormatView : Panel
     {
-        [SuppressMessage("", "S1075", Justification = "Project URL is ok to hard-code")]
-        public AboutView()
-        {
-            Logo = Bitmap.FromResource(ResourcesName.Icon);
-            WebsiteLabel = L10n.Get("SceneGate website");
-            Website = new Uri("https://scenegate.github.io/SceneGate/");
-            Developers = new[] { L10n.Get("SceneGate team and contributors") };
-            License = L10n.Get("MIT License\nhttps://opensource.org/licenses/MIT");
-            ProgramName = "SceneGate";
-            ProgramDescription = L10n.Get("Tool for reverse engineering, file format analysis, modding and localization.");
-        }
+        /// <summary>
+        /// Gets the view model of the view.
+        /// </summary>
+        public abstract IFormatViewModel ViewModel { get; }
     }
 }

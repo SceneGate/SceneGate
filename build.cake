@@ -1,10 +1,11 @@
-#load "nuget:?package=PleOps.Cake&version=0.4.2"
+#load "nuget:?package=PleOps.Cake&version=0.4.3"
 
 Task("Define-Project")
     .Description("Fill specific project information")
+    .IsDependeeOf("Build")
     .Does<BuildInfo>(info =>
 {
-    info.WarningsAsErrors = false;
+    info.AddLibraryProjects("SceneGate.UI.Formats");
 
     // Only Windows can build WPF apps: https://github.com/dotnet/sdk/issues/3803
     if (IsRunningOnWindows()) {

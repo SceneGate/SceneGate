@@ -18,7 +18,7 @@
             "command": "dotnet",
             "args": [
                 "cake",
-                "--target=BuildTest"
+                "--target=Build"
             ],
             "group": {
                 "kind": "build",

@@ -33,7 +33,7 @@ using Yarhl.FileFormat;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 
-namespace SceneGate.UI.ViewModels
+namespace SceneGate.UI.Main
 {
     public sealed class AnalyzeViewModel : ObservableObject
     {
@@ -42,6 +42,7 @@ namespace SceneGate.UI.ViewModels
         private TreeGridNode selectedNode;
         private int selectedConverterIndex;
         private bool isActionPanelVisible;
+        private Eto.Forms.Control viewer;
 
         public AnalyzeViewModel()
         {
@@ -56,6 +57,7 @@ namespace SceneGate.UI.ViewModels
             AddFolderCommand = new RelayCommand(AddFolder);
             SaveNodeCommand = new RelayCommand(SaveNode, () => CanSaveNode);
             ConvertNodeCommand = new AsyncRelayCommand(ConvertNodeAsync, () => CanConvertNode);
+            ShowViewerCommand = new RelayCommand(ShowViewer, () => CanShowViewer);
 
             RootNode = new TreeGridNode(NodeFactory.CreateContainer("root"));
         }
@@ -91,6 +93,7 @@ namespace SceneGate.UI.ViewModels
                 UpdateCompatibleConverters();
                 SaveNodeCommand?.NotifyCanExecuteChanged();
                 ConvertNodeCommand?.NotifyCanExecuteChanged();
+                ShowViewerCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -99,6 +102,11 @@ namespace SceneGate.UI.ViewModels
         public bool IsActionPanelVisible {
             get => isActionPanelVisible;
             set => SetProperty(ref isActionPanelVisible, value);
+        }
+
+        public Eto.Forms.Control Viewer {
+            get => viewer;
+            set => SetProperty(ref viewer, value);
         }
 
         public ICommand AddFileCommand { get; }
@@ -112,6 +120,10 @@ namespace SceneGate.UI.ViewModels
         public AsyncRelayCommand ConvertNodeCommand { get; }
 
         public bool CanConvertNode { get => SelectedNode is not null && SelectedConverter is not null; }
+
+        public RelayCommand ShowViewerCommand { get; }
+
+        public bool CanShowViewer { get => SelectedNode is not null; }
 
         private void UpdateCompatibleConverters()
         {
@@ -201,6 +213,15 @@ namespace SceneGate.UI.ViewModels
             OnNodeUpdate?.Invoke(this, node);
 
             SelectedNode = node;
+        }
+
+        private void ShowViewer()
+        {
+            var formatView = UiPluginManager.Instance.GetCompatibleView(SelectedNode?.Node.Format).FirstOrDefault();
+            if (formatView is not null) {
+                formatView.ViewModel.Show(SelectedNode?.Node.Format);
+                Viewer = formatView;
+            }
         }
     }
 }

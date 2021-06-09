@@ -21,9 +21,8 @@ using System.Reflection;
 using Eto.Drawing;
 using Eto.Forms;
 using SceneGate.UI.Resources;
-using SceneGate.UI.ViewModels;
 
-namespace SceneGate.UI.Views
+namespace SceneGate.UI.Main
 {
     public sealed class MainWindow : Form
     {

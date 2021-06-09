@@ -1,10 +1,24 @@
 {
     "metadata": [
+      {
+        "src": [
+          {
+            "files": [
+              "SceneGate.UI.Formats/SceneGate.UI.Formats.csproj"
+            ],
+            "src": "../src"
+          }
+        ],
+        "dest": "api",
+        "filter": "filter_config.yml",
+        "disableGitFeatures": false,
+        "disableDefaultFilter": false
+      }
     ],
     "build": {
       "content": [
         {
-          "files": [ "dev/**" ]
+          "files": [ "api/**.yml", "dev/**" ]
         },
         {
           "files": [ "toc.yml", "index.md" ]

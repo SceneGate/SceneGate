@@ -175,7 +175,7 @@ dotnet_diagnostic.SA1633.severity = none # No XML-format header in source files
 dotnet_diagnostic.S1135.severity = suggestion # It's almost inevitable to have TODO but add bug ID
 
 # Special rules for non-API (executable) projects
-[{*UI*/**,*CLI/**}]
+[{*UI/**,*UI.Gtk/**,*UI.Wpf/**,*UI.Mac/**}]
 dotnet_diagnostic.CS1591.severity = none # Disable documentation
 dotnet_diagnostic.SA0001.severity = none # Disable documentation
 dotnet_diagnostic.SA1600.severity = none # Disable documentation

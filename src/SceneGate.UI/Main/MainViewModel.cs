@@ -20,9 +20,8 @@
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using SceneGate.UI.Views;
 
-namespace SceneGate.UI.ViewModels
+namespace SceneGate.UI.Main
 {
     public sealed class MainViewModel : ObservableObject
     {

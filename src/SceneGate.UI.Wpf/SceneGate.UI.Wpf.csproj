@@ -10,6 +10,9 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
 
     <SelfContained>false</SelfContained>
+
+    <!-- Eto gives a warning due to a dependency targeting .NET Framework -->
+    <NoWarn>NU1701</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
