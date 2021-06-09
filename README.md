@@ -7,6 +7,11 @@ and localization.
 
 - Navigate the virtual file system from Yarhl.
 - Convert files with Yarhl converters via plugins.
+- View the content of files
+
+### Supported format views
+
+- .NET objects as property grid or YAML/JSON
 
 ### _Yarhly_ shipped plugins
 
@@ -70,5 +75,4 @@ purpose. Please support the original game developers by buying their games.
 
 Icons:
 
-- [Famfamfam icons](http://www.famfamfam.com/)
 - [Material design icons by Google](https://github.com/google/material-design-icons)
