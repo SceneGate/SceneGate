@@ -7,7 +7,7 @@ namespace SceneGate.UI.Wpf
     public static class Program
     {
         [STAThread]
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             new Application(Eto.Platforms.Wpf).Run(new MainWindow());
         }
