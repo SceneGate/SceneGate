@@ -44,21 +44,25 @@ namespace SceneGate.UI.Formats
 
         private void InitializeComponents()
         {
-            var yamlButton = new RadioButton {
-                Text = "Show as YAML",
-            };
-            yamlButton.BindDataContext(r => r.Checked, (ObjectViewModel vm) => vm.ShowYaml);
-
-            var propertyButton = new RadioButton(yamlButton) {
+            var propertyButton = new RadioButton() {
                 Text = "Show as property grid",
             };
             propertyButton.BindDataContext(r => r.Checked, (ObjectViewModel vm) => vm.ShowPropertyGrid);
 
-            var buttonStack = new StackLayout(yamlButton, propertyButton) {
-                Orientation = Orientation.Horizontal,
-                Spacing = 5,
-                Padding = new Padding(5),
+            var yamlButton = new RadioButton(propertyButton) {
+                Text = "Show as YAML",
             };
+            yamlButton.BindDataContext(r => r.Checked, (ObjectViewModel vm) => vm.ShowYaml);
+
+            var jsonButton = new RadioButton(propertyButton) {
+                Text = "Show as JSON",
+            };
+            jsonButton.BindDataContext(r => r.Checked, (ObjectViewModel vm) => vm.ShowJson);
+
+            var buttonsLayout = new DynamicLayout {
+                Spacing = new Size(5, 5),
+            };
+            buttonsLayout.AddRow(propertyButton, yamlButton, jsonButton);
 
             var textView = new TextArea {
                 ReadOnly = true,
@@ -66,7 +70,7 @@ namespace SceneGate.UI.Formats
                 SpellCheck = false,
                 Wrap = false,
             };
-            textView.TextBinding.BindDataContext((ObjectViewModel vm) => vm.Yaml);
+            textView.TextBinding.BindDataContext((ObjectViewModel vm) => vm.Text);
 
             var propertyView = new PropertyGrid {
                 ShowCategories = false,
@@ -77,14 +81,12 @@ namespace SceneGate.UI.Formats
             var contentPanel = new Panel();
             contentPanel.BindDataContext(
                 p => p.Content,
-                Binding.Property((ObjectViewModel vm) => vm.ShowYaml).Convert<Control>(v => v ? textView : propertyView));
+                Binding.Property((ObjectViewModel vm) => vm.ShowText).Convert<Control>(v => v ? textView : propertyView));
 
-            var mainStack = new StackLayout(buttonStack, new StackLayoutItem(contentPanel, true)) {
-                Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Stretch,
-            };
-
-            Content = mainStack;
+            var mainLayout = new DynamicLayout();
+            mainLayout.AddCentered(buttonsLayout);
+            mainLayout.AddRow(contentPanel);
+            Content = mainLayout;
         }
     }
 }

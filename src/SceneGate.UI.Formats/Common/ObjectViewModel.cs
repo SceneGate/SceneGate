@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System;
+using System.Text.Json;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -31,10 +32,13 @@ namespace SceneGate.UI.Formats
     public class ObjectViewModel : ObservableObject, IFormatViewModel
     {
         private readonly ISerializer yamlSerializer;
+        private readonly JsonSerializerOptions jsonSerializerOptions;
         private bool showYaml;
+        private bool showJson;
+        private bool showText;
         private bool showPropertyGrid;
         private IFormat format;
-        private string yaml;
+        private string text;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectViewModel" /> class.
@@ -42,7 +46,7 @@ namespace SceneGate.UI.Formats
         public ObjectViewModel()
         {
             ShowPropertyGrid = true;
-            Yaml = string.Empty;
+            Text = string.Empty;
 
             yamlSerializer = new SerializerBuilder()
                 .WithNamingConvention(PascalCaseNamingConvention.Instance)
@@ -50,6 +54,11 @@ namespace SceneGate.UI.Formats
                 .IgnoreFields()
                 .WithIndentedSequences()
                 .Build();
+
+            jsonSerializerOptions = new JsonSerializerOptions {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true,
+            };
         }
 
         /// <summary>
@@ -58,7 +67,34 @@ namespace SceneGate.UI.Formats
         /// </summary>
         public bool ShowYaml {
             get => showYaml;
-            set => SetProperty(ref showYaml, value);
+            set {
+                SetProperty(ref showYaml, value);
+                ShowText = ShowJson || value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether it should show the object
+        /// as JSON.
+        /// </summary>
+        public bool ShowJson {
+            get => showJson;
+            set {
+                SetProperty(ref showJson, value);
+                ShowText = ShowYaml || value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether it should show its text
+        /// representation.
+        /// </summary>
+        public bool ShowText {
+            get => showText;
+            set {
+                SetProperty(ref showText, value);
+                UpdateText();
+            }
         }
 
         /// <summary>
@@ -71,11 +107,11 @@ namespace SceneGate.UI.Formats
         }
 
         /// <summary>
-        /// Gets or sets the representation of the object as YAML.
+        /// Gets or sets the text representation of the object.
         /// </summary>
-        public string Yaml {
-            get => yaml;
-            set => SetProperty(ref yaml, value);
+        public string Text {
+            get => text;
+            set => SetProperty(ref text, value);
         }
 
         /// <summary>
@@ -96,10 +132,18 @@ namespace SceneGate.UI.Formats
         public void Show(IFormat format)
         {
             Format = format;
+        }
+
+        private void UpdateText()
+        {
             try {
-                Yaml = yamlSerializer.Serialize(format);
+                if (ShowYaml) {
+                    Text = yamlSerializer.Serialize(format);
+                } else if (ShowJson) {
+                    Text = JsonSerializer.Serialize(format, format.GetType(), jsonSerializerOptions);
+                }
             } catch (Exception ex) {
-                Yaml = ex.ToString();
+                Text = ex.ToString();
             }
         }
     }
