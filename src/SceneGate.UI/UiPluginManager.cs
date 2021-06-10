@@ -39,6 +39,10 @@ namespace SceneGate.UI
             "nuget",
             "nunit",
             "testhost",
+            "Eto.",
+            "WebView",
+            "Xceed",
+            "YamlDotNet",
         };
 
         private static readonly object LockObj = new object();
@@ -108,21 +112,28 @@ namespace SceneGate.UI
         {
             // Skip libraries that match the ignored libraries because
             // MEF would try to load its dependencies.
-            return paths
+            paths = paths
                 .Select(p => new { Name = Path.GetFileName(p), Path = p })
                 .Where(p => !IgnoredLibraries.Any(
                     ign => p.Name.StartsWith(ign, StringComparison.OrdinalIgnoreCase)))
-                .Select(p => p.Path)
-                .Select(LoadAssemblies);
+                .Select(p => p.Path);
+            return LoadAssemblies(paths);
         }
 
-        private static Assembly LoadAssemblies(string path)
+        private static IEnumerable<Assembly> LoadAssemblies(IEnumerable<string> paths)
         {
-            try {
-                return AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
-            } catch (BadImageFormatException) {
-                // Bad IL. Skip.
-                return null;
+            foreach (string path in paths) {
+                Assembly assembly;
+                try {
+                    assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+                } catch (BadImageFormatException) {
+                    // Bad IL. Skip.
+                    assembly = null;
+                }
+
+                if (assembly is not null) {
+                    yield return assembly;
+                }
             }
         }
 
