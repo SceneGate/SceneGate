@@ -1,4 +1,4 @@
-// Copyright (c) 2021 SceneGate
+﻿// Copyright (c) 2021 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -105,8 +105,8 @@ namespace SceneGate.UI.Main
         private Control CreateViewModeBar()
         {
             var analyzeButton = new ToggleButton {
-                Text = "\uE50A",
-                Font = new Font("Material Icons", 24),
+                Text = "\ufc84",
+                Font = new Font("Ubuntu Nerd Font", 24),
                 ToolTip = L10n.Get("Analyze"),
                 Command = viewModel.OpenAnalyzeCommand,
             };
@@ -115,8 +115,8 @@ namespace SceneGate.UI.Main
                 Binding.Property(viewModel, vm => vm.ViewKind).Convert(k => k == ViewKind.Analyze));
 
             var settingsButton = new ToggleButton {
-                Text = "\uE8B8",
-                Font = new Font("Material Icons", 24),
+                Text = "\uf992",
+                Font = new Font("Ubuntu Nerd Font", 24),
                 ToolTip = L10n.Get("Settings"),
                 Command = viewModel.OpenSettingsCommand,
             };

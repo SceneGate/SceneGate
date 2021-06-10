@@ -80,11 +80,11 @@ namespace SceneGate.UI.Main
 
         public string Icon {
             get => Node.Format switch {
-                NodeContainerFormat => "\ue2c7",
-                null => "\ue2c7",
-                Po => "\uef42",
-                IBinary => "\ue24d",
-                _ => "\ue583",
+                NodeContainerFormat => "\uf74a",
+                null => "\uf74a",
+                Po => "\ufac9",
+                IBinary => "\uf471",
+                _ => "\uf779",
             };
         }
 
