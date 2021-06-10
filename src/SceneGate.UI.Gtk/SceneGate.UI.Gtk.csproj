@@ -6,13 +6,13 @@
 
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
 
     <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <SelfContained>true</SelfContained>
+    <SelfContained>false</SelfContained>
     <PublishSingleFile>false</PublishSingleFile>
     <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <ProjectReference Include="..\SceneGate.UI\SceneGate.UI.csproj" />
 
     <PackageReference Include="Eto.Platform.Gtk" />
+    <PackageReference Include="GtkSharp.Dependencies" Condition="'$(RuntimeIdentifier)' != 'linux-x64' AND '$(RuntimeIdentifier)' != 'osx-x64'" />
   </ItemGroup>
 
 </Project>

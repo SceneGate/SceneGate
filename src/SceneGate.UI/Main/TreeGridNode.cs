@@ -1,4 +1,4 @@
-// Copyright (c) 2021 SceneGate
+﻿// Copyright (c) 2021 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@ namespace SceneGate.UI.Main
             : base()
         {
             Node = node;
+            SetFormatName();
 
             var children = node.Children.OrderBy(c => !c.IsContainer);
             foreach (var childNode in children) {
@@ -58,33 +59,15 @@ namespace SceneGate.UI.Main
             }
         }
 
-        public string FormatName {
-            get {
-                if (Node.Format == null && Node.IsContainer) {
-                    return "Container";
-                }
-
-                if (Node.Format is IBinary) {
-                    try {
-                        Node.Stream.Position = 0;
-                        string stamp = new DataReader(Node.Stream).ReadString(4, Ascii);
-                        return $"%{stamp}%";
-                    } catch {
-                        return "Binary";
-                    }
-                }
-
-                return Node.Format.GetType().Name;
-            }
-        }
+        public string FormatName { get; private set; }
 
         public string Icon {
             get => Node.Format switch {
-                NodeContainerFormat => "\ue2c7",
-                null => "\ue2c7",
-                Po => "\uef42",
-                IBinary => "\ue24d",
-                _ => "\ue583",
+                NodeContainerFormat => "\uf74a",
+                null => "\uf74a",
+                Po => "\ufac9",
+                IBinary => "\uf471",
+                _ => "\uf779",
             };
         }
 
@@ -93,6 +76,11 @@ namespace SceneGate.UI.Main
             var child = new TreeGridNode(node);
             Children.Add(child);
             Node.Add(node);
+        }
+
+        public void UpdateFormatName()
+        {
+            SetFormatName();
         }
 
         public void UpdateChildren()
@@ -104,6 +92,44 @@ namespace SceneGate.UI.Main
                 var child = new TreeGridNode(childNode);
                 Children.Add(child);
             }
+        }
+
+        private void SetFormatName()
+        {
+            if (Node.Format == null && Node.IsContainer) {
+                FormatName = "Container";
+                return;
+            }
+
+            if (Node.Format is IBinary) {
+                SetBinaryFormatName();
+                return;
+            }
+
+            FormatName = Node.Format.GetType().Name;
+        }
+
+        private void SetBinaryFormatName()
+        {
+            byte[] binaryStamp = new byte[4];
+            Node.Stream.Position = 0;
+            int read = Node.Stream.Read(binaryStamp);
+            if (read < 2) {
+                FormatName = "Binary";
+                return;
+            }
+
+            bool isValid = true;
+            char[] stamp = new char[read];
+            for (int i = 0; i < read && isValid; i++) {
+                if (binaryStamp[i] is < 0x20 or > 0x7F) {
+                    isValid = false;
+                } else {
+                    stamp[i] = (char)binaryStamp[i];
+                }
+            }
+
+            FormatName = isValid ? new string(stamp) : "Binary";
         }
     }
 }

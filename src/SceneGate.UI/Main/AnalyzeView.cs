@@ -93,16 +93,16 @@ namespace SceneGate.UI.Main
         {
             // Buttons over the treeview
             var addFileBtn = new Button {
-                Text = "\ue89c",
-                Font = new Font("Material Icons", 11),
+                Text = "\ufc50",
+                Font = new Font("Ubuntu Nerd Font", 11),
                 ToolTip = L10n.Get("Add external files"),
                 Width = 32,
                 Height = 32,
                 Command = ViewModel.AddFileCommand,
             };
             var addFolderButton = new Button {
-                Text = "\ue2cc",
-                Font = new Font("Material Icons", 11),
+                Text = "\uf756",
+                Font = new Font("Ubuntu Nerd Font", 11),
                 ToolTip = L10n.Get("Add external folders"),
                 Width = 32,
                 Height = 32,
@@ -118,6 +118,7 @@ namespace SceneGate.UI.Main
             var tree = new TreeGridView {
                 ShowHeader = false,
                 Border = BorderType.Line,
+                Style = "analyze-tree",
             };
             tree.Columns.Add(
                 new GridColumn {
