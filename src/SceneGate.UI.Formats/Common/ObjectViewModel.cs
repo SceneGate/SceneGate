@@ -24,7 +24,7 @@ using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using Yarhl.FileFormat;
 
-namespace SceneGate.UI.Formats
+namespace SceneGate.UI.Formats.Common
 {
     /// <summary>
     /// View model to display any kind of .NET object.

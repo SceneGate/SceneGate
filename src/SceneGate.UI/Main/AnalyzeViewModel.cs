@@ -27,6 +27,8 @@ using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using SceneGate.UI.Extensions;
+using SceneGate.UI.Formats;
+using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Resources;
 using Yarhl;
 using Yarhl.FileFormat;
@@ -217,10 +219,22 @@ namespace SceneGate.UI.Main
 
         private void ShowViewer()
         {
-            var formatView = UiPluginManager.Instance.GetCompatibleView(SelectedNode?.Node.Format).FirstOrDefault();
-            if (formatView is not null) {
-                formatView.ViewModel.Show(SelectedNode?.Node.Format);
-                Viewer = formatView;
+            var formatViews = UiPluginManager.Instance.GetCompatibleView(SelectedNode?.Node.Format);
+            BaseFormatView selectedView = null;
+
+            // We need to implement a better way to autodiscovery of views
+            // rather than skipping hard-coded views. In "LibGame" each discovery
+            // was returning a "matching' score instead of true/false.
+            var nonGenericViews = formatViews.Where(v => v is not ObjectView);
+            if (nonGenericViews.Any()) {
+                selectedView = nonGenericViews.First();
+            } else {
+                selectedView = formatViews.FirstOrDefault();
+            }
+
+            if (selectedView is not null) {
+                selectedView.ViewModel.Show(SelectedNode?.Node.Format);
+                Viewer = selectedView;
             }
         }
     }

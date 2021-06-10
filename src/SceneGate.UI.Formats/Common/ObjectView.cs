@@ -20,7 +20,7 @@
 using Eto.Drawing;
 using Eto.Forms;
 
-namespace SceneGate.UI.Formats
+namespace SceneGate.UI.Formats.Common
 {
     /// <summary>
     /// View for any .NET object.
