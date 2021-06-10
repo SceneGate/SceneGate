@@ -23,7 +23,7 @@
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
 
         <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
-        <PackageVersion Include="SonarAnalyzer.CSharp" Version="8.23.0.32424" />
+        <PackageVersion Include="SonarAnalyzer.CSharp" Version="8.24.0.32949" />
         <PackageVersion Include="Roslynator.Analyzers" Version="3.1.0" />
     </ItemGroup>
 </Project>

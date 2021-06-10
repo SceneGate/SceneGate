@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Description>API for UI components of SceneGate.</Description>
+
+    <!-- Bug in code analyzer with records -->
+    <NoWarn>AD0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +14,8 @@
 
   <ItemGroup>
     <PackageReference Include="Yarhl" />
+    <PackageReference Include="Yarhl.Media" />
+
     <PackageReference Include="Eto.Forms" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" />
     <PackageReference Include="YamlDotNet" />
