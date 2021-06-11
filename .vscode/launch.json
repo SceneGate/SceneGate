@@ -20,7 +20,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Cake: Run Build",
-            "program": "${workspaceFolder}/src/SceneGate.UI.Gtk/bin/Debug/net5.0/linux-x64/SceneGate.dll",
+            "program": "${workspaceFolder}/src/SceneGate.UI.Gtk/bin/Debug/net5.0/SceneGate.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,

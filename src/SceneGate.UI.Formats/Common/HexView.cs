@@ -44,31 +44,11 @@ namespace SceneGate.UI.Formats.Common
         /// <inheritdoc/>
         public override IFormatViewModel ViewModel => viewModel;
 
-        private static void AddLabelBox(
-            DynamicLayout layout,
-            string text,
-            Expression<Func<HexViewModel, string>> binding)
-        {
-            var label = new Label {
-                Text = text,
-                VerticalAlignment = VerticalAlignment.Center,
-                Font = Fonts.Sans(10),
-            };
-
-            var box = new TextBox {
-                ReadOnly = true,
-                Font = Fonts.Monospace(10),
-            };
-            box.TextBinding.BindDataContext<HexViewModel>(binding);
-
-            layout.AddRow(label, box);
-        }
-
         private void InitializeComponents()
         {
-            var font = Fonts.Monospace(12);
+            var font = Fonts.Monospace(10);
             int lineHeight = (int)font.MeasureString("0").Height;
-            int textPadding = 10;
+            int textPadding = 5;
 
             var offsetView = new TextArea {
                 Font = font,
@@ -118,28 +98,37 @@ namespace SceneGate.UI.Formats.Common
 
         private Control CreateDataTypeInspectorView()
         {
-            var layout = new DynamicLayout {
-                Spacing = new Size(5, 5),
-                Padding = new Padding(10),
+            var grid = new GridView {
+                ShowHeader = true,
+                GridLines = GridLines.Horizontal,
             };
+            grid.Columns.Add(new GridColumn {
+                DataCell = new TextBoxCell {
+                    Binding = Binding.Property((HexViewModel.DataTypeItem i) => i.Description),
+                },
+                HeaderText = "Type",
+                Editable = false,
+                AutoSize = true,
+                Resizable = false,
+            });
+            grid.Columns.Add(new GridColumn {
+                DataCell = new TextBoxCell {
+                    Binding = Binding.Property((HexViewModel.DataTypeItem i) => i.Value),
+                },
+                HeaderText = "Value",
+                Editable = false,
+                AutoSize = true,
+                Resizable = true,
+            });
 
-            AddLabelBox(layout, "8 bits: ", vm => vm.BitsText);
-            AddLabelBox(layout, "unsigned 16 bits (ushort): ", vm => vm.UshortText);
-            AddLabelBox(layout, "signed 16 bits (short): ", vm => vm.ShortText);
-            AddLabelBox(layout, "unsigned 32 bits (uint): ", vm => vm.UintText);
-            AddLabelBox(layout, "signed 32 bits (int): ", vm => vm.IntText);
-            AddLabelBox(layout, "unsigned 64 bits (ulong): ", vm => vm.UlongText);
-            AddLabelBox(layout, "signed 64 bits (long): ", vm => vm.LongText);
-            AddLabelBox(layout, "float 32 bits (single): ", vm => vm.FloatText);
-            AddLabelBox(layout, "double 64 bits: ", vm => vm.DoubleText);
-            AddLabelBox(layout, "UTF-8: ", vm => vm.Utf8Text);
-            AddLabelBox(layout, "UTF-16: ", vm => vm.Utf16Text);
-            AddLabelBox(layout, "UTF-32: ", vm => vm.Utf32Text);
-            AddLabelBox(layout, "Shift-JIS: ", vm => vm.ShiftJisText);
+            grid.DataStore = viewModel.DataTypes;
 
-            layout.Add(null);
+            // GridView doesn't implement MVVM binding.
+            // https://github.com/picoe/Eto/issues/530
+            viewModel.OnDataTypesUpdate += (_, _) =>
+                grid.ReloadData(Eto.Forms.Range.FromLength(0, viewModel.DataTypes.Count));
 
-            return layout;
+            return grid;
         }
     }
 }
