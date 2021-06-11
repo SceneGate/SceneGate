@@ -17,6 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+using System.Diagnostics;
 using System.Reflection;
 using Eto.Drawing;
 using Eto.Forms;
@@ -40,7 +41,13 @@ namespace SceneGate.UI.Main
 
         private void InitializeComponents()
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            // Get assembly with the build metadata (except commit number)
+            var assemblyPath = Assembly.GetExecutingAssembly().Location;
+            var version = FileVersionInfo.GetVersionInfo(assemblyPath).ProductVersion;
+            if (version.Contains('+')) {
+                version = version.Substring(0, version.IndexOf('+'));
+            }
+
             Title = $"SceneGate ~~ {version}";
             Icon = Icon.FromResource(ResourcesName.Icon);
             ClientSize = new Size(800, 600);
