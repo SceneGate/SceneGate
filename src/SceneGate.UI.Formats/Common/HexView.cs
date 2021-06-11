@@ -17,8 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-using System;
-using System.Linq.Expressions;
+using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 
@@ -49,6 +48,11 @@ namespace SceneGate.UI.Formats.Common
             var font = Fonts.Monospace(10);
             int lineHeight = (int)font.MeasureString("0").Height;
             int textPadding = 5;
+
+            var columnPositions = new Label {
+                Font = font,
+                Text = string.Join(' ', Enumerable.Range(0, viewModel.BytesPerRow).Select(i => $"{i:X2}")),
+            };
 
             var offsetView = new TextArea {
                 Font = font,
@@ -85,15 +89,20 @@ namespace SceneGate.UI.Formats.Common
 
             var typesView = CreateDataTypeInspectorView();
 
-            var mainStack = new StackLayout(offsetView, hexView, asciiView, scrolls, new StackLayoutItem(typesView, true)) {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Stretch,
-                Spacing = 5,
+            var mainLayout = new DynamicLayout {
+                Spacing = new Size(5, 5),
             };
-            mainStack.SizeChanged += (sender, e) =>
-                viewModel.VisibleTextRows = mainStack.Size.Height / lineHeight;
+            mainLayout.AddRow(null, columnPositions);
+            mainLayout.BeginHorizontal(true);
+            mainLayout.Add(offsetView, false);
+            mainLayout.AddRange(hexView, asciiView, scrolls);
+            mainLayout.Add(typesView, true);
+            mainLayout.EndHorizontal();
 
-            Content = mainStack;
+            mainLayout.SizeChanged += (sender, e) =>
+                viewModel.VisibleTextRows = hexView.Height / lineHeight;
+
+            Content = mainLayout;
         }
 
         private Control CreateDataTypeInspectorView()
