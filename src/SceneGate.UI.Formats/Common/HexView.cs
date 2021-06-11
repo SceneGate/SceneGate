@@ -137,7 +137,40 @@ namespace SceneGate.UI.Formats.Common
             viewModel.OnDataTypesUpdate += (_, _) =>
                 grid.ReloadData(Eto.Forms.Range.FromLength(0, viewModel.DataTypes.Count));
 
-            return grid;
+            var littleEndian = new RadioButton {
+                Text = "Little endian",
+                Checked = true,
+            };
+            var bigEndian = new RadioButton(littleEndian) {
+                Text = "Big endian",
+            };
+            bigEndian.BindDataContext(r => r.Checked, (HexViewModel vm) => vm.IsBigEndian);
+            var endianLayout = new StackLayout(littleEndian, bigEndian) {
+                Spacing = 5,
+                Orientation = Orientation.Horizontal,
+            };
+
+            var encodingNameLabel = new Label {
+                Text = "Custom encoding name:",
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            var encodingNameBox = new TextBox {
+                PlaceholderText = "code page name",
+            };
+            encodingNameBox.TextBinding.BindDataContext((HexViewModel vm) => vm.CustomEncodingName);
+            var encodingLayout = new StackLayout(encodingNameLabel, new StackLayoutItem(encodingNameBox, true)) {
+                Spacing = 5,
+                Orientation = Orientation.Horizontal,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Center,
+            };
+
+            var stackLayout = new StackLayout(grid, endianLayout, encodingLayout) {
+                Spacing = 15,
+                Orientation = Orientation.Vertical,
+            };
+
+            return stackLayout;
         }
     }
 }

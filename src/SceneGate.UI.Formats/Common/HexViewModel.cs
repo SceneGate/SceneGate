@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System;
+using System.Buffers.Binary;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -35,6 +36,7 @@ namespace SceneGate.UI.Formats.Common
     public class HexViewModel : ObservableObject, IFormatViewModel
     {
         private readonly StringBuilder textBuilder;
+        private readonly Encoding utf32BigEndian;
         private DataStream stream;
         private bool cursorUpdate;
         private int maxScroll;
@@ -69,6 +71,7 @@ namespace SceneGate.UI.Formats.Common
             DataTypes.Add(new DataTypeItem(typeof(UnicodeEncoding), "UTF-16"));
             DataTypes.Add(new DataTypeItem(typeof(UTF32Encoding), "UTF-32"));
             DataTypes.Add(new DataTypeItem(typeof(Encoding), "Custom encoding"));
+            utf32BigEndian = new UTF32Encoding(true, false);
             IsBigEndian = false;
             CustomEncodingName = "shift-jis";
         }
@@ -344,35 +347,59 @@ namespace SceneGate.UI.Formats.Common
                 return;
             }
 
-            ulong value = BitConverter.ToUInt64(buffer, 0);
+            ulong value = IsBigEndian
+                ? BinaryPrimitives.ReadUInt64BigEndian(buffer)
+                : BinaryPrimitives.ReadUInt64LittleEndian(buffer);
+
+            int numBits = 8;
             if (read >= 2) {
-                UpdateTypeValue<ushort>(((ushort)value).ToString(CultureInfo.CurrentCulture));
-                UpdateTypeValue<short>(((short)value).ToString(CultureInfo.CurrentCulture));
+                numBits = 16;
+                ushort bits16 = IsBigEndian ? (ushort)(value >> (64 - 16)) : (ushort)value;
+                UpdateTypeValue<ushort>(bits16.ToString(CultureInfo.CurrentCulture));
+                UpdateTypeValue<short>(((short)bits16).ToString(CultureInfo.CurrentCulture));
             }
 
             if (read >= 4) {
-                UpdateTypeValue<uint>(((uint)value).ToString(CultureInfo.CurrentCulture));
-                UpdateTypeValue<int>(((int)value).ToString(CultureInfo.CurrentCulture));
-                UpdateTypeValue<float>(BitConverter.ToSingle(buffer, 0).ToString(CultureInfo.CurrentCulture));
+                numBits = 32;
+                uint bits32 = IsBigEndian ? (uint)(value >> (64 - 32)) : (uint)value;
+                UpdateTypeValue<uint>(bits32.ToString(CultureInfo.CurrentCulture));
+                UpdateTypeValue<int>(((int)bits32).ToString(CultureInfo.CurrentCulture));
+
+                float floatValue = IsBigEndian
+                    ? BinaryPrimitives.ReadSingleBigEndian(buffer)
+                    : BinaryPrimitives.ReadSingleLittleEndian(buffer);
+                UpdateTypeValue<float>(floatValue.ToString(CultureInfo.CurrentCulture));
             }
 
             if (read >= 8) {
                 UpdateTypeValue<ulong>(value.ToString(CultureInfo.CurrentCulture));
                 UpdateTypeValue<long>(((long)value).ToString(CultureInfo.CurrentCulture));
-                UpdateTypeValue<double>(BitConverter.ToDouble(buffer, 0).ToString(CultureInfo.CurrentCulture));
+
+                double doubleValue = IsBigEndian
+                    ? BinaryPrimitives.ReadDoubleBigEndian(buffer)
+                    : BinaryPrimitives.ReadDoubleLittleEndian(buffer);
+                UpdateTypeValue<double>(doubleValue.ToString(CultureInfo.CurrentCulture));
             }
 
+            // We want to start from MSB (high) so LSB is on the right.
             textBuilder.Clear();
-            byte bits8 = (byte)value;
-            for (int i = 7; i >= 0; i--) {
-                textBuilder.Append((bits8 & (1 << i)) == 0 ? "0" : "1");
+            uint bitValue = IsBigEndian ? (uint)(value >> (64 - numBits)) : (uint)value;
+            for (int i = numBits - 1; i >= 0; i--) {
+                textBuilder.Append((bitValue & (1u << i)) == 0 ? "0" : "1");
+                if (i != 0 && (i % 8) == 0) {
+                    textBuilder.Append(' ');
+                }
             }
 
             UpdateTypeValue<byte>(textBuilder.ToString());
 
             UpdateTypeValue<UTF8Encoding>(Regex.Escape(Encoding.UTF8.GetString(buffer)));
-            UpdateTypeValue<UnicodeEncoding>(Regex.Escape(Encoding.Unicode.GetString(buffer)));
-            UpdateTypeValue<UTF32Encoding>(Regex.Escape(Encoding.UTF32.GetString(buffer)));
+
+            var utf16 = IsBigEndian ? Encoding.BigEndianUnicode : Encoding.Unicode;
+            UpdateTypeValue<UnicodeEncoding>(Regex.Escape(utf16.GetString(buffer)));
+
+            var utf32 = IsBigEndian ? Encoding.UTF32 : utf32BigEndian;
+            UpdateTypeValue<UTF32Encoding>(Regex.Escape(utf32.GetString(buffer)));
 
             if (customEncoding is not null) {
                 UpdateTypeValue<Encoding>(Regex.Escape(customEncoding.GetString(buffer)));
