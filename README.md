@@ -5,13 +5,15 @@ and localization.
 
 ## Features
 
-- Navigate the virtual file system from Yarhl.
-- Convert files with Yarhl converters via plugins.
-- View the content of files
+- Navigate a virtual file system and export files to the disk.
+- Convert formats with Yarhl converters via plugins.
+- View the content of different formats
 
 ### Supported format views
 
+- Hexadecimal view
 - .NET objects as property grid or YAML/JSON
+- Translation format PO
 
 ### _Yarhly_ shipped plugins
 
