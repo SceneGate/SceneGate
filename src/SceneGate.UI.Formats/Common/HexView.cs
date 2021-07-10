@@ -62,11 +62,20 @@ namespace SceneGate.UI.Formats.Common
             };
             offsetView.TextBinding.BindDataContext<HexViewModel>(vm => vm.OffsetsText);
 
-            var hexView = new TextArea {
+            var hexView = new RichTextArea {
                 Font = font,
                 Width = (int)font.MeasureString(new string('0', viewModel.BytesPerRow * 3)).Width + textPadding,
                 ReadOnly = true,
             };
+            dynamic d = hexView.Handler;
+            Color c = d.SelectedBackgroundColor;
+            hexView.MouseDown += (_, _) => {
+                // Reset the previous selection backgroup.
+                // TODO: figure out how to get the background color.
+                // OPTIMIZE: keep selection from mouseup so we only reset that part.
+                hexView.Buffer.SetBackground(new Range<int>(0, hexView.Text.Length), hexView.BackgroundColor);
+            };
+            hexView.MouseUp += (_, _) => hexView.SelectionBackground = c;
             hexView.TextBinding.BindDataContext<HexViewModel>(vm => vm.HexText);
             hexView.BindDataContext(t => t.CaretIndex, (HexViewModel vm) => vm.HexCursorPos);
 
