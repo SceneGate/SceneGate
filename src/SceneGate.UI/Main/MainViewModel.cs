@@ -17,9 +17,14 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+using System.IO;
+using System.Text;
+using System.Text.Json;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using SceneGate.UI.Projects;
+using SceneGate.UI.Resources;
 
 namespace SceneGate.UI.Main
 {
@@ -27,6 +32,7 @@ namespace SceneGate.UI.Main
     {
         private ViewKind viewKind;
         private AnalyzeViewModel analyzeViewModel;
+        private bool openedProject;
 
         public MainViewModel()
         {
@@ -34,6 +40,8 @@ namespace SceneGate.UI.Main
             OpenSettingsCommand = new RelayCommand(OpenSettings);
             QuitCommand = new RelayCommand(Quit);
             AboutCommand = new RelayCommand(OpenAboutDialog);
+            NewProjectCommand = new RelayCommand(NewProject, () => !IsProjectOpened);
+            OpenProjectCommand = new RelayCommand(OpenProject, () => !IsProjectOpened);
             ToggleActionPanelCommand = new RelayCommand(ToggleActionPanel);
             ViewKind = ViewKind.Analyze;
         }
@@ -51,7 +59,20 @@ namespace SceneGate.UI.Main
 
         public ICommand AboutCommand { get; }
 
+        public RelayCommand NewProjectCommand { get; }
+
+        public RelayCommand OpenProjectCommand { get; }
+
         public ICommand ToggleActionPanelCommand { get; }
+
+        public bool IsProjectOpened {
+            get => openedProject;
+            set {
+                SetProperty(ref openedProject, value);
+                NewProjectCommand.NotifyCanExecuteChanged();
+                OpenProjectCommand.NotifyCanExecuteChanged();
+            }
+        }
 
         public bool IsActionPanelVisible {
             get => analyzeViewModel?.IsActionPanelVisible ?? false;
@@ -81,6 +102,28 @@ namespace SceneGate.UI.Main
         {
             var about = new AboutView();
             about.ShowDialog(Eto.Forms.Application.Instance.MainForm);
+        }
+
+        private void NewProject()
+        {
+            ProjectManager.Instance.CurrentProject = new Project();
+        }
+
+        private void OpenProject()
+        {
+            var dialog = new Eto.Forms.OpenFileDialog {
+                CheckFileExists = true,
+                MultiSelect = false,
+                Title = L10n.Get("Open project file"),
+            };
+            dialog.Filters.Add(new Eto.Forms.FileFilter("SceneGate project", "json"));
+            if (dialog.ShowDialog(Eto.Forms.Application.Instance.MainForm) != Eto.Forms.DialogResult.Ok) {
+                return;
+            }
+
+            string content = File.ReadAllText(dialog.FileName, Encoding.UTF8);
+            var project = JsonSerializer.Deserialize<Project>(content);
+            ProjectManager.Instance.CurrentProject = project;
         }
     }
 }

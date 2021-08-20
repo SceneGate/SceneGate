@@ -59,6 +59,17 @@ namespace SceneGate.UI.Main
                 },
                 ApplicationItems = {
                     new Command {
+                        MenuText = L10n.Get("New project"),
+                        Shortcut = Application.Instance.CommonModifier | Keys.N,
+                        DelegatedCommand = viewModel.NewProjectCommand,
+                    },
+                    new Command {
+                        MenuText = L10n.Get("Open project"),
+                        Shortcut = Application.Instance.CommonModifier | Keys.O,
+                        DelegatedCommand = viewModel.OpenProjectCommand,
+                    },
+                    new SeparatorMenuItem(),
+                    new Command {
                         MenuText = L10n.Get("Toggle action panel"),
                         Shortcut = Application.Instance.CommonModifier | Keys.T,
                         DelegatedCommand = viewModel.ToggleActionPanelCommand,
