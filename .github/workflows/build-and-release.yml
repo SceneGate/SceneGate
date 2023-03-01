@@ -22,12 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # We need full history for version number
 
       - name: "Setup .NET SDK"
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.NET_SDK }}
 
@@ -43,14 +43,14 @@ jobs:
         run: dotnet cake --target=Stage-Artifacts --configuration=Release --verbosity=diagnostic
 
       - name: "Publish test results"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "Test results"
           path: "./artifacts/test_results"
           retention-days: 1
 
       - name: "Publish artifacts to CI"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "Artifacts"
           path: |
@@ -67,12 +67,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # We need full history for version number
 
       - name: "Setup .NET SDK"
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.NET_SDK }}
 
@@ -95,18 +95,18 @@ jobs:
       PREVIEW_NUGET_FEED: 'https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json'
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # We need full history for version number
 
       - name: "Download artifacts"
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: "Artifacts"
           path: "./artifacts"
 
       - name: "Setup .NET SDK"
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.NET_SDK }}
 

@@ -6,6 +6,8 @@
         <Copyright>Copyright (C) 2021 SceneGate</Copyright>
 
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+
+        <SelfContained>false</SelfContained>
     </PropertyGroup>
 
     <PropertyGroup>
