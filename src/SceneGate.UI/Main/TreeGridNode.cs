@@ -28,11 +28,6 @@ namespace SceneGate.UI.Main
 {
     public class TreeGridNode : TreeGridItem
     {
-        private static readonly Encoding Ascii = Encoding.GetEncoding(
-            "ASCII",
-            EncoderFallback.ExceptionFallback,
-            DecoderFallback.ExceptionFallback);
-
         public TreeGridNode(Node node)
             : base()
         {

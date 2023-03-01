@@ -4,7 +4,7 @@
     <AssemblyName>SceneGate</AssemblyName>
 
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
 
     <SelfContained>false</SelfContained>
@@ -15,6 +15,10 @@
     <PublishSingleFile>false</PublishSingleFile>
     <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Icon.icns" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SceneGate.UI\SceneGate.UI.csproj" />
