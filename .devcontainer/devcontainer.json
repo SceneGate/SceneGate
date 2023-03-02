@@ -1,24 +1,24 @@
 {
-    "name": "Dev (Ubuntu - .NET 5, 3.1 and Mono)",
+    "name": "Dev (.NET 6 and Mono)",
     "build": {
         "dockerfile": "Dockerfile",
     },
 
-    "settings": {
-        "terminal.integrated.shell.linux": "/bin/bash"
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csharp",
+                "shardulm94.trailing-spaces",
+                "cake-build.cake-vscode",
+                "streetsidesoftware.code-spell-checker",
+                "hediet.vscode-drawio",
+                "esbenp.prettier-vscode",
+                "yzhang.markdown-all-in-one",
+                "davidanson.vscode-markdownlint",
+                "eamodio.gitlens"
+            ]
+        }
     },
-
-    "extensions": [
-        "ms-dotnettools.csharp",
-        "shardulm94.trailing-spaces",
-        "cake-build.cake-vscode",
-        "streetsidesoftware.code-spell-checker",
-        "hediet.vscode-drawio",
-        "esbenp.prettier-vscode",
-        "yzhang.markdown-all-in-one",
-        "davidanson.vscode-markdownlint",
-        "eamodio.gitlens"
-    ],
 
     "remoteUser": "vscode",
 

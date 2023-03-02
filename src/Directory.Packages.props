@@ -1,30 +1,28 @@
 <Project>
     <!-- Centralize dependency management -->
     <ItemGroup>
-        <PackageVersion Include="Yarhl" Version="3.1.1-preview.28" />
-        <PackageVersion Include="Yarhl.Media" Version="3.1.1-preview.28" />
+        <PackageVersion Include="Yarhl" Version="4.0.0-preview.167" />
+        <PackageVersion Include="Yarhl.Media.Text" Version="4.0.0-preview.167" />
         <PackageVersion Include="SceneGate.Lemon" Version="0.1.0-preview.69" />
-        <PackageVersion Include="SceneGate.Ekona" Version="0.1.0-preview.13" />
+        <PackageVersion Include="SceneGate.Ekona" Version="0.1.0-preview.103" />
         <PackageVersion Include="LayTea" Version="0.1.0-preview.87" />
 
-        <PackageVersion Include="YamlDotNet" Version="11.1.1" />
-        <PackageVersion Include="Microsoft.Toolkit.Mvvm" Version="7.0.2" />
-        <PackageVersion Include="Eto.Forms" Version="2.5.11" />
-        <PackageVersion Include="Eto.Platform.Gtk" Version="2.5.11" />
-        <PackageVersion Include="GtkSharp.Dependencies" Version="1.1.0" />
-        <PackageVersion Include="Eto.Platform.Mac64" Version="2.5.11" />
-        <PackageVersion Include="Eto.Platform.Wpf" Version="2.5.11" />
-        <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.818.41" />
+        <PackageVersion Include="YamlDotNet" Version="13.0.1" />
+        <PackageVersion Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+        <PackageVersion Include="Eto.Forms" Version="2.7.3" />
+        <PackageVersion Include="Eto.Platform.Gtk" Version="2.7.3" />
+        <PackageVersion Include="GtkSharp.Dependencies" Version="1.1.1" />
+        <PackageVersion Include="Eto.Platform.Mac64" Version="2.7.3" />
 
-        <PackageVersion Include="nunit" Version="3.13.1" />
-        <PackageVersion Include="NUnit3TestAdapter" Version="3.17.0" />
-        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.9.1"/>
-        <PackageVersion Include="coverlet.collector" Version="3.0.3" />
+        <PackageVersion Include="nunit" Version="3.13.3" />
+        <PackageVersion Include="NUnit3TestAdapter" Version="4.4.2" />
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.5.0"/>
+        <PackageVersion Include="coverlet.collector" Version="3.2.0" />
 
-        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
 
         <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
-        <PackageVersion Include="SonarAnalyzer.CSharp" Version="8.24.0.32949" />
-        <PackageVersion Include="Roslynator.Analyzers" Version="3.1.0" />
+        <PackageVersion Include="SonarAnalyzer.CSharp" Version="8.53.0.62665" />
+        <PackageVersion Include="Roslynator.Analyzers" Version="4.2.0" />
     </ItemGroup>
 </Project>

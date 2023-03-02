@@ -46,8 +46,8 @@ more information about the file formats and how to use the tools.
 
 ## Build
 
-The project requires to build .NET 5.0 SDK and .NET Core 3.1 runtime. If you
-open the project with VS Code and you did install the
+The project requires to build .NET 6.0 SDK (Linux and MacOS require also Mono).
+If you open the project with VS Code and you did install the
 [VS Code Remote Containers](https://code.visualstudio.com/docs/remote/containers)
 extension, you can have an already pre-configured development environment with
 Docker or Podman.
