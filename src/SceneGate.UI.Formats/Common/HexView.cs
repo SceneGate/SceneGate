@@ -68,7 +68,7 @@ namespace SceneGate.UI.Formats.Common
                 ReadOnly = true,
             };
             dynamic d = hexView.Handler;
-            Color c = d.SelectedBackgroundColor;
+            Color c = d.SelectionBackground;
             hexView.MouseDown += (_, _) => {
                 // Reset the previous selection backgroup.
                 // TODO: figure out how to get the background color.

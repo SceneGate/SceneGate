@@ -8,7 +8,7 @@
             "name": "Launch SceneGate (GTK)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "Cake: Run Build",
+            "preLaunchTask": "Cake: Run dev build",
             "program": "${workspaceFolder}/src/SceneGate.UI.Gtk/bin/Debug/net6.0/SceneGate.dll",
             "args": [],
             "cwd": "${workspaceFolder}",

@@ -34,6 +34,22 @@
             "command": "dotnet",
             "args": [
                 "cake",
+                "--target=Build",
+                "--warn-as-error=False"
+            ],
+            "group": {
+                "kind": "build",
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "label": "Cake: Run dev build"
+        },
+        {
+            "type": "process",
+            "command": "dotnet",
+            "args": [
+                "cake",
                 "--target=BuildTest"
             ],
             "group": {
