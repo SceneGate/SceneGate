@@ -44,24 +44,6 @@ namespace SceneGate.UI.Formats.Texts
         /// <inheritdoc/>
         public override IFormatViewModel ViewModel => viewModel;
 
-        private static void AddLabelBox(
-            DynamicLayout layout,
-            string text,
-            Expression<Func<PoViewModel, string>> binding)
-        {
-            var label = new Label {
-                Text = text,
-                VerticalAlignment = VerticalAlignment.Center,
-            };
-
-            var box = new TextBox {
-                ReadOnly = true,
-            };
-            box.TextBinding.BindDataContext<PoViewModel>(binding);
-
-            layout.AddRow(label, box);
-        }
-
         private void InitializeComponents()
         {
             var list = new ListBox();

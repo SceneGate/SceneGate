@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Description>UI components of SceneGate.</Description>
   </PropertyGroup>
 
@@ -16,8 +16,8 @@
     <PackageReference Include="Microsoft.Toolkit.Mvvm" />
 
     <PackageReference Include="Yarhl" />
-    <PackageReference Include="Yarhl.Media" />
-    <PackageReference Include="LayTea" />
+    <PackageReference Include="Yarhl.Media.Text" />
+    <!-- TODO: Enable when it targets the new Yarhl <PackageReference Include="LayTea" /> -->
     <PackageReference Include="SceneGate.Ekona" />
   </ItemGroup>
 

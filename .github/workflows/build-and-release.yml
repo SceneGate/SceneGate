@@ -14,8 +14,7 @@ on:
       - published
 
 env:
-  NET_SDK: '5.0.300'
-  NET31_SDK: '3.1.409'
+  NET_SDK: '6.0.406'
 
 jobs:
   build_main:
@@ -23,18 +22,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # We need full history for version number
 
       - name: "Setup .NET SDK"
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.NET_SDK }}
-      - name: "Setup .NET Core 3.1 for Cake dependencies"
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.NET31_SDK }}
 
       - name: "Install build tools"
         run: dotnet tool restore
@@ -48,14 +43,14 @@ jobs:
         run: dotnet cake --target=Stage-Artifacts --configuration=Release --verbosity=diagnostic
 
       - name: "Publish test results"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "Test results"
           path: "./artifacts/test_results"
           retention-days: 1
 
       - name: "Publish artifacts to CI"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "Artifacts"
           path: |
@@ -72,18 +67,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # We need full history for version number
 
       - name: "Setup .NET SDK"
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.NET_SDK }}
-      - name: "Setup .NET Core 3.1 for Cake dependencies"
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.NET31_SDK }}
 
       - name: "Install build tools"
         run: dotnet tool restore
@@ -104,24 +95,20 @@ jobs:
       PREVIEW_NUGET_FEED: 'https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json'
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # We need full history for version number
 
       - name: "Download artifacts"
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: "Artifacts"
           path: "./artifacts"
 
       - name: "Setup .NET SDK"
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.NET_SDK }}
-      - name: "Setup .NET Core 3.1 for Cake dependencies"
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.NET31_SDK }}
 
       - name: "Install build tools"
         run: dotnet tool restore

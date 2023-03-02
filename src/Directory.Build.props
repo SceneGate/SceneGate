@@ -6,6 +6,8 @@
         <Copyright>Copyright (C) 2021 SceneGate</Copyright>
 
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+
+        <SelfContained>false</SelfContained>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -14,6 +16,7 @@
         <RepositoryUrl>https://github.com/SceneGate/SceneGate</RepositoryUrl>
         <PackageIcon>icon.png</PackageIcon>
         <PackageTags>reverse-engineering;rom-hacking;localization</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <!-- Deterministic and source link -->

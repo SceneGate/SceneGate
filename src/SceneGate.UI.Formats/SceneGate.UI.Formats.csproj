@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Description>API for UI components of SceneGate.</Description>
 
     <!-- Bug in code analyzer with records -->
@@ -10,11 +10,12 @@
 
   <ItemGroup>
     <None Include="../../docs/images/logo_128.png" Pack="true" PackagePath="$(PackageIcon)" Visible="false" />
+    <None Include="../../README.md" Pack="true" PackagePath="$(PackageReadmeFile)" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Yarhl" />
-    <PackageReference Include="Yarhl.Media" />
+    <PackageReference Include="Yarhl.Media.Text" />
 
     <PackageReference Include="Eto.Forms" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" />

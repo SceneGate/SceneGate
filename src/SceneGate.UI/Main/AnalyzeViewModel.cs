@@ -150,7 +150,7 @@ namespace SceneGate.UI.Main
                 MultiSelect = true,
                 Title = L10n.Get("Add external files"),
             };
-            if (dialog.ShowDialog(Eto.Forms.Application.Instance.MainForm) != Eto.Forms.DialogResult.Ok) {
+            if (dialog.ShowDialog(Eto.Forms.Application.Instance.MainForm) == Eto.Forms.DialogResult.Cancel) {
                 return;
             }
 
@@ -165,7 +165,7 @@ namespace SceneGate.UI.Main
             var dialog = new Eto.Forms.SelectFolderDialog {
                 Title = L10n.Get("Add external folders"),
             };
-            if (dialog.ShowDialog(Eto.Forms.Application.Instance.MainForm) != Eto.Forms.DialogResult.Ok) {
+            if (dialog.ShowDialog(Eto.Forms.Application.Instance.MainForm) == Eto.Forms.DialogResult.Cancel) {
                 return;
             }
 
@@ -187,7 +187,7 @@ namespace SceneGate.UI.Main
                 Title = L10n.Get("Save to file"),
                 FileName = SelectedNode.Node.Name,
             };
-            if (dialog.ShowDialog(Eto.Forms.Application.Instance.MainForm) != Eto.Forms.DialogResult.Ok) {
+            if (dialog.ShowDialog(Eto.Forms.Application.Instance.MainForm) == Eto.Forms.DialogResult.Cancel) {
                 return;
             }
 
