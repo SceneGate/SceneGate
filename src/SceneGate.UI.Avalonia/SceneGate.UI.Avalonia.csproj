@@ -16,12 +16,13 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
     <PackageReference Include="FluentAvaloniaUI" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
 
-    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
+    <PackageReference Include="Yarhl" />
+    <PackageReference Include="Yarhl.Media" />
   </ItemGroup>
 
 </Project>

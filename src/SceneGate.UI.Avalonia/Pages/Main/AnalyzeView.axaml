@@ -2,7 +2,62 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="SceneGate.UI.Pages.Main.AnalyzeView">
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             xmlns:local="using:SceneGate.UI.Pages.Main"
+             xmlns:c="using:SceneGate.UI.Pages"
+             xmlns:ctrlData="using:SceneGate.UI.ControlsData"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             x:Class="SceneGate.UI.Pages.Main.AnalyzeView"
+             x:DataType="local:AnalyzeViewModel">
 
+  <Design.DataContext>
+    <local:AnalyzeViewModel />
+  </Design.DataContext>
+
+  <UserControl.Resources>
+    <c:NodeFormatToIconConverter x:Key="Format2Icon" />
+  </UserControl.Resources>
+  
+  <Grid ColumnDefinitions="*,Auto,*">
+    <Grid Grid.Column="0" RowDefinitions="Auto,*">
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="5">
+        <TextBlock Grid.Column="0"
+                   Text="Nodes"
+                   VerticalAlignment="Center"
+                   FontWeight="Bold"
+                   Theme="{StaticResource BodyTextBlockStyle}" />
+        <Button Grid.Column="1" Content="+" Command="{Binding AddFileCommand}" />
+      </Grid>
+      <Separator Grid.Row="1" VerticalAlignment="Top" />
+
+      <TreeView Grid.Row="1"
+                MinWidth="250"
+                SelectedItem="{Binding SelectedNode}"
+                ItemsSource="{Binding Nodes}"
+                SelectionMode="Single"
+                DoubleTapped="NodeTreeViewDoubleTapped">
+        <TreeView.ItemTemplate>
+          <TreeDataTemplate ItemsSource="{Binding Children}">
+            <TextBlock Text="{Binding Name}" />
+          </TreeDataTemplate>
+        </TreeView.ItemTemplate>
+      </TreeView>
+    </Grid>
+
+    <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+
+    <fluent:TabView Grid.Column="2"
+                    IsAddTabButtonVisible="False"
+                    TabItems="{Binding OpenedNodes}"
+                    TabCloseRequested="TabViewTabCloseRequested"
+                    SelectedItem="{Binding SelectedTab}">
+      <fluent:TabView.TabItemTemplate>
+        <DataTemplate DataType="ctrlData:NodeFormatTab">
+          <fluent:TabViewItem Header="{Binding Name}"
+                              Content="{Binding Content}"
+                              IconSource="{Binding Kind, Converter={StaticResource Format2Icon}}" />
+        </DataTemplate>
+      </fluent:TabView.TabItemTemplate>
+    </fluent:TabView>
+  </Grid>
 </UserControl>
