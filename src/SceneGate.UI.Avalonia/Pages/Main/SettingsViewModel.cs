@@ -34,7 +34,7 @@ public partial class SettingsViewModel : ViewModelBase
         ApplicationVersion = (version.Build == 0) ? "DEVELOPMENT BUILD" : $"v{version}";
 
         string appUri = "avares://" + typeof(App).Namespace;
-        using Stream licenseStream = AssetLoader.Open(new Uri(appUri + ".Avalonia/Assets/LICENSE"));
+        using Stream licenseStream = AssetLoader.Open(new Uri(appUri + "/Assets/LICENSE"));
         using var licenseStreamReader = new StreamReader(licenseStream);
         License = licenseStreamReader.ReadToEnd();
     }

@@ -16,14 +16,14 @@ public partial class MainView : UserControl
 
     private void OnMainNavigationItemChange(object? sender, NavigationViewSelectionChangedEventArgs e)
     {
-        if (e.IsSettingsSelected) {
-            _ = mainNavigationFrame.Navigate(typeof(SettingsView));
-        } else if (e.SelectedItem is NavigationViewItem nvi) {
-            string viewTypeName = typeof(App).Namespace + ".Pages." + nvi.Tag;
-            Type viewType = Type.GetType(viewTypeName)
-                ?? throw new InvalidOperationException($"Cannot find view Type: {viewTypeName}");
-
-            _ = mainNavigationFrame.Navigate(viewType);
+        if (e.SelectedItem is not NavigationViewItem nvi) {
+            return;
         }
+
+        string viewTypeName = typeof(App).Namespace + nvi.Tag;
+        Type viewType = Type.GetType(viewTypeName)
+            ?? throw new InvalidOperationException($"Cannot find view Type: {viewTypeName}");
+
+        _ = mainNavigationFrame.Navigate(viewType);
     }
 }

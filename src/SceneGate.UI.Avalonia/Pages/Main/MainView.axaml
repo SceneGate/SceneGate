@@ -8,15 +8,24 @@
 
   <fluent:NavigationView
     Name="mainNavigationView"
-    IsSettingsVisible="True"
-    PaneDisplayMode="LeftCompact">
+    Classes="LargeAppNav"
+    IsSettingsVisible="False">
 
     <fluent:NavigationView.MenuItems>
       <fluent:NavigationViewItem
+        Classes="LargeAppNav"
         Content="Analyze"
-        Tag="Main.AnalyzeView"
+        Tag=".Pages.Main.AnalyzeView"
         IconSource="BrowsePhotos" />
     </fluent:NavigationView.MenuItems>
+
+    <fluent:NavigationView.FooterMenuItems>
+      <fluent:NavigationViewItem
+        Classes="LargeAppNav"
+        Content="Settings"
+        Tag=".Pages.Main.SettingsView"
+        IconSource="Setting" />
+    </fluent:NavigationView.FooterMenuItems>
     
     <fluent:Frame Name="mainNavigationFrame" />
   </fluent:NavigationView>

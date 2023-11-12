@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <AssemblyName>SceneGate.UI</AssemblyName>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -23,9 +24,4 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Pages\Main\SettingsView.axaml.cs">
-      <DependentUpon>SettingsView.axaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
 </Project>

@@ -6,8 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="SceneGate.UI.MainWindow"
         Icon="/Assets/app-logo.ico"
-        Height="600"
-        Width="800"
+        Height="800"
+        Width="1100"
         Title="SceneGate">
 
   <views:MainView />
