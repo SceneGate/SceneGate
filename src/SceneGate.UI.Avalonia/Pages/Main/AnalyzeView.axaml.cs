@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
@@ -19,6 +20,7 @@ public partial class AnalyzeView : UserControl
         DataContext = viewModel;
 
         viewModel.AskUserForFile.RegisterHandler(SelectInputFiles);
+        viewModel.AskUserForFolder.RegisterHandler(SelectInputFolder);
     }
 
     private void NodeTreeViewDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
@@ -43,5 +45,19 @@ public partial class AnalyzeView : UserControl
             .StorageProvider
             .OpenFilePickerAsync(options)
             .ConfigureAwait(false);
+    }
+
+    private async Task<IStorageFolder?> SelectInputFolder()
+    {
+        var options = new FolderPickerOpenOptions {
+            AllowMultiple = false,
+            Title = "Select the folder with files to analyze",
+        };
+
+        var results = await TopLevel.GetTopLevel(this)!
+            .StorageProvider
+            .OpenFolderPickerAsync(options)
+            .ConfigureAwait(false);
+        return results.FirstOrDefault();
     }
 }

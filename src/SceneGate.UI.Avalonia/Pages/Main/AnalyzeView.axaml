@@ -18,27 +18,35 @@
     <c:NodeFormatToIconConverter x:Key="Format2Icon" />
   </UserControl.Resources>
   
-  <Grid ColumnDefinitions="*,Auto,*">
+  <Grid ColumnDefinitions="Auto,Auto,*">
     <Grid Grid.Column="0" RowDefinitions="Auto,*">
-      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="5">
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Margin="5">
         <TextBlock Grid.Column="0"
                    Text="Nodes"
                    VerticalAlignment="Center"
                    FontWeight="Bold"
                    Theme="{StaticResource BodyTextBlockStyle}" />
-        <Button Grid.Column="1" Content="+" Command="{Binding AddFileCommand}" />
+        <Button Grid.Column="1" Margin="5 0" Command="{Binding AddFileCommand}">
+          <fluent:SymbolIcon Symbol="OpenFile" />
+        </Button>
+        <Button Grid.Column="2" Command="{Binding AddFolderCommand}">
+          <fluent:SymbolIcon Symbol="OpenLocal" />
+        </Button>
       </Grid>
       <Separator Grid.Row="1" VerticalAlignment="Top" />
 
       <TreeView Grid.Row="1"
-                MinWidth="250"
+                MinWidth="300"
                 SelectedItem="{Binding SelectedNode}"
                 ItemsSource="{Binding Nodes}"
                 SelectionMode="Single"
                 DoubleTapped="NodeTreeViewDoubleTapped">
         <TreeView.ItemTemplate>
           <TreeDataTemplate ItemsSource="{Binding Children}">
-            <TextBlock Text="{Binding Name}" />
+            <StackPanel Orientation="Horizontal">
+              <fluent:SymbolIcon Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
+              <TextBlock Margin="10 0" Text="{Binding Name}" />
+            </StackPanel>
           </TreeDataTemplate>
         </TreeView.ItemTemplate>
       </TreeView>

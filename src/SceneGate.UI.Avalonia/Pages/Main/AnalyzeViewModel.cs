@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
@@ -23,7 +24,7 @@ public partial class AnalyzeViewModel : ViewModelBase
     private ObservableCollection<NodeFormatTab> openedNodes;
 
     [ObservableProperty]
-    private NodeFormatTab selectedTab;
+    private NodeFormatTab? selectedTab;
 
     public AnalyzeViewModel()
     {
@@ -31,9 +32,12 @@ public partial class AnalyzeViewModel : ViewModelBase
         openedNodes = new ObservableCollection<NodeFormatTab>();
 
         AskUserForFile = new AsyncInteraction<IEnumerable<IStorageFile>>();
+        AskUserForFolder = new AsyncInteraction<IStorageFolder?>();
     }
 
     public AsyncInteraction<IEnumerable<IStorageFile>> AskUserForFile { get; }
+
+    public AsyncInteraction<IStorageFolder?> AskUserForFolder { get; }
 
     [RelayCommand]
     private async Task AddFileAsync()
@@ -48,12 +52,27 @@ public partial class AnalyzeViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void OpenNodeView()
+    private async Task AddFolderAsync()
     {
-        if (SelectedNode is null) {
+        IStorageFolder? folder = await AskUserForFolder.HandleAsync().ConfigureAwait(false);
+        string? path = folder?.TryGetLocalPath();
+        if (path is null) {
             return;
         }
 
+        string name = Path.GetFileName(path);
+        Node node = NodeFactory.FromDirectory(path, "*", name, subDirectories: true);
+        Nodes.Add(new TreeGridNode(node));
+    }
+
+    [RelayCommand]
+    private void OpenNodeView()
+    {
+        if (SelectedNode is null || SelectedNode.Node.IsContainer) {
+            return;
+        }
+
+        // Already opened
         if (OpenedNodes.Any(x => x.Node == SelectedNode.Node)) {
             return;
         }

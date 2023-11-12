@@ -46,16 +46,7 @@ public class TreeGridNode
             IBinary => NodeFormatKind.Binary,
             Po => NodeFormatKind.Translation,
 
-            _ => Path.GetExtension(node.Name).ToUpperInvariant() switch {
-                ".PNG" => NodeFormatKind.Image,
-                ".JPG" or ".JPEG" => NodeFormatKind.Image,
-                ".BMP" => NodeFormatKind.Image,
-                ".TIFF" => NodeFormatKind.Image,
-                ".GIF" => NodeFormatKind.Image,
-
-                ".PO" or ".POT" => NodeFormatKind.Translation,
-                _ => NodeFormatKind.Unknown,
-            },
+            _ => NodeFormatKind.Unknown,
         };
     }
 }

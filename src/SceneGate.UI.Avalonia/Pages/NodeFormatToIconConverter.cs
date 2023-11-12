@@ -12,7 +12,14 @@ public class NodeFormatToIconConverter : IValueConverter
     {
         if (value is NodeFormatKind formatKind) {
             return formatKind switch {
-                _ => new SymbolIconSource() { Symbol = Symbol.SyncFolder },
+                NodeFormatKind.Binary => Symbol.Page,
+                NodeFormatKind.Folder => Symbol.Folder,
+                NodeFormatKind.Image => Symbol.Image,
+                NodeFormatKind.Translation => Symbol.Character,
+
+                NodeFormatKind.Unknown => Symbol.Code,
+
+                _ => Symbol.Preview,
             };
         }
 
