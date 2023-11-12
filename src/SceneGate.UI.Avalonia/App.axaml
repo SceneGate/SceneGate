@@ -1,0 +1,9 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fluent="using:FluentAvalonia.Styling"
+             x:Class="SceneGate.UI.App">
+
+  <Application.Styles>
+    <fluent:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
+  </Application.Styles>
+</Application>

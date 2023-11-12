@@ -9,6 +9,12 @@
 
         <PackageVersion Include="YamlDotNet" Version="13.0.1" />
         <PackageVersion Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+        <PackageVersion Include="Avalonia" Version="11.0.5" />
+        <PackageVersion Include="Avalonia.Desktop" Version="11.0.5" />
+        <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.0.5" />
+        <PackageVersion Include="Avalonia.Diagnostics" Version="11.0.5" />
+        <PackageVersion Include="FluentAvaloniaUI" Version="2.0.4" />
+        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageVersion Include="Eto.Forms" Version="2.7.3" />
         <PackageVersion Include="Eto.Platform.Gtk" Version="2.7.3" />
         <PackageVersion Include="GtkSharp.Dependencies" Version="1.1.1" />

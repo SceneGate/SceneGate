@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RootNamespace>SceneGate.UI</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+    <AvaloniaResource Include="../../LICENSE" Link="Assets\LICENSE" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="FluentAvaloniaUI" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pages\Main\SettingsView.axaml.cs">
+      <DependentUpon>SettingsView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

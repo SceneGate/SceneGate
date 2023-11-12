@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             xmlns:local="clr-namespace:SceneGate.UI.Pages.Main"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="SceneGate.UI.Pages.Main.SettingsView"
+             x:DataType="local:SettingsViewModel">
+
+  <Design.DataContext>
+    <local:SettingsViewModel />
+  </Design.DataContext>
+
+  <ScrollViewer>
+    <StackPanel Spacing="8">
+      <Grid
+        Margin="5"
+        RowDefinitions="Auto,Auto,Auto"
+        ColumnDefinitions="Auto,Auto,Auto,*">
+        <Image
+          Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+          Margin="5"
+          Source="/Assets/app-logo.ico"
+          Height="78"
+          RenderOptions.BitmapInterpolationMode="HighQuality" />
+
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="SceneGate" Theme="{StaticResource TitleTextBlockStyle}" />
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ApplicationVersion}" Theme="{StaticResource BodyTextBlockStyle}" />
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="MIT License" Theme="{StaticResource CaptionTextBlockStyle}" />
+
+        <fluent:HyperlinkButton
+          Grid.Row="0"
+          Grid.Column="2"
+          Content="GitHub repository"
+          NavigateUri="https://github.com/SceneGate/SceneGate"
+          VerticalAlignment="Center"/>
+      </Grid>
+
+      <fluent:SettingsExpander
+        Header="Theme"
+        IconSource="DarkTheme"
+        Description="Change the current application theme">
+        <fluent:SettingsExpander.Footer>
+          <ComboBox
+            ItemsSource="{Binding AvailableThemes}"
+            SelectedItem="{Binding CurrentTheme}"
+            MinWidth="150" />
+        </fluent:SettingsExpander.Footer>
+      </fluent:SettingsExpander>
+
+      <fluent:SettingsExpander
+        Header="License"
+        IconSource="Globe">
+        <fluent:SettingsExpanderItem>
+          <TextBlock Text="{Binding License}" />
+        </fluent:SettingsExpanderItem>
+      </fluent:SettingsExpander>
+    </StackPanel>
+  </ScrollViewer>
+
+</UserControl>
