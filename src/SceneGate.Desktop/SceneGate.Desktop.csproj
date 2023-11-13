@@ -14,5 +14,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SceneGate.UI.Avalonia\SceneGate.UI.Avalonia.csproj" />
+
+    <PackageReference Include="SceneGate.Games.PokemonConquest" />
+    <PackageReference Include="SceneGate.Ekona" />
   </ItemGroup>
 </Project>

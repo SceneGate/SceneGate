@@ -6,7 +6,7 @@
              xmlns:local="using:SceneGate.UI.Pages.Main"
              xmlns:c="using:SceneGate.UI.Pages"
              xmlns:ctrlData="using:SceneGate.UI.ControlsData"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
              x:Class="SceneGate.UI.Pages.Main.AnalyzeView"
              x:DataType="local:AnalyzeViewModel">
 
@@ -18,8 +18,10 @@
     <c:NodeFormatToIconConverter x:Key="Format2Icon" />
   </UserControl.Resources>
   
-  <Grid ColumnDefinitions="Auto,Auto,*">
-    <Grid Grid.Column="0" RowDefinitions="Auto,*">
+  <Grid ColumnDefinitions="300,Auto,*">
+    <Grid Grid.Column="0"
+          RowDefinitions="Auto,*,Auto,250"
+          MinWidth="300">
       <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Margin="5">
         <TextBlock Grid.Column="0"
                    Text="Nodes"
@@ -36,7 +38,6 @@
       <Separator Grid.Row="1" VerticalAlignment="Top" />
 
       <TreeView Grid.Row="1"
-                MinWidth="300"
                 SelectedItem="{Binding SelectedNode}"
                 ItemsSource="{Binding Nodes}"
                 SelectionMode="Single"
@@ -50,13 +51,43 @@
           </TreeDataTemplate>
         </TreeView.ItemTemplate>
       </TreeView>
+
+      <GridSplitter Grid.Row="2" ResizeDirection="Rows" />
+
+      <Expander Grid.Row="3"
+                ExpandDirection="Down"
+                IsExpanded="True">
+        <Expander.Header>
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Converters"
+                       VerticalAlignment="Center"
+                       FontWeight="Bold"
+                       Theme="{StaticResource BodyTextBlockStyle}" />
+            <TextBox Text="{Binding ConverterFilter}"
+                     Margin="15 0 0 0"
+                     Watermark="Filter..."
+                     MinWidth="150"
+                     HorizontalAlignment="Right" />
+          </StackPanel>
+        </Expander.Header>
+        <TreeView SelectedItem="{Binding SelectedConverter}"
+                  ItemsSource="{Binding CompatibleConverters}"
+                  SelectionMode="Single"
+                  DoubleTapped="ConvertersTreeViewDoubleTapped">
+          <TreeView.ItemTemplate>
+            <TreeDataTemplate ItemsSource="{Binding Children}">
+              <TextBlock Text="{Binding DisplayName}" />
+            </TreeDataTemplate>
+          </TreeView.ItemTemplate>
+        </TreeView>
+      </Expander>
     </Grid>
 
     <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
 
     <fluent:TabView Grid.Column="2"
                     IsAddTabButtonVisible="False"
-                    TabItems="{Binding OpenedNodes}"
+                    TabItems="{Binding FormatViewTabs}"
                     TabCloseRequested="TabViewTabCloseRequested"
                     SelectedItem="{Binding SelectedTab}">
       <fluent:TabView.TabItemTemplate>

@@ -28,9 +28,14 @@ public partial class AnalyzeView : UserControl
         viewModel.OpenNodeViewCommand.Execute(null);
     }
 
-    private void TabViewTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
+    private void TabViewTabCloseRequested(TabView? sender, TabViewTabCloseRequestedEventArgs args)
     {
         viewModel.CloseNodeViewCommand.Execute(args.Item as NodeFormatTab);
+    }
+
+    private void ConvertersTreeViewDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
+    {
+        viewModel.ConvertNodeCommand.Execute(null);
     }
 
     private async Task<IEnumerable<IStorageFile>> SelectInputFiles()
