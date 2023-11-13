@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿namespace SceneGate.UI.Pages.Main;
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using FluentAvalonia.UI.Controls;
 using SceneGate.UI.ControlsData;
-
-namespace SceneGate.UI.Pages.Main;
 
 public partial class AnalyzeView : UserControl
 {
@@ -21,6 +21,7 @@ public partial class AnalyzeView : UserControl
 
         viewModel.AskUserForFile.RegisterHandler(SelectInputFiles);
         viewModel.AskUserForFolder.RegisterHandler(SelectInputFolder);
+        viewModel.DisplayConversionError.RegisterHandler(DisplayConversionError);
     }
 
     private void NodeTreeViewDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
@@ -64,5 +65,19 @@ public partial class AnalyzeView : UserControl
             .OpenFolderPickerAsync(options)
             .ConfigureAwait(false);
         return results.FirstOrDefault();
+    }
+
+    private async Task<object> DisplayConversionError(string message)
+    {
+        var dialog = new ContentDialog() {
+            Title = "Error converting format",
+            Content = message,
+            IsPrimaryButtonEnabled = false,
+            IsSecondaryButtonEnabled = false,
+            SecondaryButtonText = string.Empty,
+        };
+
+        _ = await dialog.ShowAsync().ConfigureAwait(false);
+        return null!;
     }
 }

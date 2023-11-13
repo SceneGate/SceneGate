@@ -15,6 +15,7 @@ public sealed class TreeGridConverter
         Children = new ObservableCollection<TreeGridConverter>();
         Id = converter.Type.FullName!;
         DisplayName = converter.Type.Name;
+        Kind = TreeGridConverterKind.Converter;
     }
 
     private TreeGridConverter(AssemblyName assembly)
@@ -22,6 +23,7 @@ public sealed class TreeGridConverter
         Children = new ObservableCollection<TreeGridConverter>();
         Id = assembly.FullName!;
         DisplayName = $"{assembly.Name} (v{assembly.Version})";
+        Kind = TreeGridConverterKind.Assesmbly;
     }
 
     private TreeGridConverter(string namespaceName)
@@ -29,11 +31,14 @@ public sealed class TreeGridConverter
         Children = new ObservableCollection<TreeGridConverter>();
         Id = namespaceName;
         DisplayName = namespaceName;
+        Kind = TreeGridConverterKind.Namespace;
     }
 
     public string Id { get; }
 
     public string DisplayName { get; }
+
+    public TreeGridConverterKind Kind { get; }
 
     public ConverterMetadata? Converter { get; }
 

@@ -16,9 +16,10 @@
 
   <UserControl.Resources>
     <c:NodeFormatToIconConverter x:Key="Format2Icon" />
+    <c:TreeGridConverterKindToIconConverter x:Key="ConverterKind2Icon" />
   </UserControl.Resources>
   
-  <Grid ColumnDefinitions="300,Auto,*">
+  <Grid ColumnDefinitions="350,Auto,*">
     <Grid Grid.Column="0"
           RowDefinitions="Auto,*,Auto,250"
           MinWidth="300">
@@ -46,7 +47,7 @@
           <TreeDataTemplate ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
               <fluent:SymbolIcon Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
-              <TextBlock Margin="10 0" Text="{Binding Name}" />
+              <TextBlock Margin="10 0 0 0" Text="{Binding Name}" />
             </StackPanel>
           </TreeDataTemplate>
         </TreeView.ItemTemplate>
@@ -76,7 +77,10 @@
                   DoubleTapped="ConvertersTreeViewDoubleTapped">
           <TreeView.ItemTemplate>
             <TreeDataTemplate ItemsSource="{Binding Children}">
-              <TextBlock Text="{Binding DisplayName}" />
+              <StackPanel Orientation="Horizontal">
+                <fluent:SymbolIcon Symbol="{Binding Kind, Converter={StaticResource ConverterKind2Icon}}" />
+                <TextBlock Margin="10 0 0 0" Text="{Binding DisplayName}" />
+              </StackPanel>
             </TreeDataTemplate>
           </TreeView.ItemTemplate>
         </TreeView>
