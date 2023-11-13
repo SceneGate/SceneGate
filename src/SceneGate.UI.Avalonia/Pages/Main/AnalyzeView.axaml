@@ -6,7 +6,7 @@
              xmlns:local="using:SceneGate.UI.Pages.Main"
              xmlns:c="using:SceneGate.UI.Pages"
              xmlns:ctrlData="using:SceneGate.UI.ControlsData"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              x:Class="SceneGate.UI.Pages.Main.AnalyzeView"
              x:DataType="local:AnalyzeViewModel">
 
@@ -19,11 +19,11 @@
     <c:TreeGridConverterKindToIconConverter x:Key="ConverterKind2Icon" />
   </UserControl.Resources>
   
-  <Grid ColumnDefinitions="350,Auto,*">
+  <Grid ColumnDefinitions="400,Auto,*">
     <Grid Grid.Column="0"
-          RowDefinitions="Auto,*,Auto,250"
+          RowDefinitions="Auto,*,Auto,350"
           MinWidth="300">
-      <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Margin="5">
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Margin="10 5">
         <TextBlock Grid.Column="0"
                    Text="Nodes"
                    VerticalAlignment="Center"
@@ -55,25 +55,34 @@
 
       <GridSplitter Grid.Row="2" ResizeDirection="Rows" />
 
-      <Expander Grid.Row="3"
-                ExpandDirection="Down"
-                IsExpanded="True">
-        <Expander.Header>
-          <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Converters"
-                       VerticalAlignment="Center"
-                       FontWeight="Bold"
-                       Theme="{StaticResource BodyTextBlockStyle}" />
-            <TextBox Text="{Binding ConverterFilter}"
-                     Margin="15 0 0 0"
-                     Watermark="Filter..."
-                     MinWidth="150"
-                     HorizontalAlignment="Right" />
-          </StackPanel>
-        </Expander.Header>
-        <TreeView SelectedItem="{Binding SelectedConverter}"
-                  ItemsSource="{Binding CompatibleConverters}"
+      <Grid Grid.Row="3"
+            Margin="10 10 5 5"
+            RowDefinitions="Auto,*"
+            ColumnDefinitions="Auto,*">
+        <TextBlock Grid.Row="0" Grid.Column="0"
+                   Text="Converters"
+                   DockPanel.Dock="Left"
+                   VerticalAlignment="Center"
+                   FontWeight="Bold"
+                   Theme="{StaticResource BodyTextBlockStyle}" />
+        <TextBox Grid.Row="0" Grid.Column="1"
+                 Text="{Binding ConverterFilter}"
+                 DockPanel.Dock="Right"
+                 Margin="20 0 5 0"
+                 Watermark="Filter..."
+                 MinWidth="150"
+                 HorizontalAlignment="Stretch" />
+        <Separator Grid.Row="1" Grid.ColumnSpan="2"
+                   Margin="0 10"
+                   VerticalAlignment="Top" />
+        <TreeView Grid.Row="1" Grid.ColumnSpan="2"
+                  Margin="0 10"
+                  Name="converterTreeView"
+                  Classes="ConverterMetatada"
+                  SelectedItem="{Binding SelectedConverter}"
+                  ItemsSource="{Binding ConverterNodes}"
                   SelectionMode="Single"
+                  AutoScrollToSelectedItem="True"
                   DoubleTapped="ConvertersTreeViewDoubleTapped">
           <TreeView.ItemTemplate>
             <TreeDataTemplate ItemsSource="{Binding Children}">
@@ -84,7 +93,7 @@
             </TreeDataTemplate>
           </TreeView.ItemTemplate>
         </TreeView>
-      </Expander>
+      </Grid>
     </Grid>
 
     <GridSplitter Grid.Column="1" ResizeDirection="Columns" />

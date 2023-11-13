@@ -1,7 +1,8 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="using:FluentAvalonia.UI.Controls"
-        xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives">
+        xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
+        xmlns:cd="using:SceneGate.UI.ControlsData">
 
   <Design.PreviewWith>
     <Border Padding="20" Width="600" Height="600">
@@ -18,7 +19,14 @@
       </ui:NavigationView>
     </Border>
   </Design.PreviewWith>
+
+  <Style Selector="TreeView.ConverterMetatada TreeViewItem" x:DataType="cd:TreeGridConverter">
+    <Setter Property="IsVisible" Value="{Binding IsCompatible}" />
+  </Style>
   
+  <!-- Navigation view with large buttons.
+    Adapted from FluentAvalonia
+  -->
   <Style Selector="ui|NavigationView.LargeAppNav">
     <Setter Property="IsPaneToggleButtonVisible" Value="False" />
     <Setter Property="OpenPaneLength" Value="72" />

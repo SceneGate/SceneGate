@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SceneGate.UI.ControlsData;
@@ -33,29 +34,26 @@ public partial class AnalyzeViewModel : ViewModelBase
     private NodeFormatTab? selectedTab;
 
     [ObservableProperty]
-    private ObservableCollection<TreeGridConverter> compatibleConverters;
+    private TreeGridConverter? selectedConverter;
 
     [ObservableProperty]
-    private ConverterMetadata? selectedConverter;
-
-    [ObservableProperty]
-    private string converterFilter;
+    private string? converterFilter;
 
     public AnalyzeViewModel()
     {
         converters = PluginManager.Instance.GetConverters().Select(x => x.Metadata).ToArray();
-        converterFilter = string.Empty;
+        ConverterNodes = new ObservableCollection<TreeGridConverter>();
+        CreateConverterNodes();
 
         nodes = new ObservableCollection<TreeGridNode>();
         formatViewTabs = new ObservableCollection<NodeFormatTab>();
-        compatibleConverters = new ObservableCollection<TreeGridConverter>();
 
         AskUserForFile = new AsyncInteraction<IEnumerable<IStorageFile>>();
         AskUserForFolder = new AsyncInteraction<IStorageFolder?>();
         DisplayConversionError = new AsyncInteraction<string, object>();
-
-        UpdateCompatibleConverters();
     }
+
+    public ObservableCollection<TreeGridConverter> ConverterNodes { get; }
 
     public AsyncInteraction<IEnumerable<IStorageFile>> AskUserForFile { get; }
 
@@ -105,24 +103,6 @@ public partial class AnalyzeViewModel : ViewModelBase
         var tab = new NodeFormatTab(SelectedNode.Node, SelectedNode.Kind, "TODO");
         FormatViewTabs.Add(tab);
         SelectedTab = tab;
-
-        //var formatViews = UiPluginManager.Instance.GetCompatibleView(SelectedNode?.Node.Format);
-        //BaseFormatView selectedView = null;
-
-        //// We need to implement a better way to autodiscovery of views
-        //// rather than skipping hard-coded views. In "LibGame" each discovery
-        //// was returning a "matching' score instead of true/false.
-        //var nonGenericViews = formatViews.Where(v => v is not ObjectView);
-        //if (nonGenericViews.Any()) {
-        //    selectedView = nonGenericViews.First();
-        //} else {
-        //    selectedView = formatViews.FirstOrDefault();
-        //}
-
-        //if (selectedView is not null) {
-        //    selectedView.ViewModel.Show(SelectedNode?.Node.Format);
-        //    Viewer = selectedView;
-        //}
     }
 
     [RelayCommand]
@@ -138,8 +118,8 @@ public partial class AnalyzeViewModel : ViewModelBase
     [RelayCommand]
     private async Task ConvertNodeAsync()
     {
-        var node = SelectedNode;
-        if (node is null || SelectedConverter is null) {
+        TreeGridNode? node = SelectedNode;
+        if (node is null || SelectedConverter?.Converter is null) {
             return;
         }
 
@@ -149,17 +129,13 @@ public partial class AnalyzeViewModel : ViewModelBase
                 binaryFormat.Stream.Position = 0;
             }
 
-            var converterType = SelectedConverter.Type;
-            await Task.Run(() => node.Node.TransformWith(converterType)).ConfigureAwait(true);
+            Type converterType = SelectedConverter.Converter.Type;
+            await node.TransformAsync(converterType).ConfigureAwait(true);
+
+            Dispatcher.UIThread.Post(UpdateCompatibleConverters);
         } catch (Exception ex) {
-            await DisplayConversionError.HandleAsync(ex.ToString()).ConfigureAwait(true);
+            _ = await DisplayConversionError.HandleAsync(ex.ToString()).ConfigureAwait(true);
         }
-
-        //node.UpdateFormatName();
-        //node.UpdateChildren();
-        //OnNodeUpdate?.Invoke(this, node);
-
-        //SelectedNode = node;
     }
 
     [RelayCommand]
@@ -168,7 +144,7 @@ public partial class AnalyzeViewModel : ViewModelBase
         throw new NotImplementedException();
     }
 
-    partial void OnConverterFilterChanged(string value)
+    partial void OnConverterFilterChanged(string? value)
     {
         UpdateCompatibleConverters();
     }
@@ -178,21 +154,17 @@ public partial class AnalyzeViewModel : ViewModelBase
         UpdateCompatibleConverters();
     }
 
+    private void CreateConverterNodes()
+    {
+        foreach (ConverterMetadata converter in converters) {
+            TreeGridConverter.InsertConverterHierarchy(converter, ConverterNodes);
+        }
+    }
+
     private void UpdateCompatibleConverters()
     {
-        CompatibleConverters.Clear();
-
-        var node = SelectedNode;
-        IEnumerable<ConverterMetadata> compatible = (node?.Node.Format is null)
-            ? converters
-            : converters.Where(c => c.CanConvert(node.Node.Format.GetType()));
-
-        if (!string.IsNullOrWhiteSpace(ConverterFilter)) {
-            compatible = compatible.Where(c => c.Name.Contains(ConverterFilter, StringComparison.OrdinalIgnoreCase));
-        }
-
-        foreach (ConverterMetadata converter in compatible) {
-            TreeGridConverter.InsertConverterHierarchy(converter, CompatibleConverters);
+        foreach (TreeGridConverter node in ConverterNodes) {
+            node.UpdateVisibility(ConverterFilter, SelectedNode?.Node.Format?.GetType());
         }
     }
 }

@@ -1,32 +1,33 @@
-﻿using System.Collections.ObjectModel;
-using System.IO;
+﻿namespace SceneGate.UI.ControlsData;
+
+using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 using Yarhl.Media.Text;
 
-namespace SceneGate.UI.ControlsData;
-
-public class TreeGridNode
+public partial class TreeGridNode : ObservableObject
 {
+    [ObservableProperty]
+    private NodeFormatKind kind;
+
     public TreeGridNode(Node node)
     {
         Node = node;
-        Kind = GetKind(node);
+        UpdateKind();
 
-        Children = new ObservableCollection<TreeGridNode>(
-            node.Children
-            .OrderBy(c => !c.IsContainer)
-            .ThenBy(c => c.Name)
-            .Select(n => new TreeGridNode(n))
-            .ToList());
+        Children = new ObservableCollection<TreeGridNode>();
+        UpdateChildren();
     }
 
     public Node Node { get; }
 
     public ObservableCollection<TreeGridNode> Children { get; }
-
-    public NodeFormatKind Kind { get; }
 
     public string Name => Node.Name;
 
@@ -37,9 +38,32 @@ public class TreeGridNode
         Node.Add(node);
     }
 
-    private static NodeFormatKind GetKind(Node node)
+    public async Task TransformAsync(Type converterType)
     {
-        return node.Format switch {
+        _ = await Task.Run(() => Node.TransformWith(converterType)).ConfigureAwait(false);
+
+        await Dispatcher.UIThread.InvokeAsync(() => {
+            UpdateKind();
+            UpdateChildren();
+        });
+    }
+
+    private void UpdateChildren()
+    {
+        Children.Clear();
+
+        var children = Node.Children
+            .OrderBy(c => !c.IsContainer)
+            .ThenBy(c => c.Name)
+            .Select(n => new TreeGridNode(n));
+        foreach (TreeGridNode child in children) {
+            Children.Add(child);
+        }
+    }
+
+    private void UpdateKind()
+    {
+        Kind = Node.Format switch {
             NodeContainerFormat => NodeFormatKind.Folder,
             null => NodeFormatKind.Folder,
 
