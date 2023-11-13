@@ -6,8 +6,7 @@ Task("Define-Project")
     .Does<BuildInfo>(info =>
 {
     info.AddLibraryProjects("SceneGate.UI.Formats");
-    info.AddApplicationProjects("SceneGate.UI.Gtk");
-    info.AddApplicationProjects("SceneGate.UI.Mac");
+    info.AddApplicationProjects("SceneGate.Desktop");
 
     info.PreviewNuGetFeed = "https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json";
 });
