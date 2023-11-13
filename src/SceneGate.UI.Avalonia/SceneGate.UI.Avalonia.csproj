@@ -25,4 +25,8 @@
     <PackageReference Include="Yarhl.Media" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SceneGate.UI.Formats\SceneGate.UI.Formats.csproj" />
+  </ItemGroup>
+
 </Project>

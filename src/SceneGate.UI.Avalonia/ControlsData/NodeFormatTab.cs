@@ -1,5 +1,6 @@
 ﻿namespace SceneGate.UI.ControlsData;
 using CommunityToolkit.Mvvm.ComponentModel;
+using SceneGate.UI.Formats;
 using Yarhl.FileSystem;
 
 public partial class NodeFormatTab : ObservableObject
@@ -10,7 +11,7 @@ public partial class NodeFormatTab : ObservableObject
     [ObservableProperty]
     private NodeFormatKind kind;
 
-    public NodeFormatTab(Node node, NodeFormatKind kind, object content)
+    public NodeFormatTab(Node node, NodeFormatKind kind, IFormatViewModel content)
     {
         Node = node;
         Name = node.Name;
@@ -20,5 +21,5 @@ public partial class NodeFormatTab : ObservableObject
 
     public Node Node { get; }
 
-    public object Content { get; }
+    public IFormatViewModel Content { get; }
 }

@@ -11,6 +11,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SceneGate.UI.ControlsData;
+using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Mvvm;
 using Yarhl;
 using Yarhl.FileFormat;
@@ -103,7 +104,7 @@ public partial class AnalyzeViewModel : ViewModelBase
         }
 
         // TODO: get format view from plugins
-        var tab = new NodeFormatTab(SelectedNode.Node, SelectedNode.Kind, "TODO");
+        var tab = new NodeFormatTab(SelectedNode.Node, SelectedNode.Kind, new ObjectViewModel());
         FormatViewTabs.Add(tab);
         SelectedTab = tab;
     }
