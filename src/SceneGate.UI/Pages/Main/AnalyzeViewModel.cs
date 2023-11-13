@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using SceneGate.UI.ControlsData;
 using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Mvvm;
+using SceneGate.UI.Plugins;
 using Yarhl;
 using Yarhl.FileFormat;
 using Yarhl.FileSystem;
@@ -20,7 +21,7 @@ using Yarhl.IO;
 
 public partial class AnalyzeViewModel : ViewModelBase
 {
-    private readonly ConverterMetadata[] converters;
+    private readonly IReadOnlyList<ConverterMetadata> converters;
 
     [ObservableProperty]
     private ObservableCollection<TreeGridNode> nodes;
@@ -42,7 +43,7 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     public AnalyzeViewModel()
     {
-        converters = PluginManager.Instance.GetConverters().Select(x => x.Metadata).ToArray();
+        converters = PluginsLocator.Instance.ConvertersMetadata;
         ConverterNodes = new ObservableCollection<TreeGridConverter>();
         CreateConverterNodes();
 

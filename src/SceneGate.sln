@@ -3,19 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneGate.Desktop", "SceneGate.Desktop\SceneGate.Desktop.csproj", "{B1D421C6-06F5-43F5-85E6-3A6B35A0FC77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SceneGate.Desktop", "SceneGate.Desktop\SceneGate.Desktop.csproj", "{B1D421C6-06F5-43F5-85E6-3A6B35A0FC77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneGate.UI", "SceneGate.UI\SceneGate.UI.csproj", "{1DD27D58-6E87-476F-9F32-72A4CDAFA5B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SceneGate.UI", "SceneGate.UI\SceneGate.UI.csproj", "{1DD27D58-6E87-476F-9F32-72A4CDAFA5B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneGate.UI.Formats", "SceneGate.UI.Formats\SceneGate.UI.Formats.csproj", "{A16FFAF5-3F00-470F-9437-B81B1A6D3E18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SceneGate.UI.Formats", "SceneGate.UI.Formats\SceneGate.UI.Formats.csproj", "{A16FFAF5-3F00-470F-9437-B81B1A6D3E18}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F150C7D5-1189-41BF-8F0E-F80C4A92B510}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		nuget.config = nuget.config
+		Tests.runsettings = Tests.runsettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B1D421C6-06F5-43F5-85E6-3A6B35A0FC77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +35,8 @@ Global
 		{A16FFAF5-3F00-470F-9437-B81B1A6D3E18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A16FFAF5-3F00-470F-9437-B81B1A6D3E18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A16FFAF5-3F00-470F-9437-B81B1A6D3E18}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
