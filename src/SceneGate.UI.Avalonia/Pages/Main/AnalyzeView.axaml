@@ -48,6 +48,16 @@
             <StackPanel Orientation="Horizontal">
               <fluent:SymbolIcon Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
               <TextBlock Margin="10 0 0 0" Text="{Binding Name}" />
+              <StackPanel.ContextFlyout>
+                <MenuFlyout>
+                  <MenuItem Header="Save to file"
+                            Command="{ReflectionBinding $parent[TreeView].DataContext.SaveBinaryNodeCommand}" />
+                  <MenuItem Header="Convert"
+                            Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}" />
+                  <MenuItem Header="Show"
+                            Command="{ReflectionBinding $parent[TreeView].DataContext.OpenNodeViewCommand}" />
+                </MenuFlyout>
+              </StackPanel.ContextFlyout>
             </StackPanel>
           </TreeDataTemplate>
         </TreeView.ItemTemplate>

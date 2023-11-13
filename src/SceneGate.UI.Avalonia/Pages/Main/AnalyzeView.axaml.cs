@@ -19,9 +19,10 @@ public partial class AnalyzeView : UserControl
         viewModel = new AnalyzeViewModel();
         DataContext = viewModel;
 
-        viewModel.AskUserForFile.RegisterHandler(SelectInputFiles);
-        viewModel.AskUserForFolder.RegisterHandler(SelectInputFolder);
+        viewModel.AskUserForInputFile.RegisterHandler(SelectInputFiles);
+        viewModel.AskUserForInputFolder.RegisterHandler(SelectInputFolder);
         viewModel.DisplayConversionError.RegisterHandler(DisplayConversionError);
+        viewModel.AskUserForFileSave.RegisterHandler(SelectOutputFile);
     }
 
     private void NodeTreeViewDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
@@ -79,5 +80,18 @@ public partial class AnalyzeView : UserControl
 
         _ = await dialog.ShowAsync().ConfigureAwait(false);
         return null!;
+    }
+
+    private async Task<IStorageFile?> SelectOutputFile(string name)
+    {
+        var options = new FilePickerSaveOptions {
+            Title = "Select where to save the file",
+            SuggestedFileName = name,
+        };
+
+        return await TopLevel.GetTopLevel(this)!
+            .StorageProvider
+            .SaveFilePickerAsync(options)
+            .ConfigureAwait(false);
     }
 }

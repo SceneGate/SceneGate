@@ -91,22 +91,6 @@ public sealed partial class TreeGridConverter : ObservableObject
         }
     }
 
-    public TreeGridConverter? SearchConverter(ConverterMetadata converter)
-    {
-        if (Converter == converter) {
-            return this;
-        }
-
-        foreach (TreeGridConverter node in Children) {
-            TreeGridConverter? found = node.SearchConverter(converter);
-            if (found is not null) {
-                return found;
-            }
-        }
-
-        return null;
-    }
-
     private TreeGridConverter GetOrAddChildNamespace(string name)
     {
         TreeGridConverter? child = Children.FirstOrDefault(x => x.DisplayName == name);

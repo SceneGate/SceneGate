@@ -48,23 +48,26 @@ public partial class AnalyzeViewModel : ViewModelBase
         nodes = new ObservableCollection<TreeGridNode>();
         formatViewTabs = new ObservableCollection<NodeFormatTab>();
 
-        AskUserForFile = new AsyncInteraction<IEnumerable<IStorageFile>>();
-        AskUserForFolder = new AsyncInteraction<IStorageFolder?>();
+        AskUserForInputFile = new AsyncInteraction<IEnumerable<IStorageFile>>();
+        AskUserForInputFolder = new AsyncInteraction<IStorageFolder?>();
         DisplayConversionError = new AsyncInteraction<string, object>();
+        AskUserForFileSave = new AsyncInteraction<string, IStorageFile?>();
     }
 
     public ObservableCollection<TreeGridConverter> ConverterNodes { get; }
 
-    public AsyncInteraction<IEnumerable<IStorageFile>> AskUserForFile { get; }
+    public AsyncInteraction<IEnumerable<IStorageFile>> AskUserForInputFile { get; }
 
-    public AsyncInteraction<IStorageFolder?> AskUserForFolder { get; }
+    public AsyncInteraction<IStorageFolder?> AskUserForInputFolder { get; }
+
+    public AsyncInteraction<string, IStorageFile?> AskUserForFileSave { get; }
 
     public AsyncInteraction<string, object> DisplayConversionError { get; }
 
     [RelayCommand]
     private async Task AddFileAsync()
     {
-        var files = await AskUserForFile.HandleAsync().ConfigureAwait(false);
+        var files = await AskUserForInputFile.HandleAsync().ConfigureAwait(false);
         var paths = files.Select(f => f.TryGetLocalPath()).Where(x => x is not null);
 
         foreach (string? file in paths) {
@@ -76,7 +79,7 @@ public partial class AnalyzeViewModel : ViewModelBase
     [RelayCommand]
     private async Task AddFolderAsync()
     {
-        IStorageFolder? folder = await AskUserForFolder.HandleAsync().ConfigureAwait(false);
+        IStorageFolder? folder = await AskUserForInputFolder.HandleAsync().ConfigureAwait(false);
         string? path = folder?.TryGetLocalPath();
         if (path is null) {
             return;
@@ -87,10 +90,10 @@ public partial class AnalyzeViewModel : ViewModelBase
         Nodes.Add(new TreeGridNode(node));
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanOpenNodeView))]
     private void OpenNodeView()
     {
-        if (SelectedNode is null || SelectedNode.Node.IsContainer) {
+        if (SelectedNode is null) {
             return;
         }
 
@@ -105,6 +108,11 @@ public partial class AnalyzeViewModel : ViewModelBase
         SelectedTab = tab;
     }
 
+    private bool CanOpenNodeView()
+    {
+        return SelectedNode is not null;
+    }
+
     [RelayCommand]
     private void CloseNodeView(NodeFormatTab tab)
     {
@@ -115,7 +123,7 @@ public partial class AnalyzeViewModel : ViewModelBase
         FormatViewTabs.Remove(tab);
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanConvertNode))]
     private async Task ConvertNodeAsync()
     {
         TreeGridNode? node = SelectedNode;
@@ -138,10 +146,31 @@ public partial class AnalyzeViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
-    private void SaveBinaryNode()
+    private bool CanConvertNode()
     {
-        throw new NotImplementedException();
+        return SelectedNode is not null && SelectedConverter?.Converter is not null;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanSaveBinaryNode))]
+    private async Task SaveBinaryNodeAsync()
+    {
+        Node? node = SelectedNode?.Node;
+        if (node?.Stream is null) {
+            return;
+        }
+
+        IStorageFile? file = await AskUserForFileSave.HandleAsync(node.Name).ConfigureAwait(false);
+        string? outputPath = file?.TryGetLocalPath();
+        if (outputPath is null) {
+            return;
+        }
+
+        node.Stream.WriteTo(outputPath);
+    }
+
+    private bool CanSaveBinaryNode()
+    {
+        return SelectedNode?.Node.Format is IBinary;
     }
 
     partial void OnConverterFilterChanged(string? value)
@@ -165,6 +194,10 @@ public partial class AnalyzeViewModel : ViewModelBase
     {
         foreach (TreeGridConverter node in ConverterNodes) {
             node.UpdateVisibility(ConverterFilter, SelectedNode?.Node.Format?.GetType());
+        }
+
+        if (SelectedConverter is { IsCompatible: false }) {
+            SelectedConverter = null;
         }
     }
 }
