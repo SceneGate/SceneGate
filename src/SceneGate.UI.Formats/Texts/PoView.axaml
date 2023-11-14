@@ -1,0 +1,114 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             xmlns:local="using:SceneGate.UI.Formats.Texts"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SceneGate.UI.Formats.Texts.PoView"
+             x:DataType="local:PoViewModel">
+
+  <Design.DataContext>
+    <local:PoViewModel />
+  </Design.DataContext>
+  
+  <Grid RowDefinitions="*,Auto,250"
+        ColumnDefinitions="1.5*,Auto,*">
+
+    <DataGrid Grid.Column="0"
+              ItemsSource="{Binding Entries}"
+              SelectedItem="{Binding SelectedEntry}"
+              x:DataType="local:PoEntryViewModel"
+              CanUserReorderColumns="False"
+              CanUserSortColumns="False"
+              CanUserResizeColumns="True"
+              AutoGenerateColumns="False">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Context"
+                            Binding="{Binding Context}" />
+        <DataGridTextColumn Header="Original"
+                            Binding="{Binding Original}"
+                            Width="*" />
+        <DataGridTextColumn Header="Translation"
+                            Binding="{Binding Translated}"
+                            Width="*" />
+      </DataGrid.Columns>
+    </DataGrid>
+
+    <Grid Grid.Row="0" Grid.Column="2" Margin="10" RowDefinitions="Auto,*">
+      <TextBlock Grid.Row="0" 
+                  Text="Header"
+                  Theme="{StaticResource BodyTextBlockStyle}"
+                  FontWeight="Bold" />
+      <DataGrid Grid.Row="1"
+                ItemsSource="{Binding Header}"
+                AutoGenerateColumns="True"
+                CanUserReorderColumns="False"
+                CanUserSortColumns="False"
+                HeadersVisibility="None"
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Auto" />
+    </Grid>
+
+    <GridSplitter Grid.Column="1" Grid.RowSpan="2" ResizeDirection="Columns" />
+    <Separator Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top" />
+
+    <Grid Grid.Row="2" Grid.Column="0"
+          Margin="5"
+          RowDefinitions="Auto,*,Auto,*"
+          ColumnDefinitions="*">
+      <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 5">
+        <TextBlock Text="Original"
+                   Theme="{StaticResource BodyTextBlockStyle}"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center"/>
+        <Border Background="{DynamicResource SystemAccentColorLight1}" MinWidth="20" Margin="5 0" CornerRadius="5">
+          <TextBlock Text="{Binding SelectedEntry.Context}"
+                     Margin="5"
+                     Foreground="{DynamicResource TextOnAccentFillColorPrimary}"/>
+        </Border>
+        <Border Background="{DynamicResource SystemAccentColorDark1}" MinWidth="20" Margin="5 0" CornerRadius="5">
+          <TextBlock Text="{Binding SelectedEntry.Flags}"
+                     Margin="5"
+                     Foreground="{DynamicResource TextOnAccentFillColorPrimary}"/>
+        </Border>
+      </StackPanel>
+ 
+      <TextBox Grid.Row="1"
+               Text="{Binding SelectedEntry.Original}"
+               IsReadOnly="True" />
+
+      <Grid Grid.Row="2" Margin="0 5 5 0" ColumnDefinitions="Auto,*,Auto">
+        <TextBlock Text="Translated"
+                   Theme="{StaticResource BodyTextBlockStyle}"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center" />
+        <Button Grid.Column="1"
+                Margin="10 0"
+                Command="{Binding PasteOriginalTranslationCommand}">
+          <fluent:SymbolIcon Symbol="Paste" />
+        </Button>
+        <ToggleSwitch Grid.Column="2"
+                      OnContent="Needs editing"
+                      OffContent="Ready!"
+                      IsChecked="{Binding SelectedEntry.IsFuzzy}" />
+      </Grid>
+
+      <TextBox Grid.Row="3"
+               Text="{Binding SelectedEntry.Translated}"
+               AcceptsReturn="True" />
+    </Grid>
+
+    <StackPanel Grid.Column="2" Grid.Row="2"
+                Orientation="Vertical"
+                Margin="10 5">
+      <TextBlock Text="Extracted comments"
+                 Margin="0 5"
+                 Theme="{StaticResource BodyTextBlockStyle}"
+                 FontWeight="Bold" />
+      <TextBlock Text="{Binding SelectedEntry.ExtractedComments}"
+                 TextWrapping="Wrap" />
+    </StackPanel>
+  </Grid>
+  
+</UserControl>
