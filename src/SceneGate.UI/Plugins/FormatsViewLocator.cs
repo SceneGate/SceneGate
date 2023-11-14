@@ -1,6 +1,7 @@
 ﻿namespace SceneGate.UI.Plugins;
 
 using System;
+using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using SceneGate.UI.Formats;
@@ -25,13 +26,16 @@ public class FormatsViewLocator : IDataTemplate
             return new TextBlock { Text = "Null view model" };
         }
 
-        string name = data.GetType().FullName!.Replace("ViewModel", "View");
-        var type = Type.GetType(name);
+        Type dataType = data.GetType();
+        string assemblyName = dataType.Assembly.FullName!;
+        string typeName = dataType.FullName!.Replace("ViewModel", "View");
+        string qualifiedName = $"{typeName}, {assemblyName}";
+        var type = Type.GetType(qualifiedName);
 
         if (type != null) {
             return (Control)Activator.CreateInstance(type)!;
         } else {
-            return new TextBlock { Text = "Not Found: " + name };
+            return new TextBlock { Text = "Not Found: " + qualifiedName };
         }
     }
 

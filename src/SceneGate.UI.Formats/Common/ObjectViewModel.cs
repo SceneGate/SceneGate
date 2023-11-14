@@ -4,7 +4,6 @@ using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
-using Yarhl.FileFormat;
 
 /// <summary>
 /// View model to display any kind of .NET object.
@@ -17,13 +16,13 @@ public class ObjectViewModel : ObservableObject, IFormatViewModel
     private bool showJson;
     private bool showText;
     private bool showPropertyGrid;
-    private IFormat format;
+    private object format;
     private string text;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObjectViewModel" /> class.
     /// </summary>
-    public ObjectViewModel()
+    public ObjectViewModel(object model)
     {
         ShowPropertyGrid = true;
         Text = string.Empty;
@@ -39,6 +38,8 @@ public class ObjectViewModel : ObservableObject, IFormatViewModel
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = true,
         };
+
+        Format = model;
     }
 
     /// <summary>
@@ -97,21 +98,9 @@ public class ObjectViewModel : ObservableObject, IFormatViewModel
     /// <summary>
     /// Gets or sets the format object.
     /// </summary>
-    public IFormat Format {
+    public object Format {
         get => format;
         set => SetProperty(ref format, value);
-    }
-
-    /// <inheritdoc/>
-    public bool CanShow(IFormat format)
-    {
-        return true;
-    }
-
-    /// <inheritdoc/>
-    public void Show(IFormat format)
-    {
-        Format = format;
     }
 
     private void UpdateText()

@@ -18,6 +18,8 @@
   <ItemGroup>
     <ProjectReference Include="..\SceneGate.UI\SceneGate.UI.csproj" />
 
+    <!-- Plugins -->
+    <ProjectReference Include="..\SceneGate.UI.Formats\SceneGate.UI.Formats.csproj" />
     <PackageReference Include="SceneGate.Games.PokemonConquest" />
     <PackageReference Include="SceneGate.Ekona" />
   </ItemGroup>

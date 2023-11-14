@@ -11,6 +11,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SceneGate.UI.ControlsData;
+using SceneGate.UI.Formats;
 using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Mvvm;
 using SceneGate.UI.Plugins;
@@ -95,17 +96,35 @@ public partial class AnalyzeViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanOpenNodeView))]
     private void OpenNodeView()
     {
-        if (SelectedNode is null) {
+        TreeGridNode? selection = SelectedNode;
+        if (selection is null) {
+            return;
+        }
+
+        Node node = selection.Node;
+        IFormat? format = node.Format;
+        if (format is null) {
             return;
         }
 
         // Already opened
-        if (FormatViewTabs.Any(x => x.Node == SelectedNode.Node)) {
+        if (FormatViewTabs.Any(x => x.Node == node)) {
             return;
         }
 
-        // TODO: get format view from plugins
-        var tab = new NodeFormatTab(SelectedNode.Node, SelectedNode.Kind, new ObjectViewModel());
+        // We get the view model from our plugins locator (custom assembly scanner)
+        IFormatViewModelBuilder? vmBuilder = PluginsLocator.Instance.ViewModelBuilders
+            .FirstOrDefault(b => b.CanShow(format));
+
+        // The plugin will build the view model
+        IFormatViewModel formatViewModel = (vmBuilder is not null)
+            ? vmBuilder.Build(format)
+            : new ObjectViewModel(format);
+
+        // We bind the view model to the content of the tab.
+        // This will trigger in Avalonia the usage of all the ViewLocators (IDataTemplate)
+        // to find its best view / worst case it prints a not found in a textblock.
+        var tab = new NodeFormatTab(node, selection.Kind, formatViewModel);
         FormatViewTabs.Add(tab);
         SelectedTab = tab;
     }
