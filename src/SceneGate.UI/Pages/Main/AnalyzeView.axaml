@@ -116,8 +116,11 @@
       <fluent:TabView.TabItemTemplate>
         <DataTemplate DataType="ctrlData:NodeFormatTab">
           <fluent:TabViewItem Header="{Binding Name}"
-                              Content="{Binding Content}"
-                              IconSource="{Binding Kind, Converter={StaticResource Format2Icon}}" />
+                              Content="{Binding Content}">
+            <fluent:TabViewItem.IconSource>
+              <fluent:SymbolIconSource Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
+            </fluent:TabViewItem.IconSource>
+          </fluent:TabViewItem>
         </DataTemplate>
       </fluent:TabView.TabItemTemplate>
     </fluent:TabView>

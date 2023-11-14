@@ -126,6 +126,7 @@ public partial class AnalyzeViewModel : ViewModelBase
         // to find its best view / worst case it prints a not found in a textblock.
         var tab = new NodeFormatTab(node, selection.Kind, formatViewModel);
         FormatViewTabs.Add(tab);
+
         SelectedTab = tab;
     }
 
@@ -161,7 +162,16 @@ public partial class AnalyzeViewModel : ViewModelBase
             Type converterType = SelectedConverter.Converter.Type;
             await node.TransformAsync(converterType).ConfigureAwait(true);
 
-            Dispatcher.UIThread.Post(UpdateCompatibleConverters);
+            Dispatcher.UIThread.Post(() => {
+                // We can't keep it open as the previous format may have been disposed
+                // and keeping all of them may consume a lot of memory.
+                NodeFormatTab? nodeTab = FormatViewTabs.FirstOrDefault(x => x.Node == node.Node);
+                if (nodeTab is not null) {
+                    CloseNodeView(nodeTab);
+                }
+
+                UpdateCompatibleConverters();
+            });
         } catch (Exception ex) {
             _ = await DisplayConversionError.HandleAsync(ex.ToString()).ConfigureAwait(true);
         }
