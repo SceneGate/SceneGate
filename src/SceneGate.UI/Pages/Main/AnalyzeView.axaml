@@ -19,7 +19,7 @@
     <c:TreeGridConverterKindToIconConverter x:Key="ConverterKind2Icon" />
   </UserControl.Resources>
   
-  <Grid ColumnDefinitions="400,Auto,*">
+  <Grid ColumnDefinitions="450,Auto,*">
     <Grid Grid.Column="0"
           RowDefinitions="Auto,*,Auto,350"
           MinWidth="300">
@@ -47,20 +47,32 @@
         <TreeView.ItemTemplate>
           <TreeDataTemplate ItemsSource="{Binding Children}">
             <!-- Setting background so contextmenu works everywhere -->
-            <DockPanel Background="Transparent">
-              <fluent:SymbolIcon DockPanel.Dock="Left"
+            <Grid Background="Transparent" ColumnDefinitions="Auto,*,*,70,60">
+              <fluent:SymbolIcon Grid.Column="0"
                                  VerticalAlignment="Center"
                                  Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
-              <Button DockPanel.Dock="Right"
+              <TextBlock Grid.Column="1"
+                         Margin="10 0 5 0"
+                         Text="{Binding Name}"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="2"
+                         Margin="5 0"
+                         Text="{Binding FormatName}"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3"
+                         Margin="5 0"
+                         Text="{Binding HumanReadableLength}"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Center" />
+              <Button Grid.Column="4"
                       FontSize="9"
                       Margin="4 0"
                       Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}"
                       ToolTip.Tip="Convert this node with the selected converter">
                 <fluent:SymbolIcon Symbol="Sync" />
               </Button>
-              <!-- Last child (this one) is the one stretched, so keep it last -->
-              <TextBlock Margin="10 0 0 0" Text="{Binding Name}" VerticalAlignment="Center" />
-              <DockPanel.ContextFlyout>
+              <Grid.ContextFlyout>
                 <MenuFlyout>
                   <MenuItem Header="Save to file"
                             Command="{ReflectionBinding $parent[TreeView].DataContext.SaveBinaryNodeCommand}" />
@@ -69,8 +81,8 @@
                   <MenuItem Header="Show"
                             Command="{ReflectionBinding $parent[TreeView].DataContext.OpenNodeViewCommand}" />
                 </MenuFlyout>
-              </DockPanel.ContextFlyout>
-            </DockPanel>
+              </Grid.ContextFlyout>
+            </Grid>
           </TreeDataTemplate>
         </TreeView.ItemTemplate>
       </TreeView>

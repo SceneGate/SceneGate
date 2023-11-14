@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <IsPublishable>true</IsPublishable>
 
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
 
