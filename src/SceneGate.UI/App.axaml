@@ -8,8 +8,14 @@
     <plugins:FormatsViewLocator />
   </Application.DataTemplates>
 
+  <Application.Resources>
+    <!-- Fonts -->
+    <FontFamily x:Key="CascadiaCodeFont">avares://SceneGate.UI/Assets/Fonts#Cascadia Code</FontFamily>
+  </Application.Resources>
+  
   <Application.Styles>
     <fluent:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
     <StyleInclude Source="avares://SceneGate.UI/Styling/ControlsStyle.axaml" />
+    <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
   </Application.Styles>
 </Application>

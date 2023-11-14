@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+             xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
+             xmlns:local="using:SceneGate.UI.Formats.Common"
+             xmlns:behaviors="using:SceneGate.UI.Formats.CodeEditor"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SceneGate.UI.Formats.Common.ObjectView"
+             x:DataType="local:ObjectViewModel">
+  <Design.DataContext>
+    <local:ObjectViewModel />
+  </Design.DataContext>
+
+  <TabControl>
+    <TabItem Header="Model">
+      <ScrollViewer>
+        <pgc:PropertyGrid SelectedObject="{Binding Model}"
+                          AllowFilter="False"
+                          AllowQuickFilter="False" />
+      </ScrollViewer>
+    </TabItem>
+
+    <TabItem Header="YAML">
+      <AvaloniaEdit:TextEditor ShowLineNumbers="True"
+                               SyntaxHighlighting="Yaml"
+                               IsReadOnly="True"
+                               FontFamily="{StaticResource CascadiaCodeFont}">
+        <i:Interaction.Behaviors>
+          <behaviors:DocumentTextBindingBehavior Text="{Binding YamlText}"/>
+        </i:Interaction.Behaviors>
+      </AvaloniaEdit:TextEditor>
+    </TabItem>
+
+    <TabItem Header="JSON">
+      <AvaloniaEdit:TextEditor ShowLineNumbers="True"
+                               SyntaxHighlighting="Json"
+                               IsReadOnly="True"
+                               FontFamily="{StaticResource CascadiaCodeFont}">
+        <i:Interaction.Behaviors>
+          <behaviors:DocumentTextBindingBehavior Text="{Binding JsonText}"/>
+        </i:Interaction.Behaviors>
+      </AvaloniaEdit:TextEditor>
+    </TabItem>
+  </TabControl>
+</UserControl>

@@ -1,9 +1,12 @@
 <Project>
     <!-- Centralize dependency management -->
     <ItemGroup>
-        <PackageVersion Include="Yarhl" Version="4.0.0-preview.167" />
-        <PackageVersion Include="Yarhl.Media.Text" Version="4.0.0-preview.167" />
-        <PackageVersion Include="SceneGate.Lemon" Version="0.1.0-preview.69" />
+    <PackageVersion Include="Avalonia.AvaloniaEdit" Version="11.0.5" />
+    <PackageVersion Include="Avalonia.Xaml.Interactions" Version="11.0.2" />
+    <PackageVersion Include="Avalonia.Xaml.Interactivity" Version="11.0.2" />
+    <PackageVersion Include="AvaloniaEdit.TextMate" Version="11.0.5" />
+    <PackageVersion Include="bodong.Avalonia.PropertyGrid" Version="11.0.4.1" />
+    <PackageVersion Include="bodong.PropertyModels" Version="11.0.4.1" />
         <PackageVersion Include="SceneGate.Ekona" Version="0.1.0-preview.103" />
         <PackageVersion Include="LayTea" Version="0.1.0-preview.87" />
 
@@ -20,14 +23,11 @@
         <PackageVersion Include="Eto.Platform.Gtk" Version="2.7.3" />
         <PackageVersion Include="GtkSharp.Dependencies" Version="1.1.1" />
         <PackageVersion Include="Eto.Platform.Mac64" Version="2.7.3" />
-
         <PackageVersion Include="nunit" Version="3.13.3" />
         <PackageVersion Include="NUnit3TestAdapter" Version="4.4.2" />
-        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.5.0"/>
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
         <PackageVersion Include="coverlet.collector" Version="3.2.0" />
-
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
-
         <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
         <PackageVersion Include="SonarAnalyzer.CSharp" Version="8.53.0.62665" />
         <PackageVersion Include="Roslynator.Analyzers" Version="4.2.0" />
