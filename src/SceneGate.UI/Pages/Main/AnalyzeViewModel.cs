@@ -28,6 +28,9 @@ public partial class AnalyzeViewModel : ViewModelBase
     private ObservableCollection<TreeGridNode> nodes;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(OpenNodeViewCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ConvertNodeCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveBinaryNodeCommand))]
     private TreeGridNode? selectedNode;
 
     [ObservableProperty]
@@ -37,6 +40,7 @@ public partial class AnalyzeViewModel : ViewModelBase
     private NodeFormatTab? selectedTab;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ConvertNodeCommand))]
     private TreeGridConverter? selectedConverter;
 
     [ObservableProperty]
@@ -217,7 +221,7 @@ public partial class AnalyzeViewModel : ViewModelBase
     private void CreateConverterNodes()
     {
         foreach (ConverterMetadata converter in converters) {
-            TreeGridConverter.InsertConverterHierarchy(converter, ConverterNodes, groupByNamespace: true);
+            TreeGridConverter.InsertConverterHierarchy(converter, ConverterNodes, groupByNamespace: false);
         }
     }
 

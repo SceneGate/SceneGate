@@ -13,7 +13,7 @@ public class NodeFormatToIconConverter : IValueConverter
         if (value is NodeFormatKind formatKind) {
             return formatKind switch {
                 NodeFormatKind.Binary => Symbol.Page,
-                NodeFormatKind.Folder => Symbol.Folder,
+                NodeFormatKind.Folder => Symbol.FolderFilled,
                 NodeFormatKind.Image => Symbol.Image,
                 NodeFormatKind.Translation => Symbol.Character,
 

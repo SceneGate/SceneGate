@@ -39,16 +39,28 @@
       <Separator Grid.Row="1" VerticalAlignment="Top" />
 
       <TreeView Grid.Row="1"
+                Classes="NodeTree"
                 SelectedItem="{Binding SelectedNode}"
                 ItemsSource="{Binding Nodes}"
                 SelectionMode="Single"
                 DoubleTapped="NodeTreeViewDoubleTapped">
         <TreeView.ItemTemplate>
           <TreeDataTemplate ItemsSource="{Binding Children}">
-            <StackPanel Orientation="Horizontal">
-              <fluent:SymbolIcon Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
-              <TextBlock Margin="10 0 0 0" Text="{Binding Name}" />
-              <StackPanel.ContextFlyout>
+            <!-- Setting background so contextmenu works everywhere -->
+            <DockPanel Background="Transparent">
+              <fluent:SymbolIcon DockPanel.Dock="Left"
+                                 VerticalAlignment="Center"
+                                 Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
+              <Button DockPanel.Dock="Right"
+                      FontSize="9"
+                      Margin="4 0"
+                      Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}"
+                      ToolTip.Tip="Convert this node with the selected converter">
+                <fluent:SymbolIcon Symbol="Sync" />
+              </Button>
+              <!-- Last child (this one) is the one stretched, so keep it last -->
+              <TextBlock Margin="10 0 0 0" Text="{Binding Name}" VerticalAlignment="Center" />
+              <DockPanel.ContextFlyout>
                 <MenuFlyout>
                   <MenuItem Header="Save to file"
                             Command="{ReflectionBinding $parent[TreeView].DataContext.SaveBinaryNodeCommand}" />
@@ -57,8 +69,8 @@
                   <MenuItem Header="Show"
                             Command="{ReflectionBinding $parent[TreeView].DataContext.OpenNodeViewCommand}" />
                 </MenuFlyout>
-              </StackPanel.ContextFlyout>
-            </StackPanel>
+              </DockPanel.ContextFlyout>
+            </DockPanel>
           </TreeDataTemplate>
         </TreeView.ItemTemplate>
       </TreeView>

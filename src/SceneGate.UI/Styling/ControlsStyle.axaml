@@ -4,26 +4,16 @@
         xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
         xmlns:cd="using:SceneGate.UI.ControlsData">
 
-  <Design.PreviewWith>
-    <Border Padding="20" Width="600" Height="600">
-      <ui:NavigationView
-        Classes="LargeAppNav"
-        IsSettingsVisible="True">
-
-        <ui:NavigationView.MenuItems>
-          <ui:NavigationViewItem
-            Classes="LargeAppNav"
-            Content="Analyze"
-            IconSource="BrowsePhotos" />
-        </ui:NavigationView.MenuItems>
-      </ui:NavigationView>
-    </Border>
-  </Design.PreviewWith>
-
+  <!-- Bind IsVisible with the item IsCompatible property for converter treeview (class ConverterMetadata) -->
   <Style Selector="TreeView.ConverterMetatada TreeViewItem" x:DataType="cd:TreeGridConverter">
     <Setter Property="IsVisible" Value="{Binding IsCompatible}" />
   </Style>
-  
+
+  <!-- Bind IsVisible in buttons if it's the item selected -->
+  <Style Selector="TreeView.NodeTree TreeViewItem Button">
+    <Setter Property="IsVisible" Value="{Binding $parent[TreeViewItem].IsSelected}" />
+  </Style>
+
   <!-- Navigation view with large buttons.
     Adapted from FluentAvalonia
   -->

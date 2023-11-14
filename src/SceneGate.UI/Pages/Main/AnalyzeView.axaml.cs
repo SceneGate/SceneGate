@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using FluentAvalonia.UI.Controls;
 using SceneGate.UI.ControlsData;
@@ -23,6 +24,17 @@ public partial class AnalyzeView : UserControl
         viewModel.AskUserForInputFolder.RegisterHandler(SelectInputFolder);
         viewModel.DisplayConversionError.RegisterHandler(DisplayConversionError);
         viewModel.AskUserForFileSave.RegisterHandler(SelectOutputFile);
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        // As converter list doesn't change we can do it once
+        foreach (var item in converterTreeView.Items) {
+            var itemView = converterTreeView.ContainerFromItem(item!);
+            converterTreeView.ExpandSubTree((itemView as TreeViewItem)!);
+        }
     }
 
     private void NodeTreeViewDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
