@@ -217,7 +217,7 @@ public partial class AnalyzeViewModel : ViewModelBase
     private void CreateConverterNodes()
     {
         foreach (ConverterMetadata converter in converters) {
-            TreeGridConverter.InsertConverterHierarchy(converter, ConverterNodes);
+            TreeGridConverter.InsertConverterHierarchy(converter, ConverterNodes, groupByNamespace: true);
         }
     }
 

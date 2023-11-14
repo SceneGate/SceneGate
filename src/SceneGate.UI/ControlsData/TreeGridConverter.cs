@@ -13,12 +13,12 @@ public sealed partial class TreeGridConverter : ObservableObject
     [ObservableProperty]
     private bool isCompatible;
 
-    private TreeGridConverter(ConverterMetadata converter)
+    private TreeGridConverter(ConverterMetadata converter, string displayName)
     {
         Converter = converter;
         Children = new ObservableCollection<TreeGridConverter>();
         Id = converter.Type.FullName!;
-        DisplayName = converter.Type.Name;
+        DisplayName = displayName;
         Kind = TreeGridConverterKind.Converter;
         IsCompatible = true;
     }
@@ -51,7 +51,10 @@ public sealed partial class TreeGridConverter : ObservableObject
 
     public ObservableCollection<TreeGridConverter> Children { get; }
 
-    public static void InsertConverterHierarchy(ConverterMetadata converter, ICollection<TreeGridConverter> list)
+    public static void InsertConverterHierarchy(
+        ConverterMetadata converter,
+        ICollection<TreeGridConverter> list,
+        bool groupByNamespace)
     {
         var assembly = new AssemblyName(converter.Type.Assembly.FullName!);
         string assemblyName = assembly.Name!;
@@ -64,12 +67,17 @@ public sealed partial class TreeGridConverter : ObservableObject
             list.Add(current);
         }
 
-        foreach (string n in namespaceList) {
-            current = current.GetOrAddChildNamespace(n);
+        string converterName = converter.Type.FullName!.Replace(assemblyName, string.Empty)[1..];
+        if (groupByNamespace) {
+            foreach (string n in namespaceList) {
+                current = current.GetOrAddChildNamespace(n);
+            }
+
+            converterName = converter.Type.Name;
         }
 
         if (!current.Children.Any(x => x.Converter == converter)) {
-            current.Children.Add(new TreeGridConverter(converter));
+            current.Children.Add(new TreeGridConverter(converter, converterName));
         }
     }
 
