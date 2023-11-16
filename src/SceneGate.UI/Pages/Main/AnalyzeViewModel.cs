@@ -15,7 +15,6 @@ using SceneGate.UI.Formats;
 using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Mvvm;
 using SceneGate.UI.Plugins;
-using Yarhl;
 using Yarhl.FileFormat;
 using Yarhl.FileSystem;
 using Yarhl.IO;
@@ -57,7 +56,7 @@ public partial class AnalyzeViewModel : ViewModelBase
 
         AskUserForInputFile = new AsyncInteraction<IEnumerable<IStorageFile>>();
         AskUserForInputFolder = new AsyncInteraction<IStorageFolder?>();
-        DisplayConversionError = new AsyncInteraction<string, object>();
+        DisplayConversionError = new AsyncInteraction<ConversionErrorViewModel, object>();
         AskUserForFileSave = new AsyncInteraction<string, IStorageFile?>();
     }
 
@@ -69,7 +68,7 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     public AsyncInteraction<string, IStorageFile?> AskUserForFileSave { get; }
 
-    public AsyncInteraction<string, object> DisplayConversionError { get; }
+    public AsyncInteraction<ConversionErrorViewModel, object> DisplayConversionError { get; }
 
     [RelayCommand]
     private async Task AddFileAsync()
@@ -157,14 +156,14 @@ public partial class AnalyzeViewModel : ViewModelBase
             return;
         }
 
+        Type converterType = SelectedConverter.Converter.Type;
         try {
             // In case some converter doesn't do it...
             if (node.Node.Format is IBinary binaryFormat) {
                 binaryFormat.Stream.Position = 0;
             }
 
-            Type converterType = SelectedConverter.Converter.Type;
-            await node.TransformAsync(converterType).ConfigureAwait(true);
+            await node.TransformAsync(converterType).ConfigureAwait(false);
 
             Dispatcher.UIThread.Post(() => {
                 // We can't keep it open as the previous format may have been disposed
@@ -177,7 +176,8 @@ public partial class AnalyzeViewModel : ViewModelBase
                 UpdateCompatibleConverters();
             });
         } catch (Exception ex) {
-            _ = await DisplayConversionError.HandleAsync(ex.ToString()).ConfigureAwait(true);
+            var errorInfo = new ConversionErrorViewModel(node.Node, converterType, null, ex);
+            _ = await DisplayConversionError.HandleAsync(errorInfo).ConfigureAwait(false);
         }
     }
 

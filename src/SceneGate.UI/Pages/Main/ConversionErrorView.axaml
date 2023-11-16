@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fluent="using:FluentAvalonia.UI.Controls"
+        xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
+        xmlns:local="using:SceneGate.UI.Pages.Main"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="500"
+        x:Class="SceneGate.UI.Pages.Main.ConversionErrorView"
+        x:DataType="local:ConversionErrorViewModel">
+
+  <Design.DataContext>
+    <local:ConversionErrorViewModel
+      NodePath="/PSL_EU_VPYP.nds/data/data/MSG.data/block0.bin"
+      FormatName="Yarhl.IO.BinaryFormat"
+      ConverterName="Yarhl.Media.Text.Po2Binary"
+      HasParameters="True"
+      ExceptionMessage="System.ArgumentOutOfRangeException: Minor must be [1,3] (Parameter 'value')&#x0a;Actual value was 67.&#x0a;at SceneGate.Ekona.Containers.Rom.Banner.set_Version(Version value)"
+      />
+  </Design.DataContext>
+  
+  <Grid Margin="5"
+        RowDefinitions="Auto,Auto,Auto,*,Auto,*"
+        ColumnDefinitions="Auto,*">
+
+    <TextBlock Grid.Row="0"
+               VerticalAlignment="Center"
+               Text="Node:" />
+    <TextBox Grid.Row="0" Grid.Column="1"
+             Margin="5 5 5 0"
+             IsReadOnly="True"
+             Text="{Binding NodePath}" />
+ 
+    <TextBlock Grid.Row="1"
+               VerticalAlignment="Center"
+               Text="Current format:" />
+    <TextBox Grid.Row="1" Grid.Column="1"
+             Margin="5 5 5 0"
+             IsReadOnly="True"
+             Text="{Binding FormatName}"/>
+    
+    <TextBlock Grid.Row="2"
+               VerticalAlignment="Center"
+               Text="Converter:" />
+    <TextBox Grid.Row="2" Grid.Column="1"
+             Margin="5 5 5 0"
+             IsReadOnly="True"
+             Text="{Binding ConverterName}" />
+
+    <DockPanel Grid.Row="3" Grid.ColumnSpan="2"
+               Margin="0 10"
+               IsVisible="{Binding HasParameters}">
+      <TextBlock DockPanel.Dock="Top"
+                 Margin="0 0 0 5"
+                 Text="Converter parameters:" />
+      <ScrollViewer>
+        <pgc:PropertyGrid SelectedObject="{Binding ConversionParameters}"
+                          AllowToggleView="False"
+                          ShowTitle="False"
+                          AllowFilter="False"
+                          AllowQuickFilter="False"
+                          IsEnabled="False" >
+        </pgc:PropertyGrid>
+      </ScrollViewer>
+    </DockPanel>
+
+    <TextBlock Grid.Row="4"
+               Margin="0 5"
+               Text="Exception message:" />
+    <TextBox Grid.Row="5" Grid.ColumnSpan="2"
+             IsReadOnly="True"
+             AcceptsReturn="True"
+             Text="{Binding ExceptionMessage}"
+             FontFamily="{StaticResource CascadiaCodeFont}"
+             TextWrapping="NoWrap"/>
+  </Grid>
+</UserControl>

@@ -18,7 +18,7 @@
     <c:NodeFormatToIconConverter x:Key="Format2Icon" />
     <c:TreeGridConverterKindToIconConverter x:Key="ConverterKind2Icon" />
   </UserControl.Resources>
-  
+
   <Grid ColumnDefinitions="450,Auto,*">
     <Grid Grid.Column="0"
           RowDefinitions="Auto,*,Auto,350"
@@ -67,7 +67,7 @@
                          VerticalAlignment="Center" />
               <Button Grid.Column="4"
                       FontSize="9"
-                      Margin="4 0"
+                      Margin="4 0 0 0"
                       Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}"
                       ToolTip.Tip="Convert this node with the selected converter">
                 <fluent:SymbolIcon Symbol="Sync" />

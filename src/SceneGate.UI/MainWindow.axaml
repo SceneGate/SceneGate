@@ -7,7 +7,7 @@
         x:Class="SceneGate.UI.MainWindow"
         Icon="/Assets/app-logo.ico"
         Height="800"
-        Width="1100"
+        Width="1200"
         Title="SceneGate">
 
   <views:MainView />

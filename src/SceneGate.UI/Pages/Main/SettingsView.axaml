@@ -25,9 +25,15 @@
           Height="78"
           RenderOptions.BitmapInterpolationMode="HighQuality" />
 
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="SceneGate" Theme="{StaticResource TitleTextBlockStyle}" />
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ApplicationVersion}" Theme="{StaticResource BodyTextBlockStyle}" />
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="MIT License" Theme="{StaticResource CaptionTextBlockStyle}" />
+        <TextBlock Text="SceneGate"
+                   Grid.Row="0" Grid.Column="1"
+                   Theme="{StaticResource TitleTextBlockStyle}" />
+        <TextBlock Text="{Binding ApplicationVersion}"
+                   Grid.Row="1" Grid.Column="1"
+                   Theme="{StaticResource BodyTextBlockStyle}" />
+        <TextBlock Text="MIT License"
+                   Grid.Row="2" Grid.Column="1"
+                   Theme="{StaticResource CaptionTextBlockStyle}" />
 
         <fluent:HyperlinkButton
           Grid.Row="0"
