@@ -4,7 +4,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Yarhl.FileSystem;
@@ -22,12 +21,16 @@ public partial class TreeGridNode : ObservableObject
     [ObservableProperty]
     private string formatName;
 
+    [ObservableProperty]
+    private bool isVisible;
+
     public TreeGridNode(Node node)
     {
         Node = node;
         Children = new ObservableCollection<TreeGridNode>();
         formatName = string.Empty;
         HumanReadableLength = string.Empty;
+        IsVisible = true;
 
         UpdateNodeInfo();
     }
@@ -50,6 +53,16 @@ public partial class TreeGridNode : ObservableObject
         _ = await Task.Run(() => Node.TransformWith(converterType)).ConfigureAwait(false);
 
         await Dispatcher.UIThread.InvokeAsync(UpdateNodeInfo);
+    }
+
+    public void UpdateVisibility(string? nameFilter)
+    {
+        foreach (TreeGridNode child in Children) {
+            child.UpdateVisibility(nameFilter);
+        }
+
+        bool match = (nameFilter is null) || Name.Contains(nameFilter, StringComparison.OrdinalIgnoreCase);
+        IsVisible = match || Children.Any(c => c.IsVisible);
     }
 
     private void UpdateNodeInfo()
@@ -118,7 +131,9 @@ public partial class TreeGridNode : ObservableObject
             magnitudeIdx++;
         }
 
-        HumanReadableLength = $"{length:F2} {Magnitudes[magnitudeIdx]}";
+        HumanReadableLength = (magnitudeIdx == 0)
+            ? $"{length} bytes"
+            : $"{length:F2} {Magnitudes[magnitudeIdx]}";
     }
 
     private void UpdateChildren()

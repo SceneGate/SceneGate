@@ -43,6 +43,9 @@ public partial class AnalyzeViewModel : ViewModelBase
     private TreeGridConverter? selectedConverter;
 
     [ObservableProperty]
+    private string? nodeNameFilter;
+
+    [ObservableProperty]
     private string? converterFilter;
 
     public AnalyzeViewModel()
@@ -217,6 +220,17 @@ public partial class AnalyzeViewModel : ViewModelBase
     private bool CanSaveBinaryNode()
     {
         return SelectedNode?.Node.Format is IBinary;
+    }
+
+    partial void OnNodeNameFilterChanged(string? value)
+    {
+        foreach (TreeGridNode node in Nodes) {
+            node.UpdateVisibility(NodeNameFilter);
+        }
+
+        if (SelectedNode is { IsVisible: false }) {
+            SelectedNode = null;
+        }
     }
 
     partial void OnConverterFilterChanged(string? value)

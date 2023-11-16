@@ -8,6 +8,9 @@
   <Style Selector="TreeView.ConverterMetatada TreeViewItem" x:DataType="cd:TreeGridConverter">
     <Setter Property="IsVisible" Value="{Binding IsCompatible}" />
   </Style>
+  <Style Selector="TreeView.NodeTree TreeViewItem" x:DataType="cd:TreeGridNode">
+    <Setter Property="IsVisible" Value="{Binding IsVisible}" />
+  </Style>
 
   <!-- Bind IsVisible in buttons if it's the item selected -->
   <Style Selector="TreeView.NodeTree TreeViewItem Button">

@@ -41,7 +41,7 @@ public partial class AnalyzeView : UserControl
         DataContext = viewModel;
 
         if (Design.IsDesignMode) {
-            viewModel.Nodes.Add(new TreeGridNode(NodeFactory.FromMemory("File 1")));
+            viewModel.Nodes.Add(new TreeGridNode(NodeFactory.FromArray("File 1", new byte[100])));
 
             var testNodeParent = NodeFactory.CreateContainer("Parent");
             testNodeParent.Add(NodeFactory.FromMemory("Child 1"));
@@ -76,6 +76,7 @@ public partial class AnalyzeView : UserControl
         viewModel.OpenNodeViewCommand.Execute(null);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "False positive")]
     private void TabViewTabCloseRequested(TabView? sender, TabViewTabCloseRequestedEventArgs args)
     {
         viewModel.CloseNodeViewCommand.Execute(args.Item as NodeFormatTab);
