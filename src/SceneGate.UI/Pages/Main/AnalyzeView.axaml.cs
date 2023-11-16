@@ -15,10 +15,27 @@ using Yarhl.FileSystem;
 public partial class AnalyzeView : UserControl
 {
     private readonly AnalyzeViewModel viewModel;
+    private readonly TaskDialog errorConversionDialog;
+    private readonly TaskDialog convertingDialog;
+    private Task? convertingTask;
 
     public AnalyzeView()
     {
         InitializeComponent();
+
+        errorConversionDialog = new TaskDialog() {
+            Header = "Error converting format",
+            IconSource = new FontIconSource { Glyph = "\uf071", FontFamily = "avares://SceneGate.UI/Assets/Fonts#Symbols Nerd Font" },
+            SubHeader = "There was an issue converting the node.",
+            Buttons = [new TaskDialogButton("Close", TaskDialogStandardResult.Close)],
+        };
+
+        convertingDialog = new TaskDialog {
+            Header = "Converting node",
+            IconSource = new SymbolIconSource { Symbol = Symbol.Sync },
+            Content = string.Empty,
+            ShowProgressBar = true,
+        };
 
         viewModel = new AnalyzeViewModel();
         DataContext = viewModel;
@@ -34,13 +51,18 @@ public partial class AnalyzeView : UserControl
 
         viewModel.AskUserForInputFile.RegisterHandler(SelectInputFiles);
         viewModel.AskUserForInputFolder.RegisterHandler(SelectInputFolder);
-        viewModel.DisplayConversionError.RegisterHandler(DisplayConversionError);
         viewModel.AskUserForFileSave.RegisterHandler(SelectOutputFile);
+        viewModel.DisplayConvertingProgress.RegisterHandler(DisplayConversionStarted);
+        viewModel.DisplayConversionError.RegisterHandler(DisplayConversionError);
+        viewModel.NotifyConversionFinished.RegisterHandler(HideConversionDialog);
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
+
+        errorConversionDialog.XamlRoot = VisualRoot as Visual;
+        convertingDialog.XamlRoot = VisualRoot as Visual;
 
         // As converter list doesn't change we can do it once
         foreach (var item in converterTreeView.Items) {
@@ -59,9 +81,41 @@ public partial class AnalyzeView : UserControl
         viewModel.CloseNodeViewCommand.Execute(args.Item as NodeFormatTab);
     }
 
-    private void ConvertersTreeViewDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
+    private async void ConvertersTreeViewDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
     {
-        viewModel.ConvertNodeCommand.Execute(null);
+        await viewModel.ConvertNodeCommand.ExecuteAsync(null);
+    }
+
+    private async Task<object?> DisplayConversionStarted(NodeConversionInfo info)
+    {
+        await Dispatcher.UIThread.InvokeAsync(() => {
+            convertingDialog.Content = $"Node {info.Node.Path} with converter {info.ConverterType.Name}";
+            convertingDialog.SetProgressBarState(50, TaskDialogProgressState.Indeterminate | TaskDialogProgressState.Normal);
+            convertingTask = convertingDialog.ShowAsync(showHosted: true);
+        });
+
+        return null;
+    }
+
+    private async Task<object?> HideConversionDialog()
+    {
+        if (convertingTask is null) {
+            return null;
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(convertingDialog.Hide);
+        await convertingTask;
+        return null;
+    }
+
+    private async Task<object> DisplayConversionError(ConversionErrorViewModel errorInfo)
+    {
+        return await Dispatcher.UIThread.InvokeAsync(async () => {
+            errorConversionDialog.Content = errorInfo;
+
+            // windows mode false by setting showHosted to true
+            return await errorConversionDialog.ShowAsync(showHosted: true).ConfigureAwait(false);
+        });
     }
 
     private async Task<IEnumerable<IStorageFile>> SelectInputFiles()
@@ -90,23 +144,6 @@ public partial class AnalyzeView : UserControl
             .OpenFolderPickerAsync(options)
             .ConfigureAwait(false);
         return results.FirstOrDefault();
-    }
-
-    private async Task<object> DisplayConversionError(ConversionErrorViewModel errorInfo)
-    {
-        return await Dispatcher.UIThread.InvokeAsync(async () => {
-            var dialog = new TaskDialog() {
-                Header = "Error converting format",
-                IconSource = new FontIconSource { Glyph = "\uf071", FontFamily = "avares://SceneGate.UI/Assets/Fonts#Symbols Nerd Font" },
-                SubHeader = "There was an issue converting the node.",
-                Content = errorInfo,
-                Buttons = [new TaskDialogButton("Close", TaskDialogStandardResult.Close)],
-                XamlRoot = VisualRoot as Visual,
-            };
-
-            // windows mode false by setting showHosted to true
-            return await dialog.ShowAsync(showHosted: true).ConfigureAwait(false);
-        });
     }
 
     private async Task<IStorageFile?> SelectOutputFile(string name)

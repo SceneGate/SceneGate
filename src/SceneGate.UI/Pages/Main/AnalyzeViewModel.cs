@@ -56,8 +56,10 @@ public partial class AnalyzeViewModel : ViewModelBase
 
         AskUserForInputFile = new AsyncInteraction<IEnumerable<IStorageFile>>();
         AskUserForInputFolder = new AsyncInteraction<IStorageFolder?>();
-        DisplayConversionError = new AsyncInteraction<ConversionErrorViewModel, object>();
         AskUserForFileSave = new AsyncInteraction<string, IStorageFile?>();
+        DisplayConvertingProgress = new AsyncInteraction<NodeConversionInfo, object?>();
+        DisplayConversionError = new AsyncInteraction<ConversionErrorViewModel, object>();
+        NotifyConversionFinished = new AsyncInteraction<object?>();
     }
 
     public ObservableCollection<TreeGridConverter> ConverterNodes { get; }
@@ -68,7 +70,11 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     public AsyncInteraction<string, IStorageFile?> AskUserForFileSave { get; }
 
+    public AsyncInteraction<NodeConversionInfo, object?> DisplayConvertingProgress { get; }
+
     public AsyncInteraction<ConversionErrorViewModel, object> DisplayConversionError { get; }
+
+    public AsyncInteraction<object?> NotifyConversionFinished { get; }
 
     [RelayCommand]
     private async Task AddFileAsync()
@@ -157,7 +163,10 @@ public partial class AnalyzeViewModel : ViewModelBase
         }
 
         Type converterType = SelectedConverter.Converter.Type;
+        var conversionInfo = new NodeConversionInfo(node.Node, converterType, null);
         try {
+            await DisplayConvertingProgress.HandleAsync(conversionInfo).ConfigureAwait(false);
+
             // In case some converter doesn't do it...
             if (node.Node.Format is IBinary binaryFormat) {
                 binaryFormat.Stream.Position = 0;
@@ -179,6 +188,8 @@ public partial class AnalyzeViewModel : ViewModelBase
             var errorInfo = new ConversionErrorViewModel(node.Node, converterType, null, ex);
             _ = await DisplayConversionError.HandleAsync(errorInfo).ConfigureAwait(false);
         }
+
+        await NotifyConversionFinished.HandleAsync().ConfigureAwait(false);
     }
 
     private bool CanConvertNode()
