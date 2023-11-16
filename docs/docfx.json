@@ -4,7 +4,6 @@
         "src": [
           {
             "files": [
-              "SceneGate.UI.Formats/bin/**/SceneGate.UI.Formats.dll"
             ],
             "src": "../src"
           }

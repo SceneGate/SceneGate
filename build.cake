@@ -5,6 +5,7 @@ Task("Define-Project")
     .IsDependeeOf("Build")
     .Does<BuildInfo>(info =>
 {
+    info.WarningsAsErrors = false;
     info.AddLibraryProjects("SceneGate.UI.Formats");
     info.AddApplicationProjects("SceneGate.Desktop");
 

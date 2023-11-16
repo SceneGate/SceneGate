@@ -14,7 +14,7 @@ on:
       - published
 
 env:
-  NET_SDK: '6.0.406'
+  NET_SDK: '8.0.100'
 
 jobs:
   build_main:
