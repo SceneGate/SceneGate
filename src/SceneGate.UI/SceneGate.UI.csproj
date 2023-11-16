@@ -1,24 +1,36 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Description>UI components of SceneGate.</Description>
+    <AssemblyName>SceneGate.UI</AssemblyName>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RootNamespace>SceneGate.UI</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\*" />
+    <AvaloniaResource Include="Assets\**" />
+    <AvaloniaResource Include="../../LICENSE" Link="Assets\LICENSE" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../SceneGate.UI.Formats/SceneGate.UI.Formats.csproj" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="FluentAvaloniaUI" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
 
-    <PackageReference Include="Eto.Forms" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" />
+    <PackageReference Include="Avalonia.AvaloniaEdit" />
+    <PackageReference Include="bodong.Avalonia.PropertyGrid" />
+    <PackageReference Include="bodong.PropertyModels" />
 
     <PackageReference Include="Yarhl" />
-    <PackageReference Include="Yarhl.Media.Text" />
-    <!-- TODO: Enable when it targets the new Yarhl <PackageReference Include="LayTea" /> -->
-    <PackageReference Include="SceneGate.Ekona" />
+    <PackageReference Include="Yarhl.Media" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SceneGate.UI.Formats\SceneGate.UI.Formats.csproj" />
   </ItemGroup>
 
 </Project>

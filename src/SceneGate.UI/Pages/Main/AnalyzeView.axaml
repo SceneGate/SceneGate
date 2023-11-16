@@ -1,0 +1,156 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             xmlns:local="using:SceneGate.UI.Pages.Main"
+             xmlns:c="using:SceneGate.UI.Pages"
+             xmlns:ctrlData="using:SceneGate.UI.ControlsData"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             x:Class="SceneGate.UI.Pages.Main.AnalyzeView"
+             x:DataType="local:AnalyzeViewModel">
+
+  <Design.DataContext>
+    <local:AnalyzeViewModel />
+  </Design.DataContext>
+
+  <UserControl.Resources>
+    <c:NodeFormatToIconConverter x:Key="Format2Icon" />
+    <c:TreeGridConverterKindToIconConverter x:Key="ConverterKind2Icon" />
+  </UserControl.Resources>
+
+  <Grid ColumnDefinitions="450,Auto,*">
+    <Grid Grid.Column="0"
+          RowDefinitions="Auto,*,Auto,350"
+          MinWidth="300">
+      <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto" Margin="10 5">
+        <TextBlock Grid.Column="0"
+                   Text="Nodes"
+                   VerticalAlignment="Center"
+                   FontWeight="Bold"
+                   Theme="{StaticResource BodyTextBlockStyle}" />
+        <TextBox Grid.Column="1"
+                 Margin="50 0 10 0"
+                 Text="{Binding NodeNameFilter}"
+                 Watermark="Name filter..." />
+        <Button Grid.Column="2" Margin="5 0" Command="{Binding AddFileCommand}">
+          <fluent:SymbolIcon Symbol="OpenFile" />
+        </Button>
+        <Button Grid.Column="3" Command="{Binding AddFolderCommand}">
+          <fluent:SymbolIcon Symbol="OpenLocal" />
+        </Button>
+      </Grid>
+      <Separator Grid.Row="1" VerticalAlignment="Top" />
+
+      <TreeView Grid.Row="1"
+                Classes="NodeTree"
+                SelectedItem="{Binding SelectedNode}"
+                ItemsSource="{Binding Nodes}"
+                SelectionMode="Single"
+                DoubleTapped="NodeTreeViewDoubleTapped">
+        <TreeView.ItemTemplate>
+          <TreeDataTemplate ItemsSource="{Binding Children}">
+            <!-- Setting background so contextmenu works everywhere -->
+            <Grid Background="Transparent" ColumnDefinitions="Auto,*,*,70,60">
+              <fluent:SymbolIcon Grid.Column="0"
+                                 VerticalAlignment="Center"
+                                 Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
+              <TextBlock Grid.Column="1"
+                         Margin="10 0 5 0"
+                         Text="{Binding Name}"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="2"
+                         Margin="5 0"
+                         Text="{Binding FormatName}"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3"
+                         Margin="5 0"
+                         Text="{Binding HumanReadableLength}"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Center" />
+              <Button Grid.Column="4"
+                      FontSize="9"
+                      Margin="4 0 0 0"
+                      Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}"
+                      ToolTip.Tip="Convert this node with the selected converter">
+                <fluent:SymbolIcon Symbol="Sync" />
+              </Button>
+              <Grid.ContextFlyout>
+                <MenuFlyout>
+                  <MenuItem Header="Save to file"
+                            Command="{ReflectionBinding $parent[TreeView].DataContext.SaveBinaryNodeCommand}" />
+                  <MenuItem Header="Convert"
+                            Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}" />
+                  <MenuItem Header="Show"
+                            Command="{ReflectionBinding $parent[TreeView].DataContext.OpenNodeViewCommand}" />
+                </MenuFlyout>
+              </Grid.ContextFlyout>
+            </Grid>
+          </TreeDataTemplate>
+        </TreeView.ItemTemplate>
+      </TreeView>
+
+      <GridSplitter Grid.Row="2" ResizeDirection="Rows" />
+
+      <Grid Grid.Row="3"
+            Margin="10 10 5 5"
+            RowDefinitions="Auto,*"
+            ColumnDefinitions="Auto,*">
+        <TextBlock Grid.Row="0" Grid.Column="0"
+                   Text="Converters"
+                   DockPanel.Dock="Left"
+                   VerticalAlignment="Center"
+                   FontWeight="Bold"
+                   Theme="{StaticResource BodyTextBlockStyle}" />
+        <TextBox Grid.Row="0" Grid.Column="1"
+                 Text="{Binding ConverterFilter}"
+                 DockPanel.Dock="Right"
+                 Margin="20 0 5 0"
+                 Watermark="Filter..."
+                 MinWidth="150"
+                 HorizontalAlignment="Stretch" />
+        <Separator Grid.Row="1" Grid.ColumnSpan="2"
+                   Margin="0 10"
+                   VerticalAlignment="Top" />
+        <TreeView Grid.Row="1" Grid.ColumnSpan="2"
+                  Margin="0 10"
+                  Name="converterTreeView"
+                  Classes="ConverterMetatada"
+                  SelectedItem="{Binding SelectedConverter}"
+                  ItemsSource="{Binding ConverterNodes}"
+                  SelectionMode="Single"
+                  AutoScrollToSelectedItem="True"
+                  DoubleTapped="ConvertersTreeViewDoubleTapped">
+          <TreeView.ItemTemplate>
+            <TreeDataTemplate ItemsSource="{Binding Children}">
+              <StackPanel Orientation="Horizontal">
+                <fluent:SymbolIcon Symbol="{Binding Kind, Converter={StaticResource ConverterKind2Icon}}" />
+                <TextBlock Margin="10 0 0 0" Text="{Binding DisplayName}" />
+              </StackPanel>
+            </TreeDataTemplate>
+          </TreeView.ItemTemplate>
+        </TreeView>
+      </Grid>
+    </Grid>
+
+    <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+
+    <fluent:TabView Grid.Column="2"
+                    IsAddTabButtonVisible="False"
+                    TabItems="{Binding FormatViewTabs}"
+                    TabCloseRequested="TabViewTabCloseRequested"
+                    SelectedItem="{Binding SelectedTab}">
+      <fluent:TabView.TabItemTemplate>
+        <DataTemplate DataType="ctrlData:NodeFormatTab">
+          <fluent:TabViewItem Header="{Binding Name}"
+                              Content="{Binding Content}">
+            <fluent:TabViewItem.IconSource>
+              <fluent:SymbolIconSource Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
+            </fluent:TabViewItem.IconSource>
+          </fluent:TabViewItem>
+        </DataTemplate>
+      </fluent:TabView.TabItemTemplate>
+    </fluent:TabView>
+  </Grid>
+</UserControl>

@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SceneGate.UI.Pages.Main.MainView" >
+
+  <fluent:NavigationView
+    Name="mainNavigationView"
+    Classes="LargeAppNav"
+    IsSettingsVisible="False">
+
+    <fluent:NavigationView.MenuItems>
+      <fluent:NavigationViewItem
+        Classes="LargeAppNav"
+        Content="Analyze"
+        Tag=".Pages.Main.AnalyzeView"
+        IconSource="BrowsePhotos" />
+    </fluent:NavigationView.MenuItems>
+
+    <fluent:NavigationView.FooterMenuItems>
+      <fluent:NavigationViewItem
+        Classes="LargeAppNav"
+        Content="Settings"
+        Tag=".Pages.Main.SettingsView"
+        IconSource="Setting" />
+    </fluent:NavigationView.FooterMenuItems>
+    
+    <fluent:Frame Name="mainNavigationFrame" />
+  </fluent:NavigationView>
+</UserControl>

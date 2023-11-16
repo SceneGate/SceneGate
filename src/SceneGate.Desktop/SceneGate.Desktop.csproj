@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <IsPublishable>true</IsPublishable>
+
+    <TargetFramework>net8.0</TargetFramework>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SceneGate.UI\SceneGate.UI.csproj" />
+
+    <!-- Plugins -->
+    <ProjectReference Include="..\SceneGate.UI.Formats\SceneGate.UI.Formats.csproj" />
+    <PackageReference Include="SceneGate.Games.PokemonConquest" />
+    <PackageReference Include="SceneGate.Ekona" />
+  </ItemGroup>
+</Project>

@@ -1,88 +1,104 @@
-// Copyright (c) 2021 SceneGate
+﻿namespace SceneGate.UI.Formats.Texts;
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Yarhl.FileFormat;
+using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Yarhl.Media.Text;
 
-namespace SceneGate.UI.Formats.Texts
+/// <summary>
+/// View model to represent a <see cref="Yarhl.Media.Text.Po" /> format.
+/// </summary>
+public partial class PoViewModel : ObservableObject, IFormatViewModel
 {
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PasteOriginalTranslationCommand))]
+    private PoEntryViewModel? selectedEntry;
+
     /// <summary>
-    /// View model to represent a <see cref="Yarhl.Media.Text.Po" /> format.
+    /// Initializes a new instance of the <see cref="PoViewModel"/> class with
+    /// test content.
     /// </summary>
-    public class PoViewModel : ObservableObject, IFormatViewModel
+    public PoViewModel()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PoViewModel" /> class.
-        /// </summary>
-        public PoViewModel()
-        {
-            Entries = new ObservableCollection<PoEntry>();
-            Header = new ObservableCollection<HeaderProperty>();
+        Entries = new ObservableCollection<PoEntryViewModel>();
+        Header = new ObservableCollection<PoHeaderProperty>();
+
+        var testModel = new Po(new PoHeader("ProjectId", "admin@email.com", "es-ES"));
+        testModel.Add(new PoEntry("Entry 1") { Context = "id:1", Translated = "Entrada 1" });
+        testModel.Add(new PoEntry("Line 1\nLine2") {
+            Context = "id:2",
+            Translated = "Línea 1\nLínea 2",
+            ExtractedComments = "This is an extracted comment",
+            Flags = "max-size:10, language-c",
+            Reference = "block:4,header:CA,FE,C0,C0",
+            TranslatorComment = "The translator does not agree",
+        });
+        Show(testModel);
+
+        SelectedEntry = Entries[1];
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PoViewModel" /> class.
+    /// </summary>
+    /// <param name="model">The model to load.</param>
+    public PoViewModel(Po model)
+    {
+        Entries = new ObservableCollection<PoEntryViewModel>();
+        Header = new ObservableCollection<PoHeaderProperty>();
+
+        Show(model);
+
+        if (Entries.Count > 0) {
+            SelectedEntry = Entries[0];
+        }
+    }
+
+    /// <summary>
+    /// Gets the collection of entries in the PO format.
+    /// </summary>
+    public ObservableCollection<PoEntryViewModel> Entries { get; }
+
+    /// <summary>
+    /// Gets the collection of properties in the PO header.
+    /// </summary>
+    public ObservableCollection<PoHeaderProperty> Header { get; }
+
+    [RelayCommand(CanExecute = nameof(CanPasteOriginalTranslation))]
+    private void PasteOriginalTranslation()
+    {
+        if (SelectedEntry is null) {
+            return;
         }
 
-        /// <summary>
-        /// Gets the collection of entries in the PO format.
-        /// </summary>
-        public ObservableCollection<PoEntry> Entries { get; }
+        SelectedEntry.Translated = SelectedEntry.Original;
+        OnPropertyChanged(nameof(SelectedEntry.Translated));
+    }
 
-        /// <summary>
-        /// Gets the collection of properties in the PO header.
-        /// </summary>
-        public ObservableCollection<HeaderProperty> Header { get; }
+    private bool CanPasteOriginalTranslation()
+    {
+        return SelectedEntry is not null;
+    }
 
-        /// <inheritdoc/>
-        public bool CanShow(IFormat format) => format is Po;
+    private void Show(Po po)
+    {
+        Header.Add(new PoHeaderProperty("Project ID", po.Header.ProjectIdVersion));
+        Header.Add(new PoHeaderProperty("Report bugs to", po.Header.ReportMsgidBugsTo));
+        Header.Add(new PoHeaderProperty("Language", po.Header.Language));
+        Header.Add(new PoHeaderProperty("Team", po.Header.LanguageTeam));
+        Header.Add(new PoHeaderProperty("Creation date", po.Header.CreationDate));
+        Header.Add(new PoHeaderProperty("Revision date", po.Header.RevisionDate));
+        Header.Add(new PoHeaderProperty("Last translator", po.Header.LastTranslator));
+        Header.Add(new PoHeaderProperty("Plural forms", po.Header.PluralForms));
 
-        /// <inheritdoc/>
-        public void Show(IFormat format)
-        {
-            if (format is not Po po) {
-                return;
-            }
-
-            Header.Clear();
-            Header.Add(new HeaderProperty("Project ID", po.Header.ProjectIdVersion));
-            Header.Add(new HeaderProperty("Report bugs to", po.Header.ReportMsgidBugsTo));
-            Header.Add(new HeaderProperty("Language", po.Header.Language));
-            Header.Add(new HeaderProperty("Team", po.Header.LanguageTeam));
-            Header.Add(new HeaderProperty("Creation date", po.Header.CreationDate));
-            Header.Add(new HeaderProperty("Revision date", po.Header.RevisionDate));
-            Header.Add(new HeaderProperty("Last translator", po.Header.LastTranslator));
-            Header.Add(new HeaderProperty("Plural forms", po.Header.PluralForms));
-
-            foreach (var ext in po.Header.Extensions) {
-                Header.Add(new HeaderProperty("X-" + ext.Key, ext.Value));
-            }
-
-            Entries.Clear();
-            foreach (var entry in po.Entries) {
-                Entries.Add(entry);
-            }
+        foreach (KeyValuePair<string, string> ext in po.Header.Extensions) {
+            Header.Add(new PoHeaderProperty("X-" + ext.Key, ext.Value));
         }
 
-        /// <summary>
-        /// Property of the PO header.
-        /// </summary>
-        [SuppressMessage("", "SA1313", Justification = "Record properties in camel case")]
-        public record HeaderProperty(string Key, string Value);
+        foreach (PoEntry entry in po.Entries) {
+            Entries.Add(new PoEntryViewModel(entry));
+        }
     }
 }

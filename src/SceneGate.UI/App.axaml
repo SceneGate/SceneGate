@@ -1,0 +1,24 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fluent="using:FluentAvalonia.Styling"
+             xmlns:plugins="using:SceneGate.UI.Plugins"
+             xmlns:local="using:SceneGate.UI"
+             x:Class="SceneGate.UI.App">
+
+  <Application.DataTemplates>
+    <plugins:FormatsViewLocator />
+    <local:ViewLocator />
+  </Application.DataTemplates>
+
+  <Application.Resources>
+    <!-- Fonts -->
+    <FontFamily x:Key="CascadiaCodeFont">avares://SceneGate.UI/Assets/Fonts#Cascadia Code</FontFamily>
+    <FontFamily x:Key="SymbolsFont">avares://SceneGate.UI/Assets/Fonts#Symbols Nerd Font</FontFamily>
+  </Application.Resources>
+  
+  <Application.Styles>
+    <fluent:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
+    <StyleInclude Source="avares://SceneGate.UI/Styling/ControlsStyle.axaml" />
+    <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+  </Application.Styles>
+</Application>
