@@ -1,22 +1,35 @@
-﻿namespace SceneGate.UI.Formats.CodeEditor;
+﻿// From: https://github.com/AvaloniaUI/AvaloniaEdit/wiki/MVVM#create-behaviour
+namespace SceneGate.UI.Formats.CodeEditor;
 
 using System;
 using Avalonia;
 using Avalonia.Xaml.Interactivity;
 using AvaloniaEdit;
 
+/// <summary>
+/// UI behavior to implement binding with the text property in AvaloniaEdit.
+/// </summary>
 public class DocumentTextBindingBehavior : Behavior<TextEditor>
 {
     private TextEditor? _textEditor = null;
 
+    /// <summary>
+    /// Binding with the text property.
+    /// </summary>
     public static readonly StyledProperty<string> TextProperty =
         AvaloniaProperty.Register<DocumentTextBindingBehavior, string>(nameof(Text));
 
+    /// <summary>
+    /// Gets or sets the text property through binding.
+    /// </summary>
     public string Text {
         get => GetValue(TextProperty);
         set => SetValue(TextProperty, value);
     }
 
+    /// <summary>
+    /// Attach to the text property.
+    /// </summary>
     protected override void OnAttached()
     {
         base.OnAttached();
@@ -28,6 +41,9 @@ public class DocumentTextBindingBehavior : Behavior<TextEditor>
         }
     }
 
+    /// <summary>
+    /// Deattach the text property.
+    /// </summary>
     protected override void OnDetaching()
     {
         base.OnDetaching();
@@ -37,7 +53,7 @@ public class DocumentTextBindingBehavior : Behavior<TextEditor>
         }
     }
 
-    private void TextChanged(object sender, EventArgs eventArgs)
+    private void TextChanged(object? sender, EventArgs eventArgs)
     {
         if (_textEditor != null && _textEditor.Document != null) {
             Text = _textEditor.Document.Text;

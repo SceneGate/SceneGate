@@ -14,7 +14,7 @@ public sealed class BuildLifetime : FrostingLifetime<PleOpsBuildContext>
     public override void Setup(PleOpsBuildContext context, ISetupContext info)
     {
         // HERE you can set default values overridable by command-line
-        context.WarningsAsErrors = false;
+        context.WarningsAsErrors = true;
 
         // Update build parameters from command line arguments.
         context.ReadArguments();

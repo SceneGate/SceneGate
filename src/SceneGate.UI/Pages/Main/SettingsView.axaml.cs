@@ -1,6 +1,6 @@
-﻿using Avalonia.Controls;
+﻿namespace SceneGate.UI.Pages.Main;
 
-namespace SceneGate.UI.Pages.Main;
+using Avalonia.Controls;
 
 public partial class SettingsView : UserControl
 {
