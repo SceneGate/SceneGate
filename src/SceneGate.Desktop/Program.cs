@@ -1,9 +1,7 @@
-﻿using System;
-
+﻿namespace SceneGate.Desktop;
+using System;
 using Avalonia;
 using SceneGate.UI;
-
-namespace SceneGate.Desktop;
 
 public static class Program
 {

@@ -5,6 +5,10 @@ Thanks for taking the time to contribute! :sparkles:
 In this document you will find all the information you need to make sure that
 the projects continues to be consistent and with great quality!
 
+> [!NOTE]  
+> By contributing in this repository you accept the
+> [developer certificate of origin](https://developercertificate.org/).
+
 ## Reporting features and issues
 
 ### Issues

@@ -1,8 +1,8 @@
-﻿using System;
+﻿namespace SceneGate.UI;
+
+using System;
 using System.Reflection;
 using FluentAvalonia.UI.Windowing;
-
-namespace SceneGate.UI;
 
 public partial class MainWindow : AppWindow
 {

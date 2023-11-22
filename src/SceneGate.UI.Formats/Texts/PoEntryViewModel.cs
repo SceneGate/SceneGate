@@ -4,6 +4,9 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Yarhl.Media.Text;
 
+/// <summary>
+/// View model wrapper over a PO entry.
+/// </summary>
 public partial class PoEntryViewModel : ObservableObject
 {
     private readonly PoEntry entry;
@@ -26,6 +29,10 @@ public partial class PoEntryViewModel : ObservableObject
     [ObservableProperty]
     private string extractedComments;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PoEntryViewModel"/> class.
+    /// </summary>
+    /// <param name="entry">The PO entry to wrap.</param>
     public PoEntryViewModel(PoEntry entry)
     {
         this.entry = entry;

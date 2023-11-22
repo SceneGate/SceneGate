@@ -1,12 +1,12 @@
-﻿using Avalonia;
+﻿namespace SceneGate.UI;
+
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using SceneGate.UI.Pages.Main;
-
-namespace SceneGate.UI;
 
 public partial class App : Application
 {

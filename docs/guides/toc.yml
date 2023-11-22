@@ -1,9 +1,0 @@
-- name: Guides
-  items:
-    - name: Quick start
-    - name: Install new plugins
-    - name: Develop a new plugin
-- name: Contributing
-  items:
-    - name: Guidelines
-      href: Contributing.md

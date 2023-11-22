@@ -83,7 +83,8 @@ public sealed class PluginsLocator : IFormatsViewModelLocator, IFormatConverters
         // Skip libraries that match the ignored libraries to prevent loading dependencies.
         paths = paths
             .Select(p => new { Name = Path.GetFileName(p), Path = p })
-            .Where(p => !IgnoredLibraries.Any(
+            .Where(p => !Array.Exists(
+                IgnoredLibraries,
                 ign => p.Name.StartsWith(ign, StringComparison.OrdinalIgnoreCase)))
             .Select(p => p.Path);
         return LoadAssemblies(paths);
@@ -150,7 +151,7 @@ public sealed class PluginsLocator : IFormatsViewModelLocator, IFormatConverters
             && interfaceType.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>));
 
         IEnumerable <Type> converterTypes = assembly.ExportedTypes
-            .Where(t => t.GetInterfaces().Any(ValidConverterInterface))
+            .Where(t => Array.Exists(t.GetInterfaces(), ValidConverterInterface))
             .Where(t => t.IsClass && !t.IsAbstract);
         foreach (Type type in converterTypes) {
             // A converter class may implement the IConverter interface several

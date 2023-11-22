@@ -5,59 +5,32 @@
             "type": "process",
             "command": "dotnet",
             "args": [
-                "cake"
-            ],
-            "group": "build",
-            "problemMatcher": [
-                "$msCompile"
-            ],
-            "label": "Cake: Run Default"
-        },
-        {
-            "type": "process",
-            "command": "dotnet",
-            "args": [
-                "cake",
-                "--target=Build"
+                "run",
+                "--project",
+                "build/orchestrator/",
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": [
-                "$msCompile"
-            ],
-            "label": "Cake: Run Build"
+            "problemMatcher": ["$msCompile"],
+            "label": "Build"
         },
         {
             "type": "process",
             "command": "dotnet",
             "args": [
-                "cake",
-                "--target=BuildTest"
+            "run",
+            "--project",
+            "build/orchestrator/",
+            "--",
+            "--target=Bundle"
             ],
             "group": {
-                "kind": "test",
-                "isDefault": true
+            "kind": "build",
             },
-            "problemMatcher": [
-                "$msCompile"
-            ],
-            "label": "Cake: Run Test"
+            "problemMatcher": ["$msCompile"],
+            "label": "Bundle"
         },
-        {
-            "type": "process",
-            "command": "dotnet",
-            "args": [
-                "cake",
-                "--target=Build",
-                "--configuration=Release"
-            ],
-            "group": "build",
-            "problemMatcher": [
-                "$msCompile"
-            ],
-            "label": "Cake: Run Build for release"
-        }
     ]
 }

@@ -22,6 +22,9 @@ public partial class ObjectViewModel : ObservableObject, IFormatViewModel
     [ObservableProperty]
     private string? yamlText;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ObjectViewModel"/> class.
+    /// </summary>
     public ObjectViewModel()
         : this(new Po())
     {

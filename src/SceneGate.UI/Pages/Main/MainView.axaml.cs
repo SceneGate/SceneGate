@@ -1,8 +1,8 @@
-﻿using System;
+﻿namespace SceneGate.UI.Pages.Main;
+
+using System;
 using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
-
-namespace SceneGate.UI.Pages.Main;
 
 public partial class MainView : UserControl
 {

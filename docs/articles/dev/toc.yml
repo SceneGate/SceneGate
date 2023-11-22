@@ -1,0 +1,11 @@
+- name: 🧑‍💻 Developer guide
+- name: 🚧 Overview
+  href: overview.md
+- name: 🚧 Converters
+  href: plugins-converter.md
+- name: 🚧 Format views
+  href: plugins-formatviews.md
+
+- name: 📃 API docs
+- name: Namespaces
+  href: ../../api/toc.yml
