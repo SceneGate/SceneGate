@@ -6,29 +6,22 @@ labels: ""
 assignees: ""
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Description
 
-**To Reproduce**
-Steps to reproduce the behavior:
+TODO: describe the issue
 
-1. Get the library from '...' and version '...'
-2. Use the class and method '....'
-3. See error
+## Reproducer
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+TODO: steps to reproduce the behavior.
 
-**Exceptions**
-If applicable, the full exception stacktrace that you get.
+## Expected behavior
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+TODO: description of the expected behavior.
 
-**Desktop (please complete the following information):**
+## Report info
 
-- OS: [e.g. Windows, Linux, Mac]
-- Version [e.g. 22]
+TODO: if applicable, the full exception stacktrace that you get.
 
-**Additional context**
-Add any other context about the problem here.
+TODO: if applicable, add screenshots to help explain your problem.
+
+TODO: describe your environment like OS, app/lib version

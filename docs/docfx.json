@@ -1,54 +1,66 @@
 {
-    "metadata": [
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "SceneGate.UI.Formats/*.csproj"
+          ],
+          "src": "../src"
+        }
+      ],
+      "dest": "api",
+      "includePrivateMembers": false,
+      "disableGitFeatures": false,
+      "disableDefaultFilter": false,
+      "noRestore": false,
+      "namespaceLayout": "flattened",
+      "memberLayout": "samePage",
+      "EnumSortOrder": "alphabetic",
+      "allowCompilationErrors": false
+    }
+  ],
+  "build": {
+    "content": [
       {
-        "src": [
-          {
-            "files": [
-            ],
-            "src": "../src"
-          }
-        ],
-        "dest": "api",
-        "filter": "filter_config.yml",
-        "disableGitFeatures": false,
-        "disableDefaultFilter": false
+        "files": [
+          "api/**.yml",
+          "api/index.md"
+        ]
+      },
+      { "files": "**/*.{md,yml}", "src": "articles", "dest": "docs" },
+      { "files": [ "toc.yml", "*.md" ] }
+    ],
+    "resource": [
+      {
+        "files": [ "**/images/**", "**/resources/**" ],
+        "exclude": [ "_site/**", "obj/**" ]
       }
     ],
-    "build": {
-      "content": [
-        {
-          "files": [ "api/**.yml", "dev/**" ]
-        },
-        {
-          "files": [ "toc.yml", "index.md" ]
-        },
-        {
-          "files": [ "guides/**" ]
-        },
-        {
-          "files": ["README.md", "CONTRIBUTING.md"],
-          "src": "../"
-        }
-      ],
-      "resource": [
-        {
-          "files": ["images/**"]
-        }
-      ],
-      "dest": "_site",
-      "globalMetadataFiles": ["global_metadata.json"],
-      "fileMetadataFiles": [],
-      "template": [
-        "default",
-        "statictoc",
-        "default-widescreen"
-      ],
-      "postProcessors": [],
-      "markdownEngineName": "markdig",
-      "noLangKeyword": false,
-      "keepFileLink": false,
-      "cleanupCacheHistory": false,
-      "disableGitFeatures": false,
-      "xrefService": [ "https://xref.docs.microsoft.com/query?uid={uid}" ]
+    "output": "_site",
+    "globalMetadata": {
+      "_appTitle": "SceneGate - Reverse engineering, modding and localization",
+      "_appName": "SceneGate",
+      "_appFooter": "<span>Copyright (c) 2021 SceneGate. Docs made with <a href=\"https://dotnet.github.io/docfx\" target=\"_blank\">docfx</a></span>",
+      "_appLogoPath": "images/logo_48.png",
+      "_appFaviconPath": "images/favicon.png",
+      "_enableSearch": true,
+      "_enableNewTab": true,
+      "_lang": "en"
+    },
+    "fileMetadataFiles": [],
+    "template": [
+      "default",
+      "modern",
+      "template"
+    ],
+    "postProcessors": [],
+    "keepFileLink": false,
+    "disableGitFeatures": false,
+    "sitemap": {
+      "baseUrl": "https://scenegate.github.io/SceneGate",
+      "priority": 0.5,
+      "changefreq": "monthly"
     }
+  }
 }

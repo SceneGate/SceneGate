@@ -1,11 +1,11 @@
-- name: Home
-  href: index.md
+- name: User manual
+  href: articles/manual/
 
-- name: Guides
-  href: guides/
+- name: Developer guide
+  href: articles/dev/
 
 - name: Changelog
-  href: dev/
+  href: articles/changelog.md
 
 - name: GitHub
-  href: https://github.com/scenegate/scenegate
+  href: https://github.com/SceneGate/SceneGate

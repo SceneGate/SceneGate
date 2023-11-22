@@ -1,21 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <IsPublishable>true</IsPublishable>
+    <Description>IDE for assets viewing and modding.</Description>
 
     <TargetFramework>net8.0</TargetFramework>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
 
     <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SceneGate.UI\SceneGate.UI.csproj" />
 
     <!-- Plugins -->

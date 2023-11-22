@@ -66,8 +66,11 @@ public partial class PoViewModel : ObservableObject, IFormatViewModel
     /// </summary>
     public ObservableCollection<PoHeaderProperty> Header { get; }
 
+    /// <summary>
+    /// Copy the source text as translation.
+    /// </summary>
     [RelayCommand(CanExecute = nameof(CanPasteOriginalTranslation))]
-    private void PasteOriginalTranslation()
+    public void PasteOriginalTranslation()
     {
         if (SelectedEntry is null) {
             return;

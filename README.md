@@ -1,38 +1,46 @@
-# SceneGate [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://choosealicense.com/licenses/mit/) ![build](https://github.com/SceneGate/scenegate/workflows/Build%20and%20release/badge.svg)
+# ![logo](docs/images/logo_48.png) SceneGate
+
+<!-- markdownlint-disable MD033 -->
+<p align="center">
+  <a href="https://github.com/SceneGate/SceneGate/releases">
+    <img alt="Stable version" src="https://img.shields.io/github/v/release/SceneGate/scenegate?sort=semver" />
+  </a>
+  &nbsp;
+  <a href="https://github.com/SceneGate/SceneGate/actions">
+    <img alt="GitHub commits since latest release (by SemVer)" src="https://img.shields.io/github/commits-since/SceneGate/scenegate/latest?sort=semver" />
+  </a>
+  &nbsp;
+  <a href="https://github.com/SceneGate/scenegate/workflows/Build%20and%20release">
+    <img alt="Build and release" src="https://github.com/SceneGate/scenegate/workflows/Build%20and%20release/badge.svg" />
+  </a>
+  &nbsp;
+  <a href="https://choosealicense.com/licenses/mit/">
+    <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat" />
+  </a>
+  &nbsp;
+</p>
 
 **Work-in-progress** tool for reverse engineering, file format analysis, modding
 and localization.
 
-## Features
+- 📁 Navigate the virtual file system from Yarhl.
+- 🔁 Convert files with Yarhl converters via plugins.
+- 🔎 View the content of files
+  - .NET objects as property grid or YAML/JSON
+  - PO viewer and editor
 
-- Navigate the virtual file system from Yarhl.
-- Convert files with Yarhl converters via plugins.
-- View the content of files
+![Demo PO format view](./docs/images/demo-poview.png)
 
-### Supported format views
+![Demo object view](./docs/images/demo-objview.png)
 
-- .NET objects as property grid or YAML/JSON
+## Supported plugins
 
-### _Yarhly_ shipped plugins
-
-- [Lemon](https://github.com/SceneGate/Lemon/)
-- [Ekona](https://github.com/SceneGate/Ekona/)
-- [Texim](https://github.com/SceneGate/Texim)
-- [LayTea](https://github.com/pleonex/LayTea)
+- [Ekona](https://github.com/SceneGate/Ekona/): DS and DSi ROM format
 
 ## Installation
 
-Install the `Ubuntu Nerd Font` font from
-[here](https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Ubuntu.zip).
-
 The project ships the application as a portable ZIP file that does not require
 any installation. Just unzip and run!
-
-<!-- prettier-ignore -->
-| Release | Package |
-| ------- | ------- |
-| Stable  | [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/SceneGate/scenegate?sort=semver)](https://github.com/SceneGate/SceneGate/releases) |
-| Preview | [![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/SceneGate/scenegate/latest?sort=semver)](https://github.com/SceneGate/SceneGate/actions) |
 
 ## Documentation
 
@@ -44,35 +52,23 @@ more information about the file formats and how to use the tools.
 
 ## Build
 
-The project requires to build .NET 6.0 SDK (Linux and MacOS require also Mono).
-If you open the project with VS Code and you did install the
-[VS Code Remote Containers](https://code.visualstudio.com/docs/remote/containers)
-extension, you can have an already pre-configured development environment with
-Docker or Podman.
+The project requires to build .NET 8.0 SDK.
 
 To build, test and generate artifacts run:
 
 ```sh
-# Only required the first time
-dotnet tool restore
+# Build and run tests
+dotnet run --project build/orchestrator
 
-# Default target is Stage-Artifacts
-dotnet cake
-```
-
-To just build and test quickly, run:
-
-```sh
-dotnet cake --target=BuildTest
+# (Optional) Create bundles (nuget, zips, docs)
+dotnet run --project build/orchestrator -- --target=Bundle
 ```
 
 ## License
 
 The software is licensed under the terms of the
-[MIT license](https://choosealicense.com/licenses/mit/). The information and
-software provided by this repository is only for educational and research
-purpose. Please support the original game developers by buying their games.
+[MIT license](https://choosealicense.com/licenses/mit/).
 
-Icons:
-
-- [Material design icons by Google](https://github.com/google/material-design-icons)
+The information and software provided by this repository is only for educational
+and research purpose. Please support the original game developers by buying
+their games.

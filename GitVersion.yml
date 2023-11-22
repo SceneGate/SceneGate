@@ -1,7 +1,5 @@
 mode: ContinuousDeployment
 branches:
-  master:
-    regex: ^main$
+  main:
     tag: preview
     increment: Patch
-

@@ -1,0 +1,68 @@
+name: "Deploy"
+
+on:
+  workflow_call:
+    inputs:
+      dotnet_version:
+        required: true
+        type: string
+      azure_nuget_feed:
+        required: false
+        type: string
+    secrets:
+      nuget_preview_token:
+        required: false
+      nuget_stable_token:
+        required: false
+      azure_nuget_token:
+        required: false
+
+jobs:
+  upload_doc:
+    name: "Documentation"
+    runs-on: "ubuntu-latest"
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
+  push_artifacts:
+    name: "Artifacts"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # We need full history for version number
+
+      - name: "Download artifacts"
+        uses: actions/download-artifact@v3
+        with:
+          name: "Artifacts"
+          path: "./build/artifacts/"
+
+      - name: "Setup .NET SDK"
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ inputs.dotnet_version }}
+
+      # Weird way to authenticate in Azure DevOps Artifacts
+      # Then, we need to setup VSS_NUGET_EXTERNAL_FEED_ENDPOINTS
+      - name: "Install Azure Artifacts Credential Provider"
+        run: wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash
+
+      - name: "Deploy artifacts"
+        run: dotnet run --project build/orchestrator -- --target=Deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STABLE_NUGET_FEED_TOKEN: ${{ secrets.nuget_stable_token }}
+          PREVIEW_NUGET_FEED_TOKEN: ${{ secrets.nuget_preview_token }}
+          VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{ inputs.azure_nuget_feed }}", "username":"", "password":"${{ secrets.azure_nuget_token }}"}]}'

@@ -240,14 +240,9 @@ dotnet_diagnostic.IDE0045.severity = suggestion # Simplify ifs
 dotnet_diagnostic.IDE0046.severity = suggestion # Simplify ifs
 
 ### StyleCop
-dotnet_diagnostic.SA1000.severity = none # false positive, space before parentheses in new()
-dotnet_diagnostic.SA1009.severity = none # false positive with ()! for null checking
-dotnet_diagnostic.SA1011.severity = none # False positive due to nullables
 dotnet_diagnostic.SA1101.severity = none # Do not force to prefix local calls with 'this'
-dotnet_diagnostic.SA1313.severity = none # Pascal naming broken with records.
 dotnet_diagnostic.SA1204.severity = suggestion # Static methods should be before non-static
 dotnet_diagnostic.SA1500.severity = none # Allow inline braces
-dotnet_diagnostic.SA1516.severity = none # Multiple blank lines - broken with top-level statements
 dotnet_diagnostic.SA1633.severity = none # No XML-format header in source files
 
 ### SonarAnalyzer

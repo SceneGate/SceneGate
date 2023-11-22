@@ -26,8 +26,8 @@ close:
 issue-labels-include:
   - Breaking
   - Bug
-  - Documentation
   - Duplicate
+  - Documentation
   - Enhancement
   - Feature
   - Improvement

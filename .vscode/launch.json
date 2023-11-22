@@ -5,11 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch SceneGate (GTK)",
+            "name": "Launch SceneGate",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "Cake: Run Build",
-            "program": "${workspaceFolder}/src/SceneGate.UI.Gtk/bin/Debug/net6.0/SceneGate.dll",
+            "preLaunchTask": "Build",
+            "program": "${workspaceFolder}/src/SceneGate.Desktop/bin/Debug/net8.0/SceneGate.Desktop.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,

@@ -1,0 +1,57 @@
+name: "Build"
+
+on:
+  workflow_call:
+    inputs:
+      dotnet_version:
+        required: true
+        type: string
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        include:
+          # By default they are no "main build" but if it matches "os" then yes.
+          - os: ubuntu-latest
+            is_main_build: true
+    name: "${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # We need full history for version number
+
+      - name: "Setup .NET SDK"
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ inputs.dotnet_version }}
+
+      - name: "Build and test"
+        run: dotnet run --project build/orchestrator -- --target=Default --dotnet-configuration=Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Bundle"
+        if: ${{ matrix.is_main_build }}
+        run: dotnet run --project build/orchestrator -- --target=Bundle --dotnet-configuration=Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Publish artifacts to CI"
+        if: ${{ matrix.is_main_build }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: "Artifacts"
+          retention-days: 7
+          path: |
+            build/artifacts/
+            !build/artifacts/docs
+
+      - name: Publish docs artifact to CI
+        if: ${{ matrix.is_main_build }}
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: build/artifacts/docs
