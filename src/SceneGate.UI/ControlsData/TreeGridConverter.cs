@@ -6,14 +6,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Yarhl.FileFormat;
+using Yarhl.Plugins.FileFormat;
 
 public sealed partial class TreeGridConverter : ObservableObject
 {
     [ObservableProperty]
     private bool isCompatible;
 
-    private TreeGridConverter(ConverterMetadata converter, string displayName)
+    private TreeGridConverter(ConverterTypeInfo converter, string displayName)
     {
         Converter = converter;
         Children = new ObservableCollection<TreeGridConverter>();
@@ -47,12 +47,12 @@ public sealed partial class TreeGridConverter : ObservableObject
 
     public TreeGridConverterKind Kind { get; }
 
-    public ConverterMetadata? Converter { get; }
+    public ConverterTypeInfo? Converter { get; }
 
     public ObservableCollection<TreeGridConverter> Children { get; }
 
     public static void InsertConverterHierarchy(
-        ConverterMetadata converter,
+        ConverterTypeInfo converter,
         ICollection<TreeGridConverter> list,
         bool groupByNamespace)
     {

@@ -14,14 +14,16 @@ using SceneGate.UI.ControlsData;
 using SceneGate.UI.Formats;
 using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Mvvm;
-using SceneGate.UI.Plugins;
 using Yarhl.FileFormat;
 using Yarhl.FileSystem;
 using Yarhl.IO;
+using Yarhl.Plugins;
+using Yarhl.Plugins.FileFormat;
 
 public partial class AnalyzeViewModel : ViewModelBase
 {
-    private readonly IReadOnlyList<ConverterMetadata> converters;
+    private readonly IReadOnlyList<ConverterTypeInfo> converters;
+    private readonly IFormatViewModelBuilder[] formatsViewModelBuilders;
 
     [ObservableProperty]
     private ObservableCollection<TreeGridNode> nodes;
@@ -50,7 +52,14 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     public AnalyzeViewModel()
     {
-        converters = PluginsLocator.Instance.ConvertersMetadata;
+        TypeLocator.Default.LoadContext.TryLoadFromBaseLoadDirectory();
+
+        converters = ConverterLocator.Default.Converters;
+        formatsViewModelBuilders = TypeLocator.Default
+            .FindImplementationsOf(typeof(IFormatViewModelBuilder))
+            .Select(i => (IFormatViewModelBuilder)Activator.CreateInstance(i.Type)!)
+            .ToArray();
+
         ConverterNodes = new ObservableCollection<TreeGridConverter>();
         CreateConverterNodes();
 
@@ -125,8 +134,7 @@ public partial class AnalyzeViewModel : ViewModelBase
         }
 
         // We get the view model from our plugins locator (custom assembly scanner)
-        IFormatViewModelBuilder? vmBuilder = PluginsLocator.Instance.ViewModelBuilders
-            .FirstOrDefault(b => b.CanShow(format));
+        IFormatViewModelBuilder? vmBuilder = Array.Find(formatsViewModelBuilders, b => b.CanShow(format));
 
         // The plugin will build the view model
         IFormatViewModel formatViewModel = (vmBuilder is not null)
@@ -245,7 +253,7 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     private void CreateConverterNodes()
     {
-        foreach (ConverterMetadata converter in converters) {
+        foreach (ConverterTypeInfo converter in converters) {
             TreeGridConverter.InsertConverterHierarchy(converter, ConverterNodes, groupByNamespace: false);
         }
     }

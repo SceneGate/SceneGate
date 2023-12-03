@@ -1,7 +1,6 @@
-﻿namespace SceneGate.UI.Plugins;
+﻿namespace SceneGate.UI;
 
 using System;
-using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using SceneGate.UI.Formats;

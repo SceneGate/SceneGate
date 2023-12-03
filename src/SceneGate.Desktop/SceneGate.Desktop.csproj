@@ -4,6 +4,7 @@
     <Description>IDE for assets viewing and modding.</Description>
 
     <TargetFramework>net8.0</TargetFramework>
+    <ApplicationIcon>../SceneGate.UI/Assets/app-logo.ico</ApplicationIcon>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -17,7 +18,11 @@
 
     <!-- Plugins -->
     <ProjectReference Include="..\SceneGate.UI.Formats\SceneGate.UI.Formats.csproj" />
-    <PackageReference Include="SceneGate.Games.PokemonConquest" />
+    <PackageReference Include="Texim" />
+    <PackageReference Include="Texim.Games" />
     <PackageReference Include="SceneGate.Ekona" />
+    <!--<PackageReference Include="SceneGate.Lemon" />-->
+    <PackageReference Include="LayTea" />
+    <!--<PackageReference Include="SceneGate.Games.PokemonConquest" />-->
   </ItemGroup>
 </Project>
