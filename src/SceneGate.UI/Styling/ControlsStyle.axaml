@@ -23,6 +23,11 @@
     </Border>
   </Design.PreviewWith>
 
+  <!-- SelectableTextBlock doesn't have a SelectionForegroundBrush so it doesn't look right on Light themes -->
+  <Style Selector="SelectableTextBlock">
+    <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+  </Style>
+  
   <Style Selector="TreeView.Compact TreeViewItem">
     <Setter Property="MinHeight" Value="22" />
   </Style>

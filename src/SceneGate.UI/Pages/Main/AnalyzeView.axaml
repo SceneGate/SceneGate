@@ -151,29 +151,29 @@
           <Grid ColumnDefinitions="80,*"
                 RowDefinitions="22,22,22,22,22">
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Path" FontWeight="Bold" />
-            <TextBlock Grid.Row="0" Grid.Column="1"
-                       Text="{Binding SelectedNode.Path}"
-                       FontFamily="{StaticResource CaskaydiaFont}" />
+            <SelectableTextBlock Grid.Row="0" Grid.Column="1"
+                                 Text="{Binding SelectedNode.Path}"
+                                 FontFamily="{StaticResource CaskaydiaFont}" />
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Format" FontWeight="Bold" />
-            <TextBlock Grid.Row="1" Grid.Column="1"
-                       Text="{Binding SelectedNode.FullTypeName}"
-                       FontFamily="{StaticResource CaskaydiaFont}" />
+            <SelectableTextBlock Grid.Row="1" Grid.Column="1"
+                                 Text="{Binding SelectedNode.FullTypeName}"
+                                 FontFamily="{StaticResource CaskaydiaFont}" />
 
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Tags" FontWeight="Bold" />
-            <TextBlock Grid.Row="2" Grid.Column="1"
-                       Text="{Binding SelectedNode.AllTags}"
-                       FontFamily="{StaticResource CaskaydiaFont}" />
+            <SelectableTextBlock Grid.Row="2" Grid.Column="1"
+                                 Text="{Binding SelectedNode.AllTags}"
+                                 FontFamily="{StaticResource CaskaydiaFont}" />
 
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Offset" FontWeight="Bold" />
-            <TextBlock Grid.Row="3" Grid.Column="1"
-                       Text="{Binding SelectedNode.OffsetHex}"
-                       FontFamily="{StaticResource CaskaydiaFont}" />
+            <SelectableTextBlock Grid.Row="3" Grid.Column="1"
+                                 Text="{Binding SelectedNode.OffsetHex}"
+                                 FontFamily="{StaticResource CaskaydiaFont}" />
 
             <TextBlock Grid.Row="4" Grid.Column="0" Text="Length" FontWeight="Bold" />
-            <TextBlock Grid.Row="4" Grid.Column="1"
-                       Text="{Binding SelectedNode.FullLength}"
-                       FontFamily="{StaticResource CaskaydiaFont}" />
+            <SelectableTextBlock Grid.Row="4" Grid.Column="1"
+                                 Text="{Binding SelectedNode.FullLength}"
+                                 FontFamily="{StaticResource CaskaydiaFont}" />
           </Grid>
         </ScrollViewer>
       </Expander>
