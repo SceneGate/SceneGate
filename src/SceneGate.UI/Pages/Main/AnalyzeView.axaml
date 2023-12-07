@@ -21,7 +21,7 @@
 
   <Grid ColumnDefinitions="450,Auto,*">
     <Grid Grid.Column="0"
-          RowDefinitions="Auto,*,Auto,350"
+          RowDefinitions="Auto,*,Auto,250,Auto"
           MinWidth="300">
       <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto" Margin="10 5">
         <TextBlock Grid.Column="0"
@@ -98,17 +98,17 @@
             ColumnDefinitions="Auto,*">
         <TextBlock Grid.Row="0" Grid.Column="0"
                    Text="Converters"
-                   DockPanel.Dock="Left"
-                   VerticalAlignment="Center"
-                   FontWeight="Bold"
-                   Theme="{StaticResource BodyTextBlockStyle}" />
+                       DockPanel.Dock="Left"
+                       VerticalAlignment="Center"
+                       FontWeight="Bold"
+                       Theme="{StaticResource BodyTextBlockStyle}" />
         <TextBox Grid.Row="0" Grid.Column="1"
                  Text="{Binding ConverterFilter}"
                  DockPanel.Dock="Right"
-                 Margin="20 0 5 0"
-                 Watermark="Filter..."
-                 MinWidth="150"
-                 HorizontalAlignment="Stretch" />
+                     Margin="20 0 5 0"
+                     Watermark="Filter..."
+                     MinWidth="150"
+                     HorizontalAlignment="Stretch" />
         <Separator Grid.Row="1" Grid.ColumnSpan="2"
                    Margin="0 10"
                    VerticalAlignment="Top" />
@@ -142,6 +142,41 @@
           </TreeView.ItemTemplate>
         </TreeView>
       </Grid>
+
+      <Expander Grid.Row="4">
+        <Expander.Header>
+          <TextBlock Text="Selected node metadata" FontWeight="Bold" />
+        </Expander.Header>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+          <Grid ColumnDefinitions="80,*"
+                RowDefinitions="22,22,22,22,22">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Path" FontWeight="Bold" />
+            <TextBlock Grid.Row="0" Grid.Column="1"
+                       Text="{Binding SelectedNode.Path}"
+                       FontFamily="{StaticResource CaskaydiaFont}" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Format" FontWeight="Bold" />
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                       Text="{Binding SelectedNode.FullTypeName}"
+                       FontFamily="{StaticResource CaskaydiaFont}" />
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Tags" FontWeight="Bold" />
+            <TextBlock Grid.Row="2" Grid.Column="1"
+                       Text="{Binding SelectedNode.AllTags}"
+                       FontFamily="{StaticResource CaskaydiaFont}" />
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Offset" FontWeight="Bold" />
+            <TextBlock Grid.Row="3" Grid.Column="1"
+                       Text="{Binding SelectedNode.OffsetHex}"
+                       FontFamily="{StaticResource CaskaydiaFont}" />
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Length" FontWeight="Bold" />
+            <TextBlock Grid.Row="4" Grid.Column="1"
+                       Text="{Binding SelectedNode.FullLength}"
+                       FontFamily="{StaticResource CaskaydiaFont}" />
+          </Grid>
+        </ScrollViewer>
+      </Expander>
     </Grid>
 
     <GridSplitter Grid.Column="1" ResizeDirection="Columns" />

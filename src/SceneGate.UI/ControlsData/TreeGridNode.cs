@@ -28,12 +28,37 @@ public partial class TreeGridNode : ObservableObject
     [ObservableProperty]
     private string toolTip;
 
+    [ObservableProperty]
+    private string name;
+
+    [ObservableProperty]
+    private string path;
+
+    [ObservableProperty]
+    private string fullTypeName;
+
+    [ObservableProperty]
+    private string offsetHex;
+
+    [ObservableProperty]
+    private string fullLength;
+
+    [ObservableProperty]
+    private string allTags;
+
     public TreeGridNode(Node node)
     {
         Node = node;
         Children = new ObservableCollection<TreeGridNode>();
+        name = string.Empty;
+        path = string.Empty;
+        fullTypeName = string.Empty;
         formatName = string.Empty;
-        HumanReadableLength = string.Empty;
+        humanReadableLength = string.Empty;
+        offsetHex = string.Empty;
+        fullLength = string.Empty;
+        allTags = string.Empty;
+
         IsVisible = true;
         ToolTip = string.Empty;
 
@@ -43,8 +68,6 @@ public partial class TreeGridNode : ObservableObject
     public Node Node { get; }
 
     public ObservableCollection<TreeGridNode> Children { get; }
-
-    public string Name => Node.Name;
 
     public void Add(Node node)
     {
@@ -72,11 +95,24 @@ public partial class TreeGridNode : ObservableObject
 
     private void UpdateNodeInfo()
     {
+        Name = Node.Name;
+        Path = Node.Path;
+        AllTags = string.Join(", ", Node.Tags.Select(i => $"{i.Key}={i.Value}"));
+        FullTypeName = Node.Format?.GetType().FullName ?? "null";
+        ToolTip = string.Format("Format: {0}", FullTypeName);
+
         UpdateFormatName();
         UpdateKind();
         UpdateChildren();
         UpdateLength();
-        UpdateToolTip();
+
+        if (Node.Stream is not null) {
+            OffsetHex = $"0x{Node.Stream.Offset:X8}";
+            FullLength = $"{Node.Stream.Length} ({HumanReadableLength})";
+        } else {
+            OffsetHex = string.Empty;
+            FullLength = string.Empty;
+        }
     }
 
     private void UpdateFormatName()
@@ -140,25 +176,6 @@ public partial class TreeGridNode : ObservableObject
         HumanReadableLength = (magnitudeIdx == 0)
             ? $"{length} bytes"
             : $"{length:F2} {Magnitudes[magnitudeIdx]}";
-    }
-
-    private void UpdateToolTip()
-    {
-        var builder = new StringBuilder()
-            .AppendFormat("Format: {0}", Node.Format?.GetType().FullName ?? "null");
-
-        if (Node.Format is IBinary binaryFormat) {
-            builder.AppendLine()
-                .AppendFormat("Offset: 0x{0:X}", binaryFormat.Stream.Offset)
-                .AppendLine()
-                .AppendFormat("Length: {0} ({1} bytes)", HumanReadableLength, binaryFormat.Stream.Length);
-        }
-
-        builder.AppendLine()
-            .Append("Tags: ")
-            .AppendJoin(", ", Node.Tags.Select(i => $"{i.Key}={i.Value}"));
-
-        ToolTip = builder.ToString();
     }
 
     private void UpdateChildren()
