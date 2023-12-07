@@ -43,7 +43,7 @@
       <Separator Grid.Row="1" VerticalAlignment="Top" />
 
       <TreeView Grid.Row="1"
-                Classes="NodeTree"
+                Classes="NodeTree Compact"
                 SelectedItem="{Binding SelectedNode}"
                 ItemsSource="{Binding Nodes}"
                 SelectionMode="Single"
@@ -115,7 +115,7 @@
         <TreeView Grid.Row="1" Grid.ColumnSpan="2"
                   Margin="0 10"
                   Name="converterTreeView"
-                  Classes="ConverterMetatada"
+                  Classes="ConverterMetatada Compact"
                   SelectedItem="{Binding SelectedConverter}"
                   ItemsSource="{Binding ConverterNodes}"
                   SelectionMode="Single"
