@@ -32,6 +32,7 @@ public partial class AnalyzeViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(OpenNodeViewCommand))]
     [NotifyCanExecuteChangedFor(nameof(ConvertNodeCommand))]
     [NotifyCanExecuteChangedFor(nameof(SaveBinaryNodeCommand))]
+    [NotifyCanExecuteChangedFor(nameof(CopyPathCommand))]
     private TreeGridNode? selectedNode;
 
     [ObservableProperty]
@@ -42,6 +43,7 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ConvertNodeCommand))]
+    [NotifyCanExecuteChangedFor(nameof(CopyConverterTypeNameCommand))]
     private TreeGridConverter? selectedConverter;
 
     [ObservableProperty]
@@ -72,6 +74,7 @@ public partial class AnalyzeViewModel : ViewModelBase
         DisplayConvertingProgress = new AsyncInteraction<NodeConversionInfo, object?>();
         DisplayConversionError = new AsyncInteraction<ConversionErrorViewModel, object>();
         NotifyConversionFinished = new AsyncInteraction<object?>();
+        CopyToClipboard = new AsyncInteraction<string, object>();
     }
 
     public ObservableCollection<TreeGridConverter> ConverterNodes { get; }
@@ -87,6 +90,8 @@ public partial class AnalyzeViewModel : ViewModelBase
     public AsyncInteraction<ConversionErrorViewModel, object> DisplayConversionError { get; }
 
     public AsyncInteraction<object?> NotifyConversionFinished { get; }
+
+    public AsyncInteraction<string, object> CopyToClipboard { get; }
 
     [RelayCommand]
     private async Task AddFileAsync()
@@ -229,6 +234,33 @@ public partial class AnalyzeViewModel : ViewModelBase
     {
         return SelectedNode?.Node.Format is IBinary;
     }
+
+    [RelayCommand(CanExecute = nameof(CanCopyPath))]
+    private async Task CopyPath()
+    {
+        string? path = SelectedNode?.Node?.Path;
+        if (path is null) {
+            return;
+        }
+
+        await CopyToClipboard.HandleAsync(path);
+    }
+
+    private bool CanCopyPath() => SelectedNode is not null;
+
+    [RelayCommand(CanExecute = nameof(CanCopyConverterTypeName))]
+    private async Task CopyConverterTypeName()
+    {
+        Type? type = SelectedConverter?.Converter?.Type;
+        if (type is null) {
+            return;
+        }
+
+        await CopyToClipboard.HandleAsync(type.FullName!);
+    }
+
+    private bool CanCopyConverterTypeName() =>
+        SelectedConverter is { Kind: TreeGridConverterKind.Converter };
 
     partial void OnNodeNameFilterChanged(string? value)
     {

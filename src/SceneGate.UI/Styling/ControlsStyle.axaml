@@ -4,6 +4,34 @@
         xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
         xmlns:cd="using:SceneGate.UI.ControlsData">
 
+  <Design.PreviewWith>
+    <Border Padding="30" MinWidth="350">
+      <TreeView Classes="Compact">
+        <TreeViewItem Header="Item 1" />
+        <TreeViewItem Header="Item 2">
+          <TreeViewItem Header="SubItem1" />
+          <TreeViewItem Header="SubItem2" />
+          <TreeViewItem Header="SubItem3">
+            <TreeViewItem Header="SubItem Item1" />
+            <TreeViewItem Header="SubItem Item2" />
+            <TreeViewItem Header="SubItem Item3" />
+          </TreeViewItem>
+        </TreeViewItem>
+        <TreeViewItem Header="Item3" />
+        <TreeViewItem Header="Item4" />
+      </TreeView>
+    </Border>
+  </Design.PreviewWith>
+
+  <!-- SelectableTextBlock doesn't have a SelectionForegroundBrush so it doesn't look right on Light themes -->
+  <Style Selector="SelectableTextBlock">
+    <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+  </Style>
+  
+  <Style Selector="TreeView.Compact TreeViewItem">
+    <Setter Property="MinHeight" Value="22" />
+  </Style>
+
   <!-- Bind IsVisible with the item IsCompatible property for converter treeview (class ConverterMetadata) -->
   <Style Selector="TreeView.ConverterMetatada TreeViewItem" x:DataType="cd:TreeGridConverter">
     <Setter Property="IsVisible" Value="{Binding IsCompatible}" />

@@ -21,7 +21,7 @@
 
   <Grid ColumnDefinitions="450,Auto,*">
     <Grid Grid.Column="0"
-          RowDefinitions="Auto,*,Auto,350"
+          RowDefinitions="Auto,*,Auto,250,Auto"
           MinWidth="300">
       <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto" Margin="10 5">
         <TextBlock Grid.Column="0"
@@ -43,7 +43,7 @@
       <Separator Grid.Row="1" VerticalAlignment="Top" />
 
       <TreeView Grid.Row="1"
-                Classes="NodeTree"
+                Classes="NodeTree Compact"
                 SelectedItem="{Binding SelectedNode}"
                 ItemsSource="{Binding Nodes}"
                 SelectionMode="Single"
@@ -51,7 +51,9 @@
         <TreeView.ItemTemplate>
           <TreeDataTemplate ItemsSource="{Binding Children}">
             <!-- Setting background so contextmenu works everywhere -->
-            <Grid Background="Transparent" ColumnDefinitions="Auto,*,*,70,60">
+            <Grid Background="Transparent"
+                  ColumnDefinitions="Auto,*,*,60"
+                  ToolTip.Tip="{Binding ToolTip}">
               <fluent:SymbolIcon Grid.Column="0"
                                  VerticalAlignment="Center"
                                  Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
@@ -64,12 +66,7 @@
                          Text="{Binding FormatName}"
                          HorizontalAlignment="Right"
                          VerticalAlignment="Center" />
-              <TextBlock Grid.Column="3"
-                         Margin="5 0"
-                         Text="{Binding HumanReadableLength}"
-                         HorizontalAlignment="Right"
-                         VerticalAlignment="Center" />
-              <Button Grid.Column="4"
+              <Button Grid.Column="3"
                       FontSize="9"
                       Margin="4 0 0 0"
                       Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}"
@@ -84,6 +81,8 @@
                             Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}" />
                   <MenuItem Header="Show"
                             Command="{ReflectionBinding $parent[TreeView].DataContext.OpenNodeViewCommand}" />
+                  <MenuItem Header="Copy path"
+                            Command="{ReflectionBinding $parent[TreeView].DataContext.CopyPathCommand}" />
                 </MenuFlyout>
               </Grid.ContextFlyout>
             </Grid>
@@ -99,24 +98,24 @@
             ColumnDefinitions="Auto,*">
         <TextBlock Grid.Row="0" Grid.Column="0"
                    Text="Converters"
-                   DockPanel.Dock="Left"
-                   VerticalAlignment="Center"
-                   FontWeight="Bold"
-                   Theme="{StaticResource BodyTextBlockStyle}" />
+                       DockPanel.Dock="Left"
+                       VerticalAlignment="Center"
+                       FontWeight="Bold"
+                       Theme="{StaticResource BodyTextBlockStyle}" />
         <TextBox Grid.Row="0" Grid.Column="1"
                  Text="{Binding ConverterFilter}"
                  DockPanel.Dock="Right"
-                 Margin="20 0 5 0"
-                 Watermark="Filter..."
-                 MinWidth="150"
-                 HorizontalAlignment="Stretch" />
+                     Margin="20 0 5 0"
+                     Watermark="Filter..."
+                     MinWidth="150"
+                     HorizontalAlignment="Stretch" />
         <Separator Grid.Row="1" Grid.ColumnSpan="2"
                    Margin="0 10"
                    VerticalAlignment="Top" />
         <TreeView Grid.Row="1" Grid.ColumnSpan="2"
                   Margin="0 10"
                   Name="converterTreeView"
-                  Classes="ConverterMetatada"
+                  Classes="ConverterMetatada Compact"
                   SelectedItem="{Binding SelectedConverter}"
                   ItemsSource="{Binding ConverterNodes}"
                   SelectionMode="Single"
@@ -124,14 +123,60 @@
                   DoubleTapped="ConvertersTreeViewDoubleTapped">
           <TreeView.ItemTemplate>
             <TreeDataTemplate ItemsSource="{Binding Children}">
-              <StackPanel Orientation="Horizontal">
+              <!-- Setting background so contextmenu works everywhere -->
+              <StackPanel Background="Transparent"
+                          Orientation="Horizontal"
+                          ToolTip.IsOpen="{Binding HasToolTip}"
+                          ToolTip.Tip="{Binding ToolTip}">
                 <fluent:SymbolIcon Symbol="{Binding Kind, Converter={StaticResource ConverterKind2Icon}}" />
                 <TextBlock Margin="10 0 0 0" Text="{Binding DisplayName}" />
+
+                <StackPanel.ContextFlyout>
+                  <MenuFlyout>
+                    <MenuItem Header="Copy type name"
+                              Command="{ReflectionBinding $parent[TreeView].DataContext.CopyConverterTypeNameCommand}"/>
+                  </MenuFlyout>
+                </StackPanel.ContextFlyout>
               </StackPanel>
             </TreeDataTemplate>
           </TreeView.ItemTemplate>
         </TreeView>
       </Grid>
+
+      <Expander Grid.Row="4">
+        <Expander.Header>
+          <TextBlock Text="Selected node metadata" FontWeight="Bold" />
+        </Expander.Header>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+          <Grid ColumnDefinitions="80,*"
+                RowDefinitions="22,22,22,22,22">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Path" FontWeight="Bold" />
+            <SelectableTextBlock Grid.Row="0" Grid.Column="1"
+                                 Text="{Binding SelectedNode.Path}"
+                                 FontFamily="{StaticResource CaskaydiaFont}" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Format" FontWeight="Bold" />
+            <SelectableTextBlock Grid.Row="1" Grid.Column="1"
+                                 Text="{Binding SelectedNode.FullTypeName}"
+                                 FontFamily="{StaticResource CaskaydiaFont}" />
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Tags" FontWeight="Bold" />
+            <SelectableTextBlock Grid.Row="2" Grid.Column="1"
+                                 Text="{Binding SelectedNode.AllTags}"
+                                 FontFamily="{StaticResource CaskaydiaFont}" />
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Offset" FontWeight="Bold" />
+            <SelectableTextBlock Grid.Row="3" Grid.Column="1"
+                                 Text="{Binding SelectedNode.OffsetHex}"
+                                 FontFamily="{StaticResource CaskaydiaFont}" />
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Length" FontWeight="Bold" />
+            <SelectableTextBlock Grid.Row="4" Grid.Column="1"
+                                 Text="{Binding SelectedNode.FullLength}"
+                                 FontFamily="{StaticResource CaskaydiaFont}" />
+          </Grid>
+        </ScrollViewer>
+      </Expander>
     </Grid>
 
     <GridSplitter Grid.Column="1" ResizeDirection="Columns" />

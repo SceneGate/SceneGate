@@ -27,7 +27,7 @@
       <AvaloniaEdit:TextEditor ShowLineNumbers="True"
                                SyntaxHighlighting="Yaml"
                                IsReadOnly="True"
-                               FontFamily="{StaticResource CascadiaCodeFont}">
+                               FontFamily="{StaticResource CaskaydiaFont}">
         <i:Interaction.Behaviors>
           <behaviors:DocumentTextBindingBehavior Text="{Binding YamlText}"/>
         </i:Interaction.Behaviors>
@@ -38,7 +38,7 @@
       <AvaloniaEdit:TextEditor ShowLineNumbers="True"
                                SyntaxHighlighting="Json"
                                IsReadOnly="True"
-                               FontFamily="{StaticResource CascadiaCodeFont}">
+                               FontFamily="{StaticResource CaskaydiaFont}">
         <i:Interaction.Behaviors>
           <behaviors:DocumentTextBindingBehavior Text="{Binding JsonText}"/>
         </i:Interaction.Behaviors>

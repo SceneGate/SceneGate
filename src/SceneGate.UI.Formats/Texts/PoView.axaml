@@ -57,19 +57,26 @@
           Margin="5"
           RowDefinitions="Auto,*,Auto,*"
           ColumnDefinitions="*">
-      <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 5">
+      <StackPanel Grid.Row="0" Margin="0 5" Orientation="Horizontal" ClipToBounds="True">
         <TextBlock Text="Original"
                    Theme="{StaticResource BodyTextBlockStyle}"
                    FontWeight="Bold"
                    VerticalAlignment="Center"/>
-        <Border Background="{DynamicResource SystemAccentColorLight1}" MinWidth="20" Margin="5 0" CornerRadius="5">
+        <Border Background="{DynamicResource SystemAccentColorLight1}"
+                MinWidth="20"
+                Margin="5 0"
+                CornerRadius="5">
           <TextBlock Text="{Binding SelectedEntry.Context}"
                      Margin="5"
                      Foreground="{DynamicResource TextOnAccentFillColorPrimary}"/>
         </Border>
-        <Border Background="{DynamicResource SystemAccentColorDark1}" MinWidth="20" Margin="5 0" CornerRadius="5">
+        <Border Background="{DynamicResource SystemAccentColorDark1}"
+                MinWidth="20"
+                Margin="5 0"
+                CornerRadius="5">
           <TextBlock Text="{Binding SelectedEntry.Flags}"
                      Margin="5"
+                     TextTrimming="CharacterEllipsis"
                      Foreground="{DynamicResource TextOnAccentFillColorPrimary}"/>
         </Border>
       </StackPanel>

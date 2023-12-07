@@ -71,7 +71,7 @@
              IsReadOnly="True"
              AcceptsReturn="True"
              Text="{Binding ExceptionMessage}"
-             FontFamily="{StaticResource CascadiaCodeFont}"
+             FontFamily="{StaticResource CaskaydiaFont}"
              TextWrapping="NoWrap"/>
   </Grid>
 </UserControl>

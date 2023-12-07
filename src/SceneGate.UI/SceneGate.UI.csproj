@@ -34,8 +34,4 @@
     <ProjectReference Include="..\SceneGate.UI.Formats\SceneGate.UI.Formats.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Plugins\" />
-  </ItemGroup>
-
 </Project>

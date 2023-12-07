@@ -3,6 +3,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -24,13 +25,42 @@ public partial class TreeGridNode : ObservableObject
     [ObservableProperty]
     private bool isVisible;
 
+    [ObservableProperty]
+    private string toolTip;
+
+    [ObservableProperty]
+    private string name;
+
+    [ObservableProperty]
+    private string path;
+
+    [ObservableProperty]
+    private string fullTypeName;
+
+    [ObservableProperty]
+    private string offsetHex;
+
+    [ObservableProperty]
+    private string fullLength;
+
+    [ObservableProperty]
+    private string allTags;
+
     public TreeGridNode(Node node)
     {
         Node = node;
         Children = new ObservableCollection<TreeGridNode>();
+        name = string.Empty;
+        path = string.Empty;
+        fullTypeName = string.Empty;
         formatName = string.Empty;
-        HumanReadableLength = string.Empty;
+        humanReadableLength = string.Empty;
+        offsetHex = string.Empty;
+        fullLength = string.Empty;
+        allTags = string.Empty;
+
         IsVisible = true;
+        ToolTip = string.Empty;
 
         UpdateNodeInfo();
     }
@@ -38,8 +68,6 @@ public partial class TreeGridNode : ObservableObject
     public Node Node { get; }
 
     public ObservableCollection<TreeGridNode> Children { get; }
-
-    public string Name => Node.Name;
 
     public void Add(Node node)
     {
@@ -67,10 +95,24 @@ public partial class TreeGridNode : ObservableObject
 
     private void UpdateNodeInfo()
     {
+        Name = Node.Name;
+        Path = Node.Path;
+        AllTags = string.Join(", ", Node.Tags.Select(i => $"{i.Key}={i.Value}"));
+        FullTypeName = Node.Format?.GetType().FullName ?? "null";
+        ToolTip = string.Format("Format: {0}", FullTypeName);
+
         UpdateFormatName();
         UpdateKind();
         UpdateChildren();
         UpdateLength();
+
+        if (Node.Stream is not null) {
+            OffsetHex = $"0x{Node.Stream.Offset:X8}";
+            FullLength = $"{Node.Stream.Length} ({HumanReadableLength})";
+        } else {
+            OffsetHex = string.Empty;
+            FullLength = string.Empty;
+        }
     }
 
     private void UpdateFormatName()
