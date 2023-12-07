@@ -35,7 +35,19 @@ and localization.
 
 ## Supported plugins
 
-- [Ekona](https://github.com/SceneGate/Ekona/): DS and DSi ROM format
+- 🔧 Generic:
+  - [Yarhl.Media.Text](https://scenegate.github.io/Yarhl/docs/media-text/po-format.html):
+    PO translation
+  - [Texim](https://github.com/SceneGate/Texim): standard images
+- 🕹️ Platforms:
+  - [Ekona](https://scenegate.github.io/Ekona/): DS and DSi ROM
+  - [Lemon](https://scenegate.github.io/Lemon/): 3DS ROM
+  - [Texim.Games](https://github.com/SceneGate/Texim): DS images
+- 🎩 Games:
+  - [Texim.Games](https://github.com/SceneGate/Texim): images from some DS games
+  - [LayTea](https://www.pleonex.dev/LayTea/): Professor Layton games (London
+    Life only for now)
+  - AmbitionConquest: Pokémon Conquest DS
 
 ## Installation
 

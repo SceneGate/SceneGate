@@ -1,24 +1,4 @@
-# SceneGate
-
-<!-- markdownlint-disable MD033 -->
-<p align="center">
-  <a href="https://github.com/SceneGate/SceneGate/releases">
-    <img alt="Stable version" src="https://img.shields.io/github/v/release/SceneGate/scenegate?sort=semver" />
-  </a>
-  &nbsp;
-  <a href="https://github.com/SceneGate/SceneGate/actions">
-    <img alt="GitHub commits since latest release (by SemVer)" src="https://img.shields.io/github/commits-since/SceneGate/scenegate/latest?sort=semver" />
-  </a>
-  &nbsp;
-  <a href="https://github.com/SceneGate/scenegate/workflows/Build%20and%20release">
-    <img alt="Build and release" src="https://github.com/SceneGate/scenegate/workflows/Build%20and%20release/badge.svg" />
-  </a>
-  &nbsp;
-  <a href="https://choosealicense.com/licenses/mit/">
-    <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat" />
-  </a>
-  &nbsp;
-</p>
+# SceneGate ![[Stable version](https://github.com/SceneGate/SceneGate/releases)](https://img.shields.io/github/v/release/SceneGate/scenegate?sort=semver)
 
 **Work-in-progress** tool for reverse engineering, file format analysis, modding
 and localization.
@@ -35,7 +15,19 @@ and localization.
 
 ## Supported plugins
 
-- [Ekona](https://github.com/SceneGate/Ekona/): DS and DSi ROM format
+- 🔧 Generic:
+  - [Yarhl.Media.Text](https://scenegate.github.io/Yarhl/docs/media-text/po-format.html):
+    PO translation
+  - [Texim](https://github.com/SceneGate/Texim): standard images
+- 🕹️ Platforms:
+  - [Ekona](https://scenegate.github.io/Ekona/): DS and DSi ROM
+  - [Lemon](https://scenegate.github.io/Lemon/): 3DS ROM
+  - [Texim.Games](https://github.com/SceneGate/Texim): DS images
+- 🎩 Games:
+  - [Texim.Games](https://github.com/SceneGate/Texim): images from some DS games
+  - [LayTea](https://www.pleonex.dev/LayTea/): Professor Layton games (London
+    Life only for now)
+  - AmbitionConquest: Pokémon Conquest DS
 
 ## License
 
