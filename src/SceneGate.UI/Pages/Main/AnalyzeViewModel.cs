@@ -33,6 +33,7 @@ public partial class AnalyzeViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(OpenNodeViewCommand))]
     [NotifyCanExecuteChangedFor(nameof(ConvertNodeCommand))]
     [NotifyCanExecuteChangedFor(nameof(SaveBinaryNodeCommand))]
+    [NotifyCanExecuteChangedFor(nameof(CopyPathCommand))]
     private TreeGridNode? selectedNode;
 
     [ObservableProperty]
@@ -43,6 +44,7 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ConvertNodeCommand))]
+    [NotifyCanExecuteChangedFor(nameof(CopyConverterTypeNameCommand))]
     private TreeGridConverter? selectedConverter;
 
     [ObservableProperty]
@@ -246,6 +248,20 @@ public partial class AnalyzeViewModel : ViewModelBase
     }
 
     private bool CanCopyPath() => SelectedNode is not null;
+
+    [RelayCommand(CanExecute = nameof(CanCopyConverterTypeName))]
+    private async Task CopyConverterTypeName()
+    {
+        Type? type = SelectedConverter?.Converter?.Type;
+        if (type is null) {
+            return;
+        }
+
+        await CopyToClipboard.HandleAsync(type.FullName!);
+    }
+
+    private bool CanCopyConverterTypeName() =>
+        SelectedConverter is { Kind: TreeGridConverterKind.Converter };
 
     partial void OnNodeNameFilterChanged(string? value)
     {

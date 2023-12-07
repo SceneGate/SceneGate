@@ -126,9 +126,17 @@
                   DoubleTapped="ConvertersTreeViewDoubleTapped">
           <TreeView.ItemTemplate>
             <TreeDataTemplate ItemsSource="{Binding Children}">
-              <StackPanel Orientation="Horizontal">
+              <!-- Setting background so contextmenu works everywhere -->
+              <StackPanel Background="Transparent" Orientation="Horizontal">
                 <fluent:SymbolIcon Symbol="{Binding Kind, Converter={StaticResource ConverterKind2Icon}}" />
                 <TextBlock Margin="10 0 0 0" Text="{Binding DisplayName}" />
+
+                <StackPanel.ContextFlyout>
+                  <MenuFlyout>
+                    <MenuItem Header="Copy type name"
+                              Command="{ReflectionBinding $parent[TreeView].DataContext.CopyConverterTypeNameCommand}"/>
+                  </MenuFlyout>
+                </StackPanel.ContextFlyout>
               </StackPanel>
             </TreeDataTemplate>
           </TreeView.ItemTemplate>
