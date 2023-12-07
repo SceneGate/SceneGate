@@ -84,6 +84,8 @@
                             Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}" />
                   <MenuItem Header="Show"
                             Command="{ReflectionBinding $parent[TreeView].DataContext.OpenNodeViewCommand}" />
+                  <MenuItem Header="Copy path"
+                            Command="{ReflectionBinding $parent[TreeView].DataContext.CopyPathCommand}" />
                 </MenuFlyout>
               </Grid.ContextFlyout>
             </Grid>

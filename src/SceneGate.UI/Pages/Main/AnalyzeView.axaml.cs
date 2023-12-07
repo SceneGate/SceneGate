@@ -55,6 +55,7 @@ public partial class AnalyzeView : UserControl
         viewModel.DisplayConvertingProgress.RegisterHandler(DisplayConversionStarted);
         viewModel.DisplayConversionError.RegisterHandler(DisplayConversionError);
         viewModel.NotifyConversionFinished.RegisterHandler(HideConversionDialog);
+        viewModel.CopyToClipboard.RegisterHandler(CopyToClipboardAsync);
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -158,5 +159,14 @@ public partial class AnalyzeView : UserControl
             .StorageProvider
             .SaveFilePickerAsync(options)
             .ConfigureAwait(false);
+    }
+
+    private async Task<object> CopyToClipboardAsync(string content)
+    {
+        await TopLevel.GetTopLevel(this)!
+            .Clipboard!
+            .SetTextAsync(content);
+
+        return null!;
     }
 }

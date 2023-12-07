@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -72,6 +73,7 @@ public partial class AnalyzeViewModel : ViewModelBase
         DisplayConvertingProgress = new AsyncInteraction<NodeConversionInfo, object?>();
         DisplayConversionError = new AsyncInteraction<ConversionErrorViewModel, object>();
         NotifyConversionFinished = new AsyncInteraction<object?>();
+        CopyToClipboard = new AsyncInteraction<string, object>();
     }
 
     public ObservableCollection<TreeGridConverter> ConverterNodes { get; }
@@ -87,6 +89,8 @@ public partial class AnalyzeViewModel : ViewModelBase
     public AsyncInteraction<ConversionErrorViewModel, object> DisplayConversionError { get; }
 
     public AsyncInteraction<object?> NotifyConversionFinished { get; }
+
+    public AsyncInteraction<string, object> CopyToClipboard { get; }
 
     [RelayCommand]
     private async Task AddFileAsync()
@@ -229,6 +233,19 @@ public partial class AnalyzeViewModel : ViewModelBase
     {
         return SelectedNode?.Node.Format is IBinary;
     }
+
+    [RelayCommand(CanExecute = nameof(CanCopyPath))]
+    private async Task CopyPath()
+    {
+        string? path = SelectedNode?.Node?.Path;
+        if (path is null) {
+            return;
+        }
+
+        await CopyToClipboard.HandleAsync(path);
+    }
+
+    private bool CanCopyPath() => SelectedNode is not null;
 
     partial void OnNodeNameFilterChanged(string? value)
     {
