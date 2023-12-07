@@ -127,7 +127,10 @@
           <TreeView.ItemTemplate>
             <TreeDataTemplate ItemsSource="{Binding Children}">
               <!-- Setting background so contextmenu works everywhere -->
-              <StackPanel Background="Transparent" Orientation="Horizontal">
+              <StackPanel Background="Transparent"
+                          Orientation="Horizontal"
+                          ToolTip.IsOpen="{Binding HasToolTip}"
+                          ToolTip.Tip="{Binding ToolTip}">
                 <fluent:SymbolIcon Symbol="{Binding Kind, Converter={StaticResource ConverterKind2Icon}}" />
                 <TextBlock Margin="10 0 0 0" Text="{Binding DisplayName}" />
 

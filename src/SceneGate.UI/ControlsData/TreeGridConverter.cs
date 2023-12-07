@@ -21,15 +21,17 @@ public sealed partial class TreeGridConverter : ObservableObject
         DisplayName = displayName;
         Kind = TreeGridConverterKind.Converter;
         IsCompatible = true;
+        ToolTip = $"{converter.SourceType.Name} → {converter.DestinationType.Name}";
     }
 
-    private TreeGridConverter(AssemblyName assembly)
+    private TreeGridConverter(Assembly assembly, AssemblyName assemblyName)
     {
         Children = new ObservableCollection<TreeGridConverter>();
         Id = assembly.FullName!;
-        DisplayName = $"{assembly.Name} (v{assembly.Version})";
+        DisplayName = $"{assemblyName.Name} (v{assemblyName.Version})";
         Kind = TreeGridConverterKind.Assesmbly;
         IsCompatible = true;
+        ToolTip = assembly.Location;
     }
 
     private TreeGridConverter(string namespaceName)
@@ -39,11 +41,16 @@ public sealed partial class TreeGridConverter : ObservableObject
         DisplayName = namespaceName;
         Kind = TreeGridConverterKind.Namespace;
         IsCompatible = true;
+        ToolTip = string.Empty;
     }
 
     public string Id { get; }
 
     public string DisplayName { get; }
+
+    public string ToolTip { get; }
+
+    public bool HasToolTip => !string.IsNullOrEmpty(ToolTip);
 
     public TreeGridConverterKind Kind { get; }
 
@@ -56,14 +63,15 @@ public sealed partial class TreeGridConverter : ObservableObject
         ICollection<TreeGridConverter> list,
         bool groupByNamespace)
     {
-        var assembly = new AssemblyName(converter.Type.Assembly.FullName!);
+        var assembly = converter.Type.Assembly.GetName();
         string assemblyName = assembly.Name!;
         string typeNamespace = converter.Type.Namespace!;
-        string[] namespaceList = typeNamespace[assemblyName.Length..].Split('.', StringSplitOptions.RemoveEmptyEntries);
+        string[] namespaceList = typeNamespace[assemblyName.Length..]
+            .Split('.', StringSplitOptions.RemoveEmptyEntries);
 
         TreeGridConverter? current = list.FirstOrDefault(x => x.Id == assembly.FullName);
         if (current is null) {
-            current = new TreeGridConverter(assembly);
+            current = new TreeGridConverter(converter.Type.Assembly, assembly);
             list.Add(current);
         }
 
