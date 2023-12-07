@@ -11,10 +11,9 @@
 
   <Application.Resources>
     <!-- Fonts -->
-    <FontFamily x:Key="CascadiaCodeFont">avares://SceneGate.UI/Assets/Fonts#Cascadia Code</FontFamily>
-    <FontFamily x:Key="SymbolsFont">avares://SceneGate.UI/Assets/Fonts#Symbols Nerd Font</FontFamily>
+    <FontFamily x:Key="CaskaydiaFont">avares://SceneGate.UI/Assets/Fonts#CaskaydiaCove Nerd Font</FontFamily>
   </Application.Resources>
-  
+
   <Application.Styles>
     <fluent:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
     <StyleInclude Source="avares://SceneGate.UI/Styling/ControlsStyle.axaml" />

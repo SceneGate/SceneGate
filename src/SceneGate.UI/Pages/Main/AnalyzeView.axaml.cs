@@ -25,7 +25,10 @@ public partial class AnalyzeView : UserControl
 
         errorConversionDialog = new TaskDialog() {
             Header = "Error converting format",
-            IconSource = new FontIconSource { Glyph = "\uf071", FontFamily = "avares://SceneGate.UI/Assets/Fonts#Symbols Nerd Font" },
+            IconSource = new FontIconSource {
+                Glyph = "\uf071",
+                FontFamily = "avares://SceneGate.UI/Assets/Fonts#CaskaydiaCove Nerd Font",
+            },
             SubHeader = "There was an issue converting the node.",
             Buttons = [new TaskDialogButton("Close", TaskDialogStandardResult.Close)],
         };
@@ -66,9 +69,11 @@ public partial class AnalyzeView : UserControl
         convertingDialog.XamlRoot = VisualRoot as Visual;
 
         // As converter list doesn't change we can do it once
-        foreach (var item in converterTreeView.Items) {
-            var itemView = converterTreeView.ContainerFromItem(item!);
-            converterTreeView.ExpandSubTree((itemView as TreeViewItem)!);
+        foreach (object? item in converterTreeView.Items) {
+            Control? itemView = converterTreeView.ContainerFromItem(item!);
+            if (itemView is TreeViewItem treeViewItem) {
+                converterTreeView.ExpandSubTree(treeViewItem);
+            }
         }
     }
 
