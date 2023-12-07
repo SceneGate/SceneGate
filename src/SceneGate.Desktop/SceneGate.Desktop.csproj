@@ -21,8 +21,8 @@
     <PackageReference Include="Texim" />
     <PackageReference Include="Texim.Games" />
     <PackageReference Include="SceneGate.Ekona" />
-    <!--<PackageReference Include="SceneGate.Lemon" />-->
-    <PackageReference Include="LayTea" />
-    <!--<PackageReference Include="SceneGate.Games.PokemonConquest" />-->
+    <PackageReference Include="SceneGate.Lemon" />
+    <PackageReference Include="SceneGate.Games.ProfessorLayton" />
+    <PackageReference Include="SceneGate.Games.PokemonConquest" />
   </ItemGroup>
 </Project>
