@@ -51,7 +51,9 @@
         <TreeView.ItemTemplate>
           <TreeDataTemplate ItemsSource="{Binding Children}">
             <!-- Setting background so contextmenu works everywhere -->
-            <Grid Background="Transparent" ColumnDefinitions="Auto,*,*,70,60">
+            <Grid Background="Transparent"
+                  ColumnDefinitions="Auto,*,*,60"
+                  ToolTip.Tip="{Binding ToolTip}">
               <fluent:SymbolIcon Grid.Column="0"
                                  VerticalAlignment="Center"
                                  Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
@@ -64,12 +66,7 @@
                          Text="{Binding FormatName}"
                          HorizontalAlignment="Right"
                          VerticalAlignment="Center" />
-              <TextBlock Grid.Column="3"
-                         Margin="5 0"
-                         Text="{Binding HumanReadableLength}"
-                         HorizontalAlignment="Right"
-                         VerticalAlignment="Center" />
-              <Button Grid.Column="4"
+              <Button Grid.Column="3"
                       FontSize="9"
                       Margin="4 0 0 0"
                       Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}"

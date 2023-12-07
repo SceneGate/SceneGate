@@ -3,6 +3,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -24,6 +25,9 @@ public partial class TreeGridNode : ObservableObject
     [ObservableProperty]
     private bool isVisible;
 
+    [ObservableProperty]
+    private string toolTip;
+
     public TreeGridNode(Node node)
     {
         Node = node;
@@ -31,6 +35,7 @@ public partial class TreeGridNode : ObservableObject
         formatName = string.Empty;
         HumanReadableLength = string.Empty;
         IsVisible = true;
+        ToolTip = string.Empty;
 
         UpdateNodeInfo();
     }
@@ -71,6 +76,7 @@ public partial class TreeGridNode : ObservableObject
         UpdateKind();
         UpdateChildren();
         UpdateLength();
+        UpdateToolTip();
     }
 
     private void UpdateFormatName()
@@ -134,6 +140,25 @@ public partial class TreeGridNode : ObservableObject
         HumanReadableLength = (magnitudeIdx == 0)
             ? $"{length} bytes"
             : $"{length:F2} {Magnitudes[magnitudeIdx]}";
+    }
+
+    private void UpdateToolTip()
+    {
+        var builder = new StringBuilder()
+            .AppendFormat("Format: {0}", Node.Format?.GetType().FullName ?? "null");
+
+        if (Node.Format is IBinary binaryFormat) {
+            builder.AppendLine()
+                .AppendFormat("Offset: 0x{0:X}", binaryFormat.Stream.Offset)
+                .AppendLine()
+                .AppendFormat("Length: {0} ({1} bytes)", HumanReadableLength, binaryFormat.Stream.Length);
+        }
+
+        builder.AppendLine()
+            .Append("Tags: ")
+            .AppendJoin(", ", Node.Tags.Select(i => $"{i.Key}={i.Value}"));
+
+        ToolTip = builder.ToString();
     }
 
     private void UpdateChildren()
