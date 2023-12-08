@@ -4,10 +4,16 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 
+/// <summary>
+/// Hexadecimal viewer for binary content.
+/// </summary>
 public partial class HexViewerView : UserControl
 {
     private readonly int lineHeight;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HexViewerView"/> class.
+    /// </summary>
     public HexViewerView()
     {
         InitializeComponent();
