@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:SceneGate.UI.Formats.Common"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
+             x:Class="SceneGate.UI.Formats.Common.HexViewerView"
+             x:DataType="local:HexViewerViewModel">
+  <Design.DataContext>
+    <local:HexViewerViewModel />
+  </Design.DataContext>
+
+  <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*"
+        RowDefinitions="Auto,*">
+
+    <TextBox Grid.Row="0" Grid.Column="1"
+             Text="{Binding PositionText}"
+             IsReadOnly="True"
+             Background="Transparent"
+             BorderThickness="0"
+             VerticalContentAlignment="Center"
+             FontSize="13"
+             FontFamily="{StaticResource CaskaydiaFont}" />
+
+    <TextBox Grid.Row="1" Grid.Column="0"
+             Text="{Binding OffsetsText}"
+             IsReadOnly="True"
+             Background="Transparent"
+             FontSize="13"
+             FontFamily="{StaticResource CaskaydiaFont}"/>
+
+    <TextBox Grid.Row="1" Grid.Column="1"
+             Name="hexView"
+             Text="{Binding HexText}"
+             CaretIndex="{Binding HexCursorPos, Mode=TwoWay}"
+             IsReadOnly="True"
+             Background="Transparent"
+             SizeChanged="HexViewSizeChanged"
+             FontSize="13"
+             FontFamily="{StaticResource CaskaydiaFont}"/>
+
+    <TextBox Grid.Row="1" Grid.Column="2"
+             Text="{Binding AsciiText}"
+             CaretIndex="{Binding AsciiCursorPos, Mode=TwoWay}"
+             IsReadOnly="True"
+             Background="Transparent"
+             FontSize="13"
+             FontFamily="{StaticResource CaskaydiaFont}"/>
+    
+    <ScrollBar Grid.Row="1" Grid.Column="3"
+               Orientation="Vertical"
+               Maximum="{Binding MaximumScroll}"
+               Value="{Binding CurrentScroll}"/>
+
+    <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="4"
+                Spacing="15"
+                Orientation="Vertical">
+      <DataGrid ItemsSource="{Binding DataTypes}"
+                Margin="5"
+                CanUserReorderColumns="False"
+                CanUserResizeColumns="False"
+                CanUserSortColumns="False"
+                IsReadOnly="True">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="Type" Binding="{Binding Description}" />
+          <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+        </DataGrid.Columns>
+      </DataGrid>
+
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <RadioButton Content="Little endian" GroupName="Endianness" IsChecked="True" />
+        <RadioButton Content="Big endian" GroupName="Endianness" IsChecked="{Binding IsBigEndian}" />
+      </StackPanel>
+      <DockPanel Margin="0 0 10 0">
+        <TextBlock DockPanel.Dock="Left" Text="Custom encoding name: " VerticalAlignment="Center" />
+        <TextBox Watermark="code page name"
+                 Text="{Binding CustomEncodingName}" />
+      </DockPanel>
+    </StackPanel>
+  </Grid>
+</UserControl>

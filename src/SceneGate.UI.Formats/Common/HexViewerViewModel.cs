@@ -3,17 +3,19 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Yarhl.IO;
 
 /// <summary>
 /// View model for the hexadecimal view.
 /// </summary>
-public class HexViewerViewModel : ObservableObject, IFormatViewModel
+public partial class HexViewerViewModel : ObservableObject, IFormatViewModel
 {
     private readonly StringBuilder textBuilder;
     private readonly Encoding utf32BigEndian;
@@ -34,8 +36,19 @@ public class HexViewerViewModel : ObservableObject, IFormatViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="HexViewerViewModel" /> class.
     /// </summary>
+    public HexViewerViewModel()
+        : this(DataStreamFactory.FromArray(new byte[0x100]))
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HexViewerViewModel" /> class.
+    /// </summary>
     public HexViewerViewModel(Stream stream)
     {
+        // Make sure that the shift-jis encoding is initialized.
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
         textBuilder = new StringBuilder();
         DataTypes =  [
             new DataTypeItem(typeof(byte), "8-bits"),
@@ -54,7 +67,7 @@ public class HexViewerViewModel : ObservableObject, IFormatViewModel
         ];
         utf32BigEndian = new UTF32Encoding(true, false);
         IsBigEndian = false;
-        customEncodingName = "shift-jis";
+        CustomEncodingName = "shift-jis";
 
         offsetsText = string.Empty;
         hexText = string.Empty;
@@ -75,6 +88,12 @@ public class HexViewerViewModel : ObservableObject, IFormatViewModel
     /// Gets the number of bytes per row.
     /// </summary>
     public static int BytesPerRow => 0x10;
+
+    /// <summary>
+    /// Gets text indicating each position column.
+    /// </summary>
+    public static string PositionText =>
+        string.Join(' ', Enumerable.Range(0, BytesPerRow).Select(i => $"{i:X2}"));
 
     /// <summary>
     /// Gets or sets the maximum scroll range.
@@ -181,6 +200,7 @@ public class HexViewerViewModel : ObservableObject, IFormatViewModel
     /// </summary>
     public string CustomEncodingName {
         get => customEncodingName;
+        [MemberNotNull(nameof(customEncodingName))]
         set {
             SetProperty(ref customEncodingName, value);
 
@@ -382,7 +402,7 @@ public class HexViewerViewModel : ObservableObject, IFormatViewModel
             UpdateTypeValue<Encoding>("Unknown encoding name");
         }
 
-        // GridView doesn't implement MVVM binding.
+        // Eto GridView doesn't implement MVVM binding.
         // https://github.com/picoe/Eto/issues/530
         OnDataTypesUpdate?.Invoke(this, EventArgs.Empty);
     }
@@ -403,9 +423,13 @@ public class HexViewerViewModel : ObservableObject, IFormatViewModel
     /// <summary>
     /// Item of the data type inspector.
     /// </summary>
-    public class DataTypeItem : ObservableObject
+    public partial class DataTypeItem : ObservableObject
     {
-        private string dataValue;
+        /// <summary>
+        /// Gets or sets the value for this type instance.
+        /// </summary>
+        [ObservableProperty]
+        private string value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataTypeItem" /> class.
@@ -416,7 +440,7 @@ public class HexViewerViewModel : ObservableObject, IFormatViewModel
         {
             Type = type;
             Description = description;
-            dataValue = string.Empty;
+            value = string.Empty;
         }
 
         /// <summary>
@@ -428,13 +452,5 @@ public class HexViewerViewModel : ObservableObject, IFormatViewModel
         /// Gets the description of the type.
         /// </summary>
         public string Description { get; }
-
-        /// <summary>
-        /// Gets or sets the value for this type instance.
-        /// </summary>
-        public string Value {
-            get => dataValue;
-            set => SetProperty(ref dataValue, value);
-        }
     }
 }
