@@ -5,27 +5,20 @@
         xmlns:cd="using:SceneGate.UI.ControlsData">
 
   <Design.PreviewWith>
-    <Border Padding="30" MinWidth="350">
-      <TreeView Classes="Compact">
-        <TreeViewItem Header="Item 1" />
-        <TreeViewItem Header="Item 2">
-          <TreeViewItem Header="SubItem1" />
-          <TreeViewItem Header="SubItem2" />
-          <TreeViewItem Header="SubItem3">
-            <TreeViewItem Header="SubItem Item1" />
-            <TreeViewItem Header="SubItem Item2" />
-            <TreeViewItem Header="SubItem Item3" />
-          </TreeViewItem>
-        </TreeViewItem>
-        <TreeViewItem Header="Item3" />
-        <TreeViewItem Header="Item4" />
-      </TreeView>
+    <Border Padding="30" MinWidth="350" Height="300">
+      <TextBox Text="a&#xa;b&#xa;c" IsReadOnly="True" MaxHeight="40" />
     </Border>
   </Design.PreviewWith>
 
   <!-- SelectableTextBlock doesn't have a SelectionForegroundBrush so it doesn't look right on Light themes -->
   <Style Selector="SelectableTextBlock">
     <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+  </Style>
+
+  <!-- Non-scrollable textbox for HexView -->
+  <Style Selector="TextBox.NonScrollable">
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
   </Style>
   
   <Style Selector="TreeView.Compact TreeViewItem">
