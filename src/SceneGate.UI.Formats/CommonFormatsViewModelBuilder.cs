@@ -1,7 +1,10 @@
 ﻿namespace SceneGate.UI.Formats;
+
 using System;
+using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Formats.Texts;
 using Yarhl.FileFormat;
+using Yarhl.IO;
 using Yarhl.Media.Text;
 
 /// <summary>
@@ -16,13 +19,17 @@ public class CommonFormatsViewModelBuilder : IFormatViewModelBuilder
             return new PoViewModel(poFormat);
         }
 
+        if (format is IBinary binaryFormat) {
+            return new HexViewerViewModel(binaryFormat.Stream);
+        }
+
         throw new NotSupportedException("Invalid format");
     }
 
     /// <inheritdoc/>
     public bool CanShow(IFormat format)
     {
-        if (format is Po) {
+        if (format is Po or IBinary) {
             return true;
         }
 

@@ -4,21 +4,20 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Yarhl.FileFormat;
-using Yarhl.IO;
 
 /// <summary>
 /// View model for the hexadecimal view.
 /// </summary>
-public class HexViewModel : ObservableObject, IFormatViewModel
+public class HexViewerViewModel : ObservableObject, IFormatViewModel
 {
     private readonly StringBuilder textBuilder;
     private readonly Encoding utf32BigEndian;
-    private DataStream stream;
+    private readonly Stream stream;
     private bool cursorUpdate;
     private int maxScroll;
     private int currentScroll;
@@ -30,15 +29,15 @@ public class HexViewModel : ObservableObject, IFormatViewModel
     private string asciiText;
     private bool isBigEndian;
     private string customEncodingName;
-    private Encoding customEncoding;
+    private Encoding? customEncoding;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HexViewModel" /> class.
+    /// Initializes a new instance of the <see cref="HexViewerViewModel" /> class.
     /// </summary>
-    public HexViewModel()
+    public HexViewerViewModel(Stream stream)
     {
         textBuilder = new StringBuilder();
-        DataTypes = [
+        DataTypes =  [
             new DataTypeItem(typeof(byte), "8-bits"),
             new DataTypeItem(typeof(ushort), "int 16-bits"),
             new DataTypeItem(typeof(short), "signed int 16-bits"),
@@ -55,18 +54,27 @@ public class HexViewModel : ObservableObject, IFormatViewModel
         ];
         utf32BigEndian = new UTF32Encoding(true, false);
         IsBigEndian = false;
-        CustomEncodingName = "shift-jis";
+        customEncodingName = "shift-jis";
+
+        offsetsText = string.Empty;
+        hexText = string.Empty;
+        asciiText = string.Empty;
+
+        this.stream = stream;
+        AdjustScroll();
+        HexCursorPos = 0;
+        UpdateVisibleText();
     }
 
     /// <summary>
     /// Notifies there was an update in the data type inspector values.
     /// </summary>
-    public event EventHandler OnDataTypesUpdate;
+    public event EventHandler? OnDataTypesUpdate;
 
     /// <summary>
     /// Gets the number of bytes per row.
     /// </summary>
-    public int BytesPerRow => 0x10;
+    public static int BytesPerRow => 0x10;
 
     /// <summary>
     /// Gets or sets the maximum scroll range.
@@ -82,8 +90,9 @@ public class HexViewModel : ObservableObject, IFormatViewModel
     public int CurrentScroll {
         get => currentScroll;
         set {
-            SetProperty(ref currentScroll, value);
-            UpdateVisibleText();
+            if (SetProperty(ref currentScroll, value)) {
+                UpdateVisibleText();
+            }
         }
     }
 
@@ -93,9 +102,10 @@ public class HexViewModel : ObservableObject, IFormatViewModel
     public int VisibleTextRows {
         get => visibleLines;
         set {
-            SetProperty(ref visibleLines, value);
-            AdjustScroll();
-            UpdateVisibleText();
+            if (SetProperty(ref visibleLines, value)) {
+                AdjustScroll();
+                UpdateVisibleText();
+            }
         }
     }
 
@@ -113,9 +123,10 @@ public class HexViewModel : ObservableObject, IFormatViewModel
     public int HexCursorPos {
         get => hexCursorPos;
         set {
-            SetProperty(ref hexCursorPos, value);
-            UpdateAsciiCursor();
-            UpdateDataTypes();
+            if (SetProperty(ref hexCursorPos, value)) {
+                UpdateAsciiCursor();
+                UpdateDataTypes();
+            }
         }
     }
 
@@ -133,9 +144,10 @@ public class HexViewModel : ObservableObject, IFormatViewModel
     public int AsciiCursorPos {
         get => asciiCursorPos;
         set {
-            SetProperty(ref asciiCursorPos, value);
-            UpdateHexCursor();
-            UpdateDataTypes();
+            if (SetProperty(ref asciiCursorPos, value)) {
+                UpdateHexCursor();
+                UpdateDataTypes();
+            }
         }
     }
 
@@ -185,25 +197,6 @@ public class HexViewModel : ObservableObject, IFormatViewModel
         }
     }
 
-    /// <inheritdoc/>
-    public bool CanShow(IFormat format)
-    {
-        return format is IBinary;
-    }
-
-    /// <inheritdoc/>
-    public void Show(IFormat format)
-    {
-        if (format is not IBinary binary) {
-            return;
-        }
-
-        stream = binary.Stream;
-        AdjustScroll();
-        HexCursorPos = 0;
-        UpdateVisibleText();
-    }
-
     private void AdjustScroll()
     {
         // We use floor because we start at 0 so it's already one line.
@@ -215,6 +208,7 @@ public class HexViewModel : ObservableObject, IFormatViewModel
         stream.Position = currentScroll * BytesPerRow;
     }
 
+#pragma warning disable IDE0047 // false positive
     private void UpdateStreamBytePosition()
     {
         UpdateStreamRowPosition();
@@ -309,10 +303,11 @@ public class HexViewModel : ObservableObject, IFormatViewModel
 
         cursorUpdate = false;
     }
+#pragma warning restore IDE0047
 
     private void UpdateDataTypes()
     {
-        if (stream is null || stream.Disposed) {
+        if (stream is null) {
             return;
         }
 
@@ -421,7 +416,7 @@ public class HexViewModel : ObservableObject, IFormatViewModel
         {
             Type = type;
             Description = description;
-            Value = string.Empty;
+            dataValue = string.Empty;
         }
 
         /// <summary>
