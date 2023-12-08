@@ -8,6 +8,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Texim.Colors;
 using Texim.Palettes;
 
+/// <summary>
+/// View model to display palettes.
+/// </summary>
 public partial class PaletteViewModel : ObservableObject, IFormatViewModel
 {
     [ObservableProperty]
@@ -19,35 +22,56 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     [ObservableProperty]
     private Color selectedColor;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaletteViewModel"/> class.
+    /// </summary>
+    /// <remarks>
+    /// It uses dummy / test data.
+    /// </remarks>
     public PaletteViewModel()
     {
-        byte[] random1 = new byte[16 * 2 * 16];
-        byte[] random2 = new byte[256];
         var random = new Random(42);
-        random.NextBytes(random1);
-        random.NextBytes(random2);
+        byte[] colorBytes = new byte[256 * 2];
+        random.NextBytes(colorBytes);
+        Rgb[] colors = colorBytes.DecodeColorsAs<Bgr555>();
 
         IPalette[] testPalettes = [
-            new Palette(random1.DecodeColorsAs<Bgr555>()),
-            new Palette(random2.DecodeColorsAs<Bgr555>()),
+            new Palette(colors),
+            new Palette(colors[..128]),
+            new Palette(colors[..16]),
+            new Palette(colors[16..30]),
+            new Palette(colors[0..0]),
+            new Palette(colors[..20]),
         ];
 
         Palettes = new(testPalettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
-        SelectedPalette = Palettes.FirstOrDefault();
-        SelectedColor = SelectedPalette?.Colors.FirstOrDefault() ?? default;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaletteViewModel"/> class.
+    /// </summary>
+    /// <param name="palette">The palette to represent.</param>
     public PaletteViewModel(IPalette palette)
     {
         Palettes = [new PaletteRepresentation(0, palette)];
-        SelectedPalette = Palettes[0];
-        SelectedColor = SelectedPalette.Colors.FirstOrDefault();
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaletteViewModel"/> class.
+    /// </summary>
+    /// <param name="palettes">The collection of palettes to represent.</param>
     public PaletteViewModel(IPaletteCollection palettes)
     {
         Palettes = new(palettes.Palettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
-        SelectedPalette = Palettes.FirstOrDefault();
-        SelectedColor = SelectedPalette?.Colors.FirstOrDefault() ?? default;
+    }
+
+    partial void OnPalettesChanged(ObservableCollection<PaletteRepresentation> value)
+    {
+        SelectedPalette = value.FirstOrDefault();
+    }
+
+    partial void OnSelectedPaletteChanged(PaletteRepresentation? value)
+    {
+        SelectedColor = value?.Colors.FirstOrDefault() ?? default;
     }
 }
