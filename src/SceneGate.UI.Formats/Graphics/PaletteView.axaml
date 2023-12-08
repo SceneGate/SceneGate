@@ -43,8 +43,12 @@
                    Command="{Binding SavePaletteCommand}">
         <SplitButton.Flyout>
           <MenuFlyout Placement="Bottom">
-            <MenuItem Header="Selected" Command="{Binding SavePaletteCommand}" />
-            <MenuItem Header="All" Command="{Binding SaveAllPalettesCommand}" />
+            <MenuItem Header="All as PNG"
+                      Command="{Binding SaveAllPalettesCommand}"
+                      CommandParameter="PNG"/>
+            <MenuItem Header="All as RIFF"
+                      Command="{Binding SaveAllPalettesCommand}"
+                      CommandParameter="RIFF"/>
           </MenuFlyout>
         </SplitButton.Flyout>
       </SplitButton>

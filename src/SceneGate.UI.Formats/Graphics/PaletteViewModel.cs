@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media;
@@ -10,7 +11,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SceneGate.UI.Formats.Mvvm;
 using Texim.Colors;
+using Texim.Formats;
 using Texim.Palettes;
+using Yarhl.IO;
 
 /// <summary>
 /// View model to display palettes.
@@ -18,9 +21,12 @@ using Texim.Palettes;
 public partial class PaletteViewModel : ObservableObject, IFormatViewModel
 {
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveAllPalettesCommand))]
     private ObservableCollection<PaletteRepresentation> palettes;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SavePaletteCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ImportPaletteCommand))]
     private PaletteRepresentation? selectedPalette;
 
     [ObservableProperty]
@@ -49,7 +55,8 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
         ];
 
         Palettes = new(testPalettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
-        AskOutputFile = new AsyncInteraction<IStorageFile>();
+        AskOutputFile = new AsyncInteraction<IStorageFile?>();
+        AskOutputFolder = new AsyncInteraction<IStorageFolder?>();
     }
 
     /// <summary>
@@ -59,7 +66,8 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     public PaletteViewModel(IPalette palette)
     {
         Palettes = [new PaletteRepresentation(0, palette)];
-        AskOutputFile = new AsyncInteraction<IStorageFile>();
+        AskOutputFile = new AsyncInteraction<IStorageFile?>();
+        AskOutputFolder = new AsyncInteraction<IStorageFolder?>();
     }
 
     /// <summary>
@@ -69,13 +77,19 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     public PaletteViewModel(IPaletteCollection palettes)
     {
         Palettes = new(palettes.Palettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
-        AskOutputFile = new AsyncInteraction<IStorageFile>();
+        AskOutputFile = new AsyncInteraction<IStorageFile?>();
+        AskOutputFolder = new AsyncInteraction<IStorageFolder?>();
     }
 
     /// <summary>
     /// Gets the interaction to ask the user for the output file to save the palette.
     /// </summary>
-    public AsyncInteraction<IStorageFile> AskOutputFile { get; }
+    public AsyncInteraction<IStorageFile?> AskOutputFile { get; }
+
+    /// <summary>
+    /// Gets the interaction to ask the user for the output folder to save all the palettes.
+    /// </summary>
+    public AsyncInteraction<IStorageFolder?> AskOutputFolder { get; }
 
     partial void OnPalettesChanged(ObservableCollection<PaletteRepresentation> value)
     {
@@ -90,15 +104,67 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     [RelayCommand(CanExecute = nameof(CanSavePalette))]
     private async Task SavePaletteAsync()
     {
-        await Task.Delay(100);
+        if (SelectedPalette is null) {
+            return;
+        }
+
+        IStorageFile? file = await AskOutputFile.HandleAsync().ConfigureAwait(false);
+        if (file is null) {
+            return;
+        }
+
+        BinaryFormat outputFormat;
+        if (file.Name.EndsWith(".pal")) {
+            var palette2Riff = new Palette2BinaryRiff(gimpCompatibility: true);
+            outputFormat = palette2Riff.Convert(SelectedPalette.Palette);
+        } else {
+            var palette2Png = new Palette2Bitmap();
+            outputFormat = palette2Png.Convert(SelectedPalette.Palette);
+        }
+
+        using Stream output = await file.OpenWriteAsync().ConfigureAwait(false);
+        outputFormat.Stream.WriteTo(output);
+        outputFormat.Dispose();
     }
 
     private bool CanSavePalette() => SelectedPalette is { IsError: false };
 
     [RelayCommand(CanExecute = nameof(CanSaveAllPalettes))]
-    private async Task SaveAllPalettesAsync()
+    private async Task SaveAllPalettesAsync(string formatName)
     {
-        await Task.Delay(100);
+        IStorageFolder? folder = await AskOutputFolder.HandleAsync().ConfigureAwait(false);
+        if (folder is null) {
+            return;
+        }
+
+        foreach (PaletteRepresentation palette in Palettes) {
+            if (palette.IsError) {
+                continue;
+            }
+
+            BinaryFormat outputFormat;
+            string extension;
+            if (formatName == "RIFF") {
+                var palette2Riff = new Palette2BinaryRiff(gimpCompatibility: true);
+                outputFormat = palette2Riff.Convert(palette.Palette);
+                extension = ".pal";
+            } else {
+                var palette2Png = new Palette2Bitmap();
+                outputFormat = palette2Png.Convert(palette.Palette);
+                extension = ".png";
+            }
+
+            string name = $"palette{palette.Index:D2}" + extension;
+            using IStorageFile? file = await folder.CreateFileAsync(name).ConfigureAwait(false);
+            if (file is null) {
+                outputFormat.Dispose();
+                continue;
+            }
+
+            using Stream output = await file.OpenWriteAsync().ConfigureAwait(false);
+            outputFormat.Stream.WriteTo(output);
+            outputFormat.Dispose();
+        }
     }
 
     private bool CanSaveAllPalettes() => Palettes.Count > 0;
