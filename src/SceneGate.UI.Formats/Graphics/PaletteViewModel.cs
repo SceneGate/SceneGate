@@ -3,8 +3,10 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Texim.Colors;
 using Texim.Palettes;
 
@@ -73,5 +75,35 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     partial void OnSelectedPaletteChanged(PaletteRepresentation? value)
     {
         SelectedColor = value?.Colors.FirstOrDefault() ?? default;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanSavePalette))]
+    private async Task SavePaletteAsync()
+    {
+        await Task.Delay(100);
+    }
+
+    private bool CanSavePalette() => SelectedPalette is { IsError: false };
+
+    [RelayCommand(CanExecute = nameof(CanSaveAllPalettes))]
+    private async Task SaveAllPalettesAsync()
+    {
+        await Task.Delay(100);
+    }
+
+    private bool CanSaveAllPalettes() => Palettes.Count > 0;
+
+    [RelayCommand(CanExecute = nameof(CanImportPalette))]
+    private async Task ImportPaletteAsync()
+    {
+        await Task.Delay(100);
+    }
+
+    private bool CanImportPalette() => SelectedPalette is not null;
+
+    [RelayCommand]
+    private async Task ImportAllPalettesAsync()
+    {
+        await Task.Delay(100);
     }
 }

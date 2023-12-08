@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Texim.Palettes;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 using Yarhl.Media.Text;
@@ -199,6 +200,9 @@ public partial class TreeGridNode : ObservableObject
 
             IBinary => NodeFormatKind.Binary,
             Po => NodeFormatKind.Translation,
+
+            IPalette => NodeFormatKind.Palette,
+            IPaletteCollection => NodeFormatKind.Palette,
 
             _ => NodeFormatKind.Unknown,
         };

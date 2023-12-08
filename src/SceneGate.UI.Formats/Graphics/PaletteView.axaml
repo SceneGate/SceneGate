@@ -39,40 +39,47 @@
                 VerticalAlignment="Top"
                 Margin="12 0"
                 Spacing="10">
-      <SplitButton Content="Export">
+      <SplitButton Content="Export"
+                   Command="{Binding SavePaletteCommand}">
         <SplitButton.Flyout>
           <MenuFlyout Placement="Bottom">
-            <MenuItem Header="Selected" />
-            <MenuItem Header="All" />
+            <MenuItem Header="Selected" Command="{Binding SavePaletteCommand}" />
+            <MenuItem Header="All" Command="{Binding SaveAllPalettesCommand}" />
           </MenuFlyout>
         </SplitButton.Flyout>
       </SplitButton>
-      <SplitButton Content="Import">
+      <SplitButton Content="Import" Command="{Binding ImportPaletteCommand}">
         <SplitButton.Flyout>
           <MenuFlyout Placement="Bottom">
-            <MenuItem Header="Selected" />
-            <MenuItem Header="All" />
+            <MenuItem Header="Selected" Command="{Binding ImportPaletteCommand}" />
+            <MenuItem Header="All" Command="{Binding ImportAllPalettesCommand}" />
           </MenuFlyout>
         </SplitButton.Flyout>
       </SplitButton>
     </StackPanel>
 
-    <ListBox Grid.Row="0" Grid.Column="3" Grid.RowSpan="2"
-             SelectedItem="{Binding SelectedPalette}"
-             ItemsSource="{Binding Palettes}">
-      <ListBox.ItemTemplate>
-        <DataTemplate>
-          <StackPanel Orientation="Vertical" Margin="0 5">
-            <StackPanel Orientation="Horizontal">
-              <TextBlock Text="Palette " />
-              <TextBlock Text="{Binding Index}" />
+    <Border Grid.Row="0" Grid.Column="3" Grid.RowSpan="2"
+            Background="{DynamicResource ControlOnImageFillColorDefaultBrush}"
+            CornerRadius="10"
+            BorderThickness="2"
+            BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
+            Padding="10">
+      <ListBox SelectedItem="{Binding SelectedPalette}"
+               ItemsSource="{Binding Palettes}">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <StackPanel Orientation="Vertical" Margin="0 5">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Palette " />
+                <TextBlock Text="{Binding Index}" />
+              </StackPanel>
+              <Image Source="{Binding Image}" StretchDirection="DownOnly" />
+              <PathIcon Data="{StaticResource document_error_regular}"
+                        IsVisible="{Binding IsError}"/>
             </StackPanel>
-            <Image Source="{Binding Image}" StretchDirection="DownOnly" />
-            <PathIcon Data="{StaticResource document_error_regular}"
-                      IsVisible="{Binding IsError}"/>
-          </StackPanel>
-        </DataTemplate>
-      </ListBox.ItemTemplate>
-    </ListBox>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Border>
   </Grid>
 </UserControl>
