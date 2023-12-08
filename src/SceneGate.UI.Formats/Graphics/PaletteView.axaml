@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:SceneGate.UI.Formats.Graphics"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="500"
+             x:Class="SceneGate.UI.Formats.Graphics.PaletteView"
+             x:DataType="local:PaletteViewModel">
+
+  <Design.DataContext>
+    <local:PaletteViewModel />
+  </Design.DataContext>
+
+  <Grid ColumnDefinitions="Auto,*,Auto"
+        RowDefinitions="Auto,*"
+        Margin="5">
+
+    <ColorView Grid.Row="0" Grid.Column="0"
+               IsAccentColorsVisible="False"
+               IsColorSpectrumVisible="False"
+               IsColorComponentsVisible="False"
+               Palette="{Binding CurrentAvaloniaPalette}"
+               Color="{Binding SelectedColor}" />
+
+    <ColorView Grid.Row="0" Grid.Column="1"
+               Classes="ReadOnly"
+               Color="{Binding SelectedColor}"
+               IsAlphaEnabled="False"
+               IsColorPreviewVisible="False"
+               IsColorSpectrumVisible="False"
+               IsColorPaletteVisible="False"/>
+
+    <StackPanel Grid.Row="1" Grid.Column="0"
+                Orientation="Horizontal"
+                Margin="10 5"
+                Spacing="10">
+      <SplitButton Content="Export">
+        <SplitButton.Flyout>
+          <MenuFlyout Placement="Bottom">
+            <MenuItem Header="Selected" />
+            <MenuItem Header="All" />
+          </MenuFlyout>
+        </SplitButton.Flyout>
+      </SplitButton>
+      <SplitButton Content="Import">
+        <SplitButton.Flyout>
+          <MenuFlyout Placement="Bottom">
+            <MenuItem Header="Selected" />
+            <MenuItem Header="All" />
+          </MenuFlyout>
+        </SplitButton.Flyout>
+      </SplitButton>
+    </StackPanel>
+
+    <ListBox Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+             SelectedItem="{Binding CurrentImage}"
+             ItemsSource="{Binding PaletteImages}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Vertical">
+            <Image Source="{Binding}" StretchDirection="DownOnly" />
+            <TextBlock Text="Palette " />
+            <TextBlock Text="{Binding }" />
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </Grid>
+</UserControl>

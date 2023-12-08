@@ -6,7 +6,10 @@
 
   <Design.PreviewWith>
     <Border Padding="30" MinWidth="350" Height="300">
-      <TextBox Text="a&#xa;b&#xa;c" IsReadOnly="True" MaxHeight="40" />
+      <ColorView
+        Classes="ReadOnly"
+        IsColorSpectrumVisible="False"
+        IsColorPaletteVisible="False"/>
     </Border>
   </Design.PreviewWith>
 
@@ -19,6 +22,19 @@
   <Style Selector="TextBox.NonScrollable">
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+  </Style>
+
+  <!-- ReadOnly ColorView -->
+  <Style Selector="ColorView.ReadOnly">
+    <Style Selector="^ NumericUpDown">
+      <Setter Property="IsReadOnly" Value="True" />
+    </Style>
+    <Style Selector="^ ColorSlider">
+      <Setter Property="IsEnabled" Value="False" />
+    </Style>
+    <Style Selector="^ TextBox">
+      <Setter Property="IsReadOnly" Value="True" />
+    </Style>
   </Style>
   
   <Style Selector="TreeView.Compact TreeViewItem">
