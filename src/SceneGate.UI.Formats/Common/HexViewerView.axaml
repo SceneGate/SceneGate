@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:SceneGate.UI.Formats.Common"
-             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
              x:Class="SceneGate.UI.Formats.Common.HexViewerView"
              x:DataType="local:HexViewerViewModel">
   <Design.DataContext>
@@ -11,7 +11,8 @@
   </Design.DataContext>
 
   <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*"
-        RowDefinitions="Auto,*">
+        RowDefinitions="Auto,*"
+        MaxWidth="1050">
 
     <TextBox Grid.Row="0" Grid.Column="1"
              Text="{Binding PositionText}"
@@ -71,8 +72,12 @@
                 CanUserSortColumns="False"
                 IsReadOnly="True">
         <DataGrid.Columns>
-          <DataGridTextColumn Header="Type" Binding="{Binding Description}" />
-          <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+          <DataGridTextColumn Header="Type"
+                              Binding="{Binding Description}"
+                              FontSize="13" />
+          <DataGridTextColumn Header="Value"
+                              Binding="{Binding Value}"
+                              FontSize="13" />
         </DataGrid.Columns>
       </DataGrid>
 

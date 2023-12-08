@@ -7,7 +7,7 @@
              xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
              xmlns:local="using:SceneGate.UI.Formats.Common"
              xmlns:behaviors="using:SceneGate.UI.Formats.CodeEditor"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
              x:Class="SceneGate.UI.Formats.Common.ObjectView"
              x:DataType="local:ObjectViewModel">
   <Design.DataContext>
