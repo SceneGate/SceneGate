@@ -24,6 +24,7 @@
 
     <TextBox Grid.Row="1" Grid.Column="0"
              Text="{Binding OffsetsText}"
+             Classes="NonScrollable"
              IsReadOnly="True"
              Background="Transparent"
              FontSize="13"
@@ -32,20 +33,28 @@
     <TextBox Grid.Row="1" Grid.Column="1"
              Name="hexView"
              Text="{Binding HexText}"
+             Classes="NonScrollable"
              CaretIndex="{Binding HexCursorPos, Mode=TwoWay}"
              IsReadOnly="True"
              Background="Transparent"
-             SizeChanged="HexViewSizeChanged"
              FontSize="13"
-             FontFamily="{StaticResource CaskaydiaFont}"/>
+             FontFamily="{StaticResource CaskaydiaFont}"
+             PointerWheelChanged="ViewsPointerWheelChanged"
+             KeyUp="ViewsKeyUp"
+             KeyDown="ViewsKeyDown"
+             SizeChanged="HexViewSizeChanged" />
 
     <TextBox Grid.Row="1" Grid.Column="2"
              Text="{Binding AsciiText}"
+             Classes="NonScrollable"
              CaretIndex="{Binding AsciiCursorPos, Mode=TwoWay}"
              IsReadOnly="True"
              Background="Transparent"
              FontSize="13"
-             FontFamily="{StaticResource CaskaydiaFont}"/>
+             FontFamily="{StaticResource CaskaydiaFont}"
+             PointerWheelChanged="ViewsPointerWheelChanged"
+             KeyUp="ViewsKeyUp"
+             KeyDown="ViewsKeyDown" />
     
     <ScrollBar Grid.Row="1" Grid.Column="3"
                Orientation="Vertical"

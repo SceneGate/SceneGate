@@ -109,6 +109,10 @@ public partial class HexViewerViewModel : ObservableObject, IFormatViewModel
     public int CurrentScroll {
         get => currentScroll;
         set {
+            if (value < 0) {
+                value = 0;
+            }
+
             if (SetProperty(ref currentScroll, value)) {
                 UpdateVisibleText();
             }
