@@ -21,8 +21,8 @@ public partial class HexViewerViewModel : ObservableObject, IFormatViewModel
     private readonly Encoding utf32BigEndian;
     private readonly Stream stream;
     private bool cursorUpdate;
-    private int maxScroll;
-    private int currentScroll;
+    private long maxScroll;
+    private long currentScroll;
     private int visibleLines;
     private string offsetsText;
     private int hexCursorPos;
@@ -98,7 +98,7 @@ public partial class HexViewerViewModel : ObservableObject, IFormatViewModel
     /// <summary>
     /// Gets or sets the maximum scroll range.
     /// </summary>
-    public int MaximumScroll {
+    public long MaximumScroll {
         get => maxScroll;
         set => SetProperty(ref maxScroll, value);
     }
@@ -106,11 +106,13 @@ public partial class HexViewerViewModel : ObservableObject, IFormatViewModel
     /// <summary>
     /// Gets or sets the current scroll value.
     /// </summary>
-    public int CurrentScroll {
+    public long CurrentScroll {
         get => currentScroll;
         set {
             if (value < 0) {
                 value = 0;
+            } else if (value >= MaximumScroll) {
+                value = MaximumScroll;
             }
 
             if (SetProperty(ref currentScroll, value)) {
@@ -224,12 +226,21 @@ public partial class HexViewerViewModel : ObservableObject, IFormatViewModel
     private void AdjustScroll()
     {
         // We use floor because we start at 0 so it's already one line.
-        MaximumScroll = (int)Math.Floor((float)stream.Length / BytesPerRow);
+        MaximumScroll = (long)Math.Floor((float)stream.Length / BytesPerRow);
     }
 
     private void UpdateStreamRowPosition()
     {
         stream.Position = currentScroll * BytesPerRow;
+
+        // Pad down
+        stream.Position &= (~BytesPerRow) + 1;
+
+        // Leave at least 3 lines
+        long realMax = stream.Length - (3 * BytesPerRow);
+        if (stream.Position > realMax) {
+            stream.Position = realMax;
+        }
     }
 
 #pragma warning disable IDE0047 // false positive
@@ -252,7 +263,6 @@ public partial class HexViewerViewModel : ObservableObject, IFormatViewModel
     {
         UpdateDataTypes();
 
-        UpdateStreamRowPosition();
         long startPosition = stream.Position;
 
         int numBytes = BytesPerRow * VisibleTextRows;
