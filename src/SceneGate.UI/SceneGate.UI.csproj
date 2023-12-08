@@ -2,6 +2,9 @@
   <PropertyGroup>
     <Description>Main UI components for SceneGate application.</Description>
 
+    <!-- Overwritten during build system - This is the value for devs -->
+    <Version>0.0.0-dev</Version>
+
     <TargetFramework>net8.0</TargetFramework>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
