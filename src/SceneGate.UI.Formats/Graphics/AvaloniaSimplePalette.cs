@@ -27,23 +27,28 @@ public class AvaloniaSimplePalette : IColorPalette
     }
 
     /// <summary>
-    /// Gets the number of color rows.
-    /// </summary>
-    public int ColorCount => palette.Colors.Count / ShadeCount;
-
-    /// <summary>
     /// Gets the number of color columns.
     /// </summary>
-    public int ShadeCount => palette.Colors.Count > 16 ? 16 : 8;
+    public int ColorCount => palette.Colors.Count > 16 ? 16 : 8;
+
+    /// <summary>
+    /// Gets the number of color rows.
+    /// </summary>
+    public int ShadeCount => (int)Math.Ceiling((double)palette.Colors.Count / ColorCount);
 
     /// <summary>
     /// Gets a color by its row and column coordinates.
     /// </summary>
-    /// <param name="colorIndex">The row number.</param>
-    /// <param name="shadeIndex">The column number.</param>
+    /// <param name="colorIndex">The column number.</param>
+    /// <param name="shadeIndex">The row number.</param>
     /// <returns>The color of the palette.</returns>
     public Color GetColor(int colorIndex, int shadeIndex)
     {
-        return palette.Colors[(colorIndex * ShadeCount) + shadeIndex].ToAvaloniaColor();
+        int index = (shadeIndex * ColorCount) + colorIndex;
+        if (index >= palette.Colors.Count) {
+            return default;
+        }
+
+        return palette.Colors[index].ToAvaloniaColor();
     }
 }
