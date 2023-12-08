@@ -3,30 +3,18 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Texim.Colors;
-using Texim.Formats;
 using Texim.Palettes;
-using Yarhl.IO;
 
 public partial class PaletteViewModel : ObservableObject, IFormatViewModel
 {
-    private readonly IPalette[] palettes;
+    [ObservableProperty]
+    private ObservableCollection<PaletteRepresentation> palettes;
 
     [ObservableProperty]
-    private ObservableCollection<Bitmap> paletteImages;
-
-    [ObservableProperty]
-    private IColorPalette currentAvaloniaPalette;
-
-    [ObservableProperty]
-    private Color[] currentPaletteColors;
-
-    [ObservableProperty]
-    private Bitmap? currentImage;
+    private PaletteRepresentation? selectedPalette;
 
     [ObservableProperty]
     private Color selectedColor;
@@ -39,55 +27,27 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
         random.NextBytes(random1);
         random.NextBytes(random2);
 
-        palettes = [
+        IPalette[] testPalettes = [
             new Palette(random1.DecodeColorsAs<Bgr555>()),
-            new Palette(random2.DecodeColorsAs<Bgr555>()),
-            new Palette(random2.DecodeColorsAs<Bgr555>()),
-            new Palette(random2.DecodeColorsAs<Bgr555>()),
-            new Palette(random2.DecodeColorsAs<Bgr555>()),
-            new Palette(random2.DecodeColorsAs<Bgr555>()),
-            new Palette(random2.DecodeColorsAs<Bgr555>()),
-            new Palette(random2.DecodeColorsAs<Bgr555>()),
-            new Palette(random2.DecodeColorsAs<Bgr555>()),
             new Palette(random2.DecodeColorsAs<Bgr555>()),
         ];
 
-        paletteImages = [];
-        GenerateImages();
+        Palettes = new(testPalettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
+        SelectedPalette = Palettes.FirstOrDefault();
+        SelectedColor = SelectedPalette?.Colors.FirstOrDefault() ?? default;
     }
 
     public PaletteViewModel(IPalette palette)
     {
-        palettes = [palette];
-        paletteImages = [];
-        GenerateImages();
+        Palettes = [new PaletteRepresentation(0, palette)];
+        SelectedPalette = Palettes[0];
+        SelectedColor = SelectedPalette.Colors.FirstOrDefault();
     }
 
     public PaletteViewModel(IPaletteCollection palettes)
     {
-        this.palettes = [..palettes.Palettes];
-        paletteImages = [];
-        GenerateImages();
-    }
-
-    public void GenerateImages()
-    {
-        foreach (Bitmap existingImage in PaletteImages) {
-            existingImage.Dispose();
-        }
-
-        PaletteImages.Clear();
-
-        var palette2Image = new Palette2Bitmap();
-        foreach (IPalette palette in palettes) {
-            using BinaryFormat pngImage = palette2Image.Convert(palette);
-
-            pngImage.Stream.Position = 0;
-            PaletteImages.Add(new Bitmap(pngImage.Stream));
-        }
-
-        CurrentImage = PaletteImages.FirstOrDefault();
-        CurrentAvaloniaPalette = new AvaloniaPalette(palettes[0]);
-        CurrentPaletteColors = palettes[0].Colors.Select(c => c.ToAvaloniaColor()).ToArray();
+        Palettes = new(palettes.Palettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
+        SelectedPalette = Palettes.FirstOrDefault();
+        SelectedColor = SelectedPalette?.Colors.FirstOrDefault() ?? default;
     }
 }
