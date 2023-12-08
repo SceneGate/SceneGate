@@ -5,8 +5,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SceneGate.UI.Formats.Mvvm;
 using Texim.Colors;
 using Texim.Palettes;
 
@@ -47,6 +49,7 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
         ];
 
         Palettes = new(testPalettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
+        AskOutputFile = new AsyncInteraction<IStorageFile>();
     }
 
     /// <summary>
@@ -56,6 +59,7 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     public PaletteViewModel(IPalette palette)
     {
         Palettes = [new PaletteRepresentation(0, palette)];
+        AskOutputFile = new AsyncInteraction<IStorageFile>();
     }
 
     /// <summary>
@@ -65,7 +69,13 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     public PaletteViewModel(IPaletteCollection palettes)
     {
         Palettes = new(palettes.Palettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
+        AskOutputFile = new AsyncInteraction<IStorageFile>();
     }
+
+    /// <summary>
+    /// Gets the interaction to ask the user for the output file to save the palette.
+    /// </summary>
+    public AsyncInteraction<IStorageFile> AskOutputFile { get; }
 
     partial void OnPalettesChanged(ObservableCollection<PaletteRepresentation> value)
     {
@@ -94,16 +104,16 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     private bool CanSaveAllPalettes() => Palettes.Count > 0;
 
     [RelayCommand(CanExecute = nameof(CanImportPalette))]
-    private async Task ImportPaletteAsync()
+    private Task ImportPaletteAsync()
     {
-        await Task.Delay(100);
+        throw new NotImplementedException();
     }
 
     private bool CanImportPalette() => SelectedPalette is not null;
 
     [RelayCommand]
-    private async Task ImportAllPalettesAsync()
+    private Task ImportAllPalettesAsync()
     {
-        await Task.Delay(100);
+        throw new NotImplementedException();
     }
 }

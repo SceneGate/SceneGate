@@ -13,7 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using SceneGate.UI.ControlsData;
 using SceneGate.UI.Formats;
 using SceneGate.UI.Formats.Common;
-using SceneGate.UI.Mvvm;
+using SceneGate.UI.Formats.Mvvm;
 using Yarhl.FileFormat;
 using Yarhl.FileSystem;
 using Yarhl.IO;

@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:SceneGate.UI.Formats.Graphics"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
              x:Class="SceneGate.UI.Formats.Graphics.PaletteView"
              x:DataType="local:PaletteViewModel">
 
@@ -48,7 +48,9 @@
           </MenuFlyout>
         </SplitButton.Flyout>
       </SplitButton>
-      <SplitButton Content="Import" Command="{Binding ImportPaletteCommand}">
+      <SplitButton Content="Import"
+                   Command="{Binding ImportPaletteCommand}"
+                   IsVisible="False">
         <SplitButton.Flyout>
           <MenuFlyout Placement="Bottom">
             <MenuItem Header="Selected" Command="{Binding ImportPaletteCommand}" />
