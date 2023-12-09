@@ -13,124 +13,160 @@
     <local:BinaryPaletteViewModel />
   </Design.DataContext>
   
-  <Grid ColumnDefinitions="Auto,*,Auto">
+  <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+
+    <Border Grid.Column="0"
+            BorderThickness="1"
+            CornerRadius="4"
+            BorderBrush="{DynamicResource ControlElevationBorderBrush}">
     <Grid Grid.Column="0"
-          ColumnDefinitions="Auto,Auto,Auto"
-          RowDefinitions="Auto,Auto,Auto,Auto,*"
-          Margin="10">
-
-      <!-- Offset -->
-      <Border Grid.Row="0" Grid.Column="0"
-              Height="32"
-              Margin="0 5"
-              Background="{DynamicResource TextControlBackgroundDisabled}"
-              BorderBrush="{DynamicResource TextControlBorderBrush}"
-              BorderThickness="1,1,0,1"
-              CornerRadius="4,0,0,4">
-        <TextBlock Text="Offset"
-                   Padding="5 0"
-                   FontWeight="SemiBold"
-                   VerticalAlignment="Center" />
+          RowDefinitions="Auto,Auto,Auto,*">
+      <Border Grid.Row="0"
+        CornerRadius="4 4 0 0"
+        Background="{DynamicResource AccentFillColorDefaultBrush}"
+        Padding="5">
+        <TextBlock Text="Palette format"
+                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                   Theme="{StaticResource SubtitleTextBlockStyle}"
+                   HorizontalAlignment="Center"/>
       </Border>
-      <NumericUpDown Grid.Row="0" Grid.Column="1"
-                     Margin="0 5"
-                     CornerRadius="0,4,4,0"
-                     Value="{Binding Offset}"
-                     Minimum="0"
-                     FontFamily="{StaticResource CaskaydiaFont}"
-                     VerticalContentAlignment="Center">
-        <NumericUpDown.TextConverter>
-          <controls:HexadecimalValueConverter />
-        </NumericUpDown.TextConverter>
-      </NumericUpDown>
-      <CheckBox Grid.Row="0" Grid.Column="2"
-                Margin="10 5"
-                IsChecked="True"
-                Content="Hexadecimal" />
 
-      <!-- Length -->
-      <Border Grid.Row="1" Grid.Column="0"
-              Margin="0 5"
-              Height="32"
-              Background="{DynamicResource TextControlBackgroundDisabled}"
-              BorderBrush="{DynamicResource TextControlBorderBrush}"
-              BorderThickness="1,1,0,1"
-              CornerRadius="4,0,0,4">
-        <TextBlock Text="Length"
-                   Padding="5 0"
-                   FontWeight="SemiBold"
-                   VerticalAlignment="Center" />
-      </Border>
-      <NumericUpDown Grid.Row="1" Grid.Column="1"
-                     Margin="0 5"
-                     CornerRadius="0,4,4,0"
-                     Value="{Binding Length}"
-                     Minimum="0"
-                     FontFamily="{StaticResource CaskaydiaFont}"
-                     VerticalContentAlignment="Center">
-        <NumericUpDown.TextConverter>
-          <controls:HexadecimalValueConverter />
-        </NumericUpDown.TextConverter>
-      </NumericUpDown>
-      <CheckBox Grid.Row="1" Grid.Column="2"
-                Margin="10 5"
-                IsChecked="True"
-                Content="Hexadecimal" />
+      <Grid Grid.Row="1"
+            ColumnDefinitions="Auto,Auto,Auto"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+            Margin="10 3">
 
-      <!-- Colors per palette -->
-      <Border Grid.Row="2" Grid.Column="0"
-              Margin="0 5"
-              Height="32"
-              Background="{DynamicResource TextControlBackgroundDisabled}"
-              BorderBrush="{DynamicResource TextControlBorderBrush}"
-              BorderThickness="1,1,0,1"
-              CornerRadius="4,0,0,4">
-        <TextBlock Text="Colors per palette"
-                   Padding="5 0"
-                   FontWeight="SemiBold"
-                   VerticalAlignment="Center" />
-      </Border>
-      <NumericUpDown Grid.Row="2" Grid.Column="1"
-                     Margin="0 5"
-                     CornerRadius="0,4,4,0"
-                     Value="{Binding ColorsPerPalette}"
-                     FormatString="0"
-                     Minimum="0"
-                     Maximum="256"
-                     FontFamily="{StaticResource CaskaydiaFont}"
-                     VerticalContentAlignment="Center" />
+        <!-- Offset -->
+        <Border Grid.Row="0" Grid.Column="0"
+                Height="32"
+                Margin="0 5"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+          <TextBlock Text="Offset"
+                     Padding="5 0"
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Center" />
+        </Border>
+        <NumericUpDown Grid.Row="0" Grid.Column="1"
+                       Margin="0 5"
+                       CornerRadius="0,4,4,0"
+                       Value="{Binding Offset}"
+                       Minimum="0"
+                       FontFamily="{StaticResource CaskaydiaFont}"
+                       VerticalContentAlignment="Center">
+          <NumericUpDown.TextConverter>
+            <controls:HexadecimalValueConverter />
+          </NumericUpDown.TextConverter>
+        </NumericUpDown>
+        <CheckBox Grid.Row="0" Grid.Column="2"
+                  Margin="10 5"
+                  IsChecked="True"
+                  Content="Hexadecimal" />
 
-      <!-- Format -->
-      <Border Grid.Row="3" Grid.Column="0"
-              Margin="0 5"
-              Height="32"
-              Background="{DynamicResource TextControlBackgroundDisabled}"
-              BorderBrush="{DynamicResource TextControlBorderBrush}"
-              BorderThickness="1,1,0,1"
-              CornerRadius="4,0,0,4">
-        <TextBlock Text="Color format"
-                   Padding="5 0"
-                   FontWeight="SemiBold"
-                   VerticalAlignment="Center" />
-      </Border>
-      <fluent:FAComboBox Grid.Row="3" Grid.Column="1"
-                         Margin="0 5"
-                         CornerRadius="0 4 4 0"
-                         SelectedIndex="0"
-                         IsEditable="False">
-        <fluent:FAComboBoxItem Content="BGR555" />
-        <fluent:FAComboBoxItem Content="RGB32" />
-        <fluent:FAComboBoxItem Content="RGBA32" />
-      </fluent:FAComboBox>
+        <!-- Length -->
+        <Border Grid.Row="1" Grid.Column="0"
+                Margin="0 5"
+                Height="32"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+          <TextBlock Text="Length"
+                     Padding="5 0"
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Center" />
+        </Border>
+        <NumericUpDown Grid.Row="1" Grid.Column="1"
+                       Margin="0 5"
+                       CornerRadius="0,4,4,0"
+                       Value="{Binding Length}"
+                       Minimum="0"
+                       FontFamily="{StaticResource CaskaydiaFont}"
+                       VerticalContentAlignment="Center">
+          <NumericUpDown.TextConverter>
+            <controls:HexadecimalValueConverter />
+          </NumericUpDown.TextConverter>
+        </NumericUpDown>
+        <CheckBox Grid.Row="1" Grid.Column="2"
+                  Margin="10 5"
+                  IsChecked="True"
+                  Content="Hexadecimal" />
 
-      <TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
-              Text="{Binding HexContent}"
-              IsReadOnly="True"
-              Background="Transparent"
-              FontSize="13"
-              FontFamily="{StaticResource CaskaydiaFont}" />
+        <!-- Colors per palette -->
+        <Border Grid.Row="2" Grid.Column="0"
+                Margin="0 5"
+                Height="32"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+          <TextBlock Text="Colors per palette"
+                     Padding="5 0"
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Center" />
+        </Border>
+        <NumericUpDown Grid.Row="2" Grid.Column="1"
+                       Margin="0 5"
+                       CornerRadius="0,4,4,0"
+                       Value="{Binding ColorsPerPalette}"
+                       FormatString="0"
+                       Minimum="0"
+                       Maximum="256"
+                       FontFamily="{StaticResource CaskaydiaFont}"
+                       VerticalContentAlignment="Center" />
+
+        <!-- Format -->
+        <Border Grid.Row="3" Grid.Column="0"
+                Margin="0 5"
+                Height="32"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+          <TextBlock Text="Color format"
+                     Padding="5 0"
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Center" />
+        </Border>
+        <fluent:FAComboBox Grid.Row="3" Grid.Column="1"
+                           Margin="0 5"
+                           CornerRadius="0 4 4 0"
+                           SelectedIndex="0"
+                           IsEditable="False">
+          <fluent:FAComboBoxItem Content="BGR555" />
+          <fluent:FAComboBoxItem Content="RGB32" />
+          <fluent:FAComboBoxItem Content="RGBA32" />
+        </fluent:FAComboBox>
+      </Grid>
+
+      <TextBlock Grid.Row="2"
+                 Margin="12 0"
+                 FontWeight="SemiBold"
+                 Text="Palette bytes:"/>
+      <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+               Margin="10 4"
+               Text="{Binding HexContent}"
+               IsReadOnly="True"
+               Background="Transparent"
+               FontSize="13"
+               FontFamily="{StaticResource CaskaydiaFont}" />
     </Grid>
+    </Border>
 
-    <local:PaletteView Grid.Column="1" DataContext="{Binding PaletteInfo}" />
+    <Border Grid.Column="2"
+            CornerRadius="5"
+            Background="{DynamicResource AccentFillColorDefaultBrush}"
+            Height="400"
+             Padding="5">
+      <TextBlock Text="P&#xa;r&#xa;e&#xa;v&#xa;i&#xa;e&#xa;w"
+                 Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                 Theme="{StaticResource SubtitleTextBlockStyle}"
+                 TextAlignment="Center"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"/>
+    </Border>
+    <local:PaletteView Grid.Column="3" DataContext="{Binding PaletteInfo}" />
   </Grid>
 </UserControl>
