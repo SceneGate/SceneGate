@@ -52,7 +52,7 @@
         <NumericUpDown Grid.Row="0" Grid.Column="1"
                        Name="OffsetNumericBox"
                        Margin="0 5"
-                       Width="150"
+                       Width="160"
                        CornerRadius="0,4,4,0"
                        FormatString="0"
                        Value="{Binding Offset}"

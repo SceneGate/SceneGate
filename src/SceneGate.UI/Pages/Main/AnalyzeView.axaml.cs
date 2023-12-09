@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
@@ -91,6 +92,17 @@ public partial class AnalyzeView : UserControl
     private async void ConvertersTreeViewDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
     {
         await viewModel.ConvertNodeCommand.ExecuteAsync(null);
+    }
+
+    private void NodeTreeViewKeyUp(object? sender, Avalonia.Input.KeyEventArgs e)
+    {
+        if (e.Key == Key.Space && viewModel.OpenNodeViewCommand.CanExecute(null)) {
+            viewModel.OpenNodeViewCommand.Execute(null);
+        } else if (e.Key == Key.H && viewModel.OpenWithHexViewerCommand.CanExecute(null)) {
+            viewModel.OpenWithHexViewerCommand.Execute(null);
+        } else if (e.Key == Key.P && viewModel.OpenAsRawPaletteCommand.CanExecute(null)) {
+            viewModel.OpenAsRawPaletteCommand.Execute(null);
+        }
     }
 
     private async Task<object?> DisplayConversionStarted(NodeConversionInfo info)

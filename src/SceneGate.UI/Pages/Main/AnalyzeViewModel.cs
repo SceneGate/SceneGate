@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using SceneGate.UI.ControlsData;
 using SceneGate.UI.Formats;
 using SceneGate.UI.Formats.Common;
+using SceneGate.UI.Formats.Graphics;
 using SceneGate.UI.Formats.Mvvm;
 using Yarhl.FileFormat;
 using Yarhl.FileSystem;
@@ -162,6 +163,19 @@ public partial class AnalyzeViewModel : ViewModelBase
         return SelectedNode is not null;
     }
 
+    private void OpenNodeViewWith(IFormatViewModel formatViewModel)
+    {
+        TreeGridNode? selection = SelectedNode;
+        if (selection is null) {
+            return;
+        }
+
+        var tab = new NodeFormatTab(selection.Node, selection.Kind, formatViewModel);
+        FormatViewTabs.Add(tab);
+
+        SelectedTab = tab;
+    }
+
     [RelayCommand]
     private void CloseNodeView(NodeFormatTab tab)
     {
@@ -263,6 +277,45 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     private bool CanCopyConverterTypeName() =>
         SelectedConverter is { Kind: TreeGridConverterKind.Converter };
+
+    [RelayCommand(CanExecute = nameof(CanOpenAsObject))]
+    private void OpenAsObject()
+    {
+        if (SelectedNode?.Node.Format is not IFormat format) {
+            return;
+        }
+
+        var viewModel = new ObjectViewModel(format);
+        OpenNodeViewWith(viewModel);
+    }
+
+    private bool CanOpenAsObject() => SelectedNode is not null;
+
+    [RelayCommand(CanExecute = nameof(CanOpenWithHexViewer))]
+    private void OpenWithHexViewer()
+    {
+        if (SelectedNode?.Node.Format is not IBinary format) {
+            return;
+        }
+
+        var viewModel = new HexViewerViewModel(format);
+        OpenNodeViewWith(viewModel);
+    }
+
+    private bool CanOpenWithHexViewer() => SelectedNode?.Node.Format is IBinary;
+
+    [RelayCommand(CanExecute = nameof(CanOpenAsRawPalette))]
+    private void OpenAsRawPalette()
+    {
+        if (SelectedNode?.Node.Format is not IBinary format) {
+            return;
+        }
+
+        var viewModel = new BinaryPaletteViewModel(format);
+        OpenNodeViewWith(viewModel);
+    }
+
+    private bool CanOpenAsRawPalette() => SelectedNode?.Node.Format is IBinary;
 
     partial void OnNodeNameFilterChanged(string? value)
     {
