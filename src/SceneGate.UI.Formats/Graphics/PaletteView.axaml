@@ -18,186 +18,217 @@
   </UserControl.Resources>
 
   <Grid ColumnDefinitions="*,Auto,Auto"
-        RowDefinitions="Auto,*"
+        RowDefinitions="*"
         Margin="5">
 
-    <pgc:PropertyGrid Grid.Row="0" Grid.Column="0"
-                      MaxWidth="500"
-                      SelectedObject="{Binding SourceFormat}"
-                      Margin="10 0"
-                      AllowFilter="False"
-                      AllowQuickFilter="False" />
-
-    <pgc:PropertyGrid Grid.Row="1" Grid.Column="0"
-                      MaxWidth="500"
-                      SelectedObject="{Binding SelectedPalette.Palette}"
-                      Margin="10 0"
-                      AllowFilter="False"
-                      AllowQuickFilter="False" />
-
-    <ColorView Grid.Row="0" Grid.Column="1"
-               IsColorPreviewVisible="False"
-               IsColorSpectrumVisible="False"
-               IsColorComponentsVisible="False"
-               Palette="{Binding SelectedPalette.AvaloniaPalette}"
-               Color="{Binding SelectedColor}" />
-
-    <!-- Copied and adapted from component tab of ColorView in FluentAvalonia -->
-    <!-- https://github.com/amwx/FluentAvalonia/blob/b84f54e75fd30feb18d766fe4d95da486d734b8f/src/FluentAvalonia/Styling/ControlThemes/BasicControls/ColorPicker/ColorView.axaml#L375 -->
-    <Grid Grid.Row="1" Grid.Column="1"
-          ColumnDefinitions="30,80,*"
-          RowDefinitions="Auto,10,1*,1*,1*,1.5*">
-      <!-- Color preview -->
-      <ColorPreviewer Grid.Row="0" Grid.ColumnSpan="3"
-                      HsvColor="{Binding SelectedHsvColor}"
-                      IsAccentColorsVisible="False"/>
-
-      <!-- Component Red -->
-      <Border Grid.Row="2" Grid.Column="0"
-              Height="32"
-              Background="{DynamicResource TextControlBackgroundDisabled}"
-              BorderBrush="{DynamicResource TextControlBorderBrush}"
-              BorderThickness="1,1,0,1"
-              CornerRadius="4,0,0,4">
-        <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
-                   FontWeight="SemiBold"
-                   Text="R"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center" />
+    <Grid Grid.Row="0" Grid.Column="0"
+          RowDefinitions="Auto,Auto,1*,Auto,Auto,1*"
+          MaxWidth="430"
+          HorizontalAlignment="Left"
+          Margin="10 0">
+      <Border Grid.Row="0"
+              CornerRadius="4 4 0 0"
+              Background="{DynamicResource AccentFillColorDefaultBrush}"
+              Padding="5">
+        <TextBlock Text="Format properties"
+                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                   Theme="{StaticResource TitleTextBlockStyle}"
+                   HorizontalAlignment="Center"/>
       </Border>
-      <NumericUpDown Grid.Row="2" Grid.Column="1"
-                     Height="32"
-                     CornerRadius="0,4,4,0"
-                     Minimum="{Binding Minimum, ElementName=Component1Slider}"
-                     Maximum="{Binding Maximum, ElementName=Component1Slider}"
-                     Value="{Binding Value, ElementName=Component1Slider}"
-                     IsReadOnly="True"
-                     ShowButtonSpinner="False" />
-      <ColorSlider Grid.Row="2" Grid.Column="2"
-                   Name="Component1Slider"
-                   Margin="12 0"
-                   Orientation="Horizontal"
-                   IsEnabled="False"
-                   IsRoundingEnabled="True"
-                   ColorComponent="Component1"
-                   ColorModel="Rgba"
-                   HsvColor="{Binding SelectedHsvColor}" />
-
-      <!-- Component Green -->
-      <Border Grid.Row="3" Grid.Column="0"
-              Height="32"
-              Background="{DynamicResource TextControlBackgroundDisabled}"
-              BorderBrush="{DynamicResource TextControlBorderBrush}"
-              BorderThickness="1,1,0,1"
-              CornerRadius="4,0,0,4">
-        <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
-                   FontWeight="SemiBold"
-                   Text="G"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center" />
+      <Border Grid.Row="1"
+              CornerRadius="0 0 4 4"
+              Background="{DynamicResource ControlFillColorInputActiveBrush}"
+              Padding="5 10 5 5">
+        <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}"
+                          AllowFilter="False"
+                          AllowQuickFilter="False" />
       </Border>
-      <NumericUpDown Grid.Row="3" Grid.Column="1"
-                     Height="32"
-                     CornerRadius="0,4,4,0"
-                     Minimum="{Binding Minimum, ElementName=Component2Slider}"
-                     Maximum="{Binding Maximum, ElementName=Component2Slider}"
-                     Value="{Binding Value, ElementName=Component2Slider}"
-                     IsReadOnly="True"
-                     ShowButtonSpinner="False" />
-      <ColorSlider Grid.Row="3" Grid.Column="2"
-                   Name="Component2Slider"
-                   Margin="12 0"
-                   Orientation="Horizontal"
-                   IsEnabled="False"
-                   IsRoundingEnabled="True"
-                   ColorComponent="Component2"
-                   ColorModel="Rgba"
-                   HsvColor="{Binding SelectedHsvColor}" />
 
-      <!-- Component Blue -->
-      <Border Grid.Row="4" Grid.Column="0"
-              Height="32"
-              Background="{DynamicResource TextControlBackgroundDisabled}"
-              BorderBrush="{DynamicResource TextControlBorderBrush}"
-              BorderThickness="1,1,0,1"
-              CornerRadius="4,0,0,4">
-        <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
-                   FontWeight="SemiBold"
-                   Text="B"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center" />
+      <Border Grid.Row="3"
+              CornerRadius="4 4 0 0"
+              Background="{DynamicResource AccentFillColorSecondaryBrush}"
+              Padding="5">
+        <TextBlock Text="Current palette properties"
+                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                   Theme="{StaticResource SubtitleTextBlockStyle}"
+                   HorizontalAlignment="Center" />
       </Border>
-      <NumericUpDown Grid.Row="4" Grid.Column="1"
-                     Height="32"
-                     CornerRadius="0,4,4,0"
-                     Minimum="{Binding Minimum, ElementName=Component3Slider}"
-                     Maximum="{Binding Maximum, ElementName=Component3Slider}"
-                     Value="{Binding Value, ElementName=Component3Slider}"
-                     IsReadOnly="True"
-                     ShowButtonSpinner="False" />
-      <ColorSlider Grid.Row="4" Grid.Column="2"
-                   Name="Component3Slider"
-                   Margin="12 0"
-                   Orientation="Horizontal"
-                   IsEnabled="False"
-                   IsRoundingEnabled="True"
-                   ColorComponent="Component3"
-                   ColorModel="Rgba"
-                   HsvColor="{Binding SelectedHsvColor}" />
+      <Border Grid.Row="4"
+              CornerRadius="0 0 4 4"
+              Background="{DynamicResource ControlFillColorInputActiveBrush}"
+              Padding="5 10 5 5">
+        <pgc:PropertyGrid SelectedObject="{Binding SelectedPalette.Palette}"
+                          AllowFilter="False"
+                          AllowQuickFilter="False" />
+      </Border>
+    </Grid>
 
-      <!-- Hex color -->
-      <DockPanel Grid.Row="5" Grid.Column="2" Margin="12">
-        <Border DockPanel.Dock="Left"
+    <StackPanel Grid.Row="0" Grid.Column="1">
+      <ColorView IsColorPreviewVisible="False"
+                 IsColorSpectrumVisible="False"
+                 IsColorComponentsVisible="False"
+                 Palette="{Binding SelectedPalette.AvaloniaPalette}"
+                 Color="{Binding SelectedColor}" />
+
+      <!-- Copied and adapted from component tab of ColorView in FluentAvalonia -->
+      <!-- https://github.com/amwx/FluentAvalonia/blob/b84f54e75fd30feb18d766fe4d95da486d734b8f/src/FluentAvalonia/Styling/ControlThemes/BasicControls/ColorPicker/ColorView.axaml#L375 -->
+      <Grid ColumnDefinitions="30,80,*"
+            RowDefinitions="Auto,10,Auto,Auto,Auto,10,Auto">
+        <!-- Color preview -->
+        <ColorPreviewer Grid.Row="0" Grid.ColumnSpan="3"
+                        HsvColor="{Binding SelectedHsvColor}"
+                        IsAccentColorsVisible="False"/>
+
+        <!-- Component Red -->
+        <Border Grid.Row="2" Grid.Column="0"
+                Margin="0 5"
                 Height="32"
-                Width="30"
                 Background="{DynamicResource TextControlBackgroundDisabled}"
                 BorderBrush="{DynamicResource TextControlBorderBrush}"
                 BorderThickness="1,1,0,1"
                 CornerRadius="4,0,0,4">
           <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
                      FontWeight="SemiBold"
-                     Text="#"
+                     Text="R"
                      HorizontalAlignment="Center"
                      VerticalAlignment="Center" />
         </Border>
-        <TextBox Grid.Row="5" Grid.Column="1"
-                 Height="32"
-                 CornerRadius="0,4,4,0"
-                 AutomationProperties.Name="Hexadecimal Color"
-                 Text="{Binding SelectedHexColor}"
-                 IsReadOnly="True" />
-      </DockPanel>
+        <NumericUpDown Grid.Row="2" Grid.Column="1"
+                       Height="32"
+                       CornerRadius="0,4,4,0"
+                       Minimum="{Binding Minimum, ElementName=Component1Slider}"
+                       Maximum="{Binding Maximum, ElementName=Component1Slider}"
+                       Value="{Binding Value, ElementName=Component1Slider}"
+                       IsReadOnly="True"
+                       ShowButtonSpinner="False" />
+        <ColorSlider Grid.Row="2" Grid.Column="2"
+                     Name="Component1Slider"
+                     Margin="12 0"
+                     Orientation="Horizontal"
+                     IsEnabled="False"
+                     IsRoundingEnabled="True"
+                     ColorComponent="Component1"
+                     ColorModel="Rgba"
+                     HsvColor="{Binding SelectedHsvColor}" />
 
-      <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-                  Orientation="Horizontal"
-                  VerticalAlignment="Center"
-                  HorizontalAlignment="Left"
-                  Spacing="10">
-        <Button>
-          <StackPanel Orientation="Horizontal">
-            <fluent:SymbolIcon Symbol="SaveLocal" />
-            <TextBlock Margin="7 0" Text="Export" />
-          </StackPanel>
-          <Button.Flyout>
-            <fluent:FAMenuFlyout>
-              <fluent:MenuFlyoutItem Text="Selected"
-                                     IconSource="Image"
-                                     Command="{Binding SavePaletteCommand}"/>
-              <fluent:MenuFlyoutItem Text="All as PNG"
-                                     IconSource="ImageCopy"
-                                     Command="{Binding SaveAllPalettesCommand}"
-                                     CommandParameter="PNG"/>
-              <fluent:MenuFlyoutItem Text="All as RIFF"
-                                     IconSource="ImageCopy"
-                                     Command="{Binding SaveAllPalettesCommand}"
-                                     CommandParameter="RIFF"/>
-            </fluent:FAMenuFlyout>
-          </Button.Flyout>
-        </Button>
-      </StackPanel>
-    </Grid>
+        <!-- Component Green -->
+        <Border Grid.Row="3" Grid.Column="0"
+                Margin="0 5"
+                Height="32"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+          <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
+                     FontWeight="SemiBold"
+                     Text="G"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center" />
+        </Border>
+        <NumericUpDown Grid.Row="3" Grid.Column="1"
+                       Height="32"
+                       CornerRadius="0,4,4,0"
+                       Minimum="{Binding Minimum, ElementName=Component2Slider}"
+                       Maximum="{Binding Maximum, ElementName=Component2Slider}"
+                       Value="{Binding Value, ElementName=Component2Slider}"
+                       IsReadOnly="True"
+                       ShowButtonSpinner="False" />
+        <ColorSlider Grid.Row="3" Grid.Column="2"
+                     Name="Component2Slider"
+                     Margin="12 0"
+                     Orientation="Horizontal"
+                     IsEnabled="False"
+                     IsRoundingEnabled="True"
+                     ColorComponent="Component2"
+                     ColorModel="Rgba"
+                     HsvColor="{Binding SelectedHsvColor}" />
 
-    <Border Grid.Row="0" Grid.Column="3" Grid.RowSpan="2"
+        <!-- Component Blue -->
+        <Border Grid.Row="4" Grid.Column="0"
+                Margin="0 5"
+                Height="32"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+          <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
+                     FontWeight="SemiBold"
+                     Text="B"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center" />
+        </Border>
+        <NumericUpDown Grid.Row="4" Grid.Column="1"
+                       Height="32"
+                       CornerRadius="0,4,4,0"
+                       Minimum="{Binding Minimum, ElementName=Component3Slider}"
+                       Maximum="{Binding Maximum, ElementName=Component3Slider}"
+                       Value="{Binding Value, ElementName=Component3Slider}"
+                       IsReadOnly="True"
+                       ShowButtonSpinner="False" />
+        <ColorSlider Grid.Row="4" Grid.Column="2"
+                     Name="Component3Slider"
+                     Margin="12 0"
+                     Orientation="Horizontal"
+                     IsEnabled="False"
+                     IsRoundingEnabled="True"
+                     ColorComponent="Component3"
+                     ColorModel="Rgba"
+                     HsvColor="{Binding SelectedHsvColor}" />
+
+        <!-- Hex color -->
+        <DockPanel Grid.Row="6" Grid.Column="2" Margin="12 0">
+          <Border DockPanel.Dock="Left"
+                  Height="32"
+                  Width="30"
+                  Background="{DynamicResource TextControlBackgroundDisabled}"
+                  BorderBrush="{DynamicResource TextControlBorderBrush}"
+                  BorderThickness="1,1,0,1"
+                  CornerRadius="4,0,0,4">
+            <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
+                       FontWeight="SemiBold"
+                       Text="#"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+          </Border>
+          <TextBox Grid.Row="5" Grid.Column="1"
+                   Height="32"
+                   CornerRadius="0,4,4,0"
+                   AutomationProperties.Name="Hexadecimal Color"
+                   Text="{Binding SelectedHexColor}"
+                   IsReadOnly="True" />
+        </DockPanel>
+
+        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Spacing="10">
+          <Button>
+            <StackPanel Orientation="Horizontal">
+              <fluent:SymbolIcon Symbol="SaveLocal" />
+              <TextBlock Margin="7 0" Text="Export" />
+            </StackPanel>
+            <Button.Flyout>
+              <fluent:FAMenuFlyout>
+                <fluent:MenuFlyoutItem Text="Selected"
+                                       IconSource="Image"
+                                       Command="{Binding SavePaletteCommand}"/>
+                <fluent:MenuFlyoutItem Text="All as PNG"
+                                       IconSource="ImageCopy"
+                                       Command="{Binding SaveAllPalettesCommand}"
+                                       CommandParameter="PNG"/>
+                <fluent:MenuFlyoutItem Text="All as RIFF"
+                                       IconSource="ImageCopy"
+                                       Command="{Binding SaveAllPalettesCommand}"
+                                       CommandParameter="RIFF"/>
+              </fluent:FAMenuFlyout>
+            </Button.Flyout>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </StackPanel>
+
+    <Border Grid.Row="0" Grid.Column="2"
             Margin="20 0 5 0"
             Background="{DynamicResource ControlOnImageFillColorDefaultBrush}"
             CornerRadius="10"
