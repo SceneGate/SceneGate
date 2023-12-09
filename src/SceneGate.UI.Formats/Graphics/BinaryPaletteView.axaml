@@ -1,0 +1,176 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:SceneGate.UI.Formats.Graphics"
+             xmlns:controls="using:SceneGate.UI.Formats.Controls"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
+             x:Class="SceneGate.UI.Formats.Graphics.BinaryPaletteView"
+             x:DataType="local:BinaryPaletteViewModel">
+
+  <Design.DataContext>
+    <local:BinaryPaletteViewModel />
+  </Design.DataContext>
+  
+  <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+
+    <Border Grid.Column="0"
+            BorderThickness="1"
+            CornerRadius="4"
+            BorderBrush="{DynamicResource ControlElevationBorderBrush}">
+    <Grid Grid.Column="0"
+          RowDefinitions="Auto,Auto,Auto,*">
+      <Border Grid.Row="0"
+        CornerRadius="4 4 0 0"
+        Background="{DynamicResource AccentFillColorDefaultBrush}"
+        Padding="5">
+        <TextBlock Text="Palette format"
+                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                   Theme="{StaticResource SubtitleTextBlockStyle}"
+                   HorizontalAlignment="Center"/>
+      </Border>
+
+      <Grid Grid.Row="1"
+            ColumnDefinitions="Auto,Auto,Auto"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+            Margin="10 3">
+
+        <!-- Offset -->
+        <Border Grid.Row="0" Grid.Column="0"
+                Height="32"
+                Margin="0 5"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+          <TextBlock Text="Offset"
+                     Padding="5 0"
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Center" />
+        </Border>
+        <NumericUpDown Grid.Row="0" Grid.Column="1"
+                       Name="OffsetNumericBox"
+                       Margin="0 5"
+                       Width="160"
+                       CornerRadius="0,4,4,0"
+                       FormatString="0"
+                       Value="{Binding Offset}"
+                       Minimum="0"
+                       Maximum="{Binding MaximumOffset}"
+                       FontFamily="{StaticResource CaskaydiaFont}"
+                       VerticalContentAlignment="Center">
+          <NumericUpDown.TextConverter>
+            <controls:HexadecimalValueConverter />
+          </NumericUpDown.TextConverter>
+        </NumericUpDown>
+        <CheckBox Grid.Row="0" Grid.Column="2"
+                  Margin="10 5"
+                  IsChecked="True"
+                  Content="Hexadecimal"
+                  IsCheckedChanged="OffsetHexCheckboxChecked"/>
+
+        <!-- Length -->
+        <Border Grid.Row="1" Grid.Column="0"
+                Margin="0 5"
+                Height="32"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+          <TextBlock Text="Length"
+                     Padding="5 0"
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Center" />
+        </Border>
+        <NumericUpDown Grid.Row="1" Grid.Column="1"
+                       Name="LengthNumericBox"
+                       Margin="0 5"
+                       CornerRadius="0,4,4,0"
+                       FormatString="0"
+                       Value="{Binding Length}"
+                       Minimum="0"
+                       Maximum="{Binding MaximumLength}"
+                       FontFamily="{StaticResource CaskaydiaFont}"
+                       VerticalContentAlignment="Center">
+        </NumericUpDown>
+        <CheckBox Grid.Row="1" Grid.Column="2"
+                  Margin="10 5"
+                  IsChecked="False"
+                  Content="Hexadecimal"
+                  IsCheckedChanged="LengthHexCheckboxChecked"/>
+
+        <!-- Colors per palette -->
+        <Border Grid.Row="2" Grid.Column="0"
+                Margin="0 5"
+                Height="32"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+          <TextBlock Text="Colors per palette"
+                     Padding="5 0"
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Center" />
+        </Border>
+        <NumericUpDown Grid.Row="2" Grid.Column="1"
+                       Margin="0 5"
+                       CornerRadius="0,4,4,0"
+                       Value="{Binding ColorsPerPalette}"
+                       FormatString="0"
+                       Minimum="0"
+                       Maximum="256"
+                       FontFamily="{StaticResource CaskaydiaFont}"
+                       VerticalContentAlignment="Center" />
+
+        <!-- Format -->
+        <Border Grid.Row="3" Grid.Column="0"
+                Margin="0 5"
+                Height="32"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+          <TextBlock Text="Color format"
+                     Padding="5 0"
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Center" />
+        </Border>
+        <fluent:FAComboBox Grid.Row="3" Grid.Column="1"
+                           Margin="0 5"
+                           CornerRadius="0 4 4 0"
+                           SelectedIndex="0"
+                           IsEditable="False"
+                           SelectedItem="{Binding ColorKind}"
+                           ItemsSource="{Binding AllColorKinds}"/>
+      </Grid>
+
+      <TextBlock Grid.Row="2"
+                 Margin="12 0"
+                 FontWeight="SemiBold"
+                 Text="Palette bytes:"/>
+      <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+               Margin="10 4"
+               Text="{Binding HexContent}"
+               IsReadOnly="True"
+               Background="Transparent"
+               FontSize="13"
+               FontFamily="{StaticResource CaskaydiaFont}" />
+    </Grid>
+    </Border>
+
+    <Border Grid.Column="2"
+            CornerRadius="5"
+            Background="{DynamicResource AccentFillColorDefaultBrush}"
+            Height="400"
+             Padding="5">
+      <TextBlock Text="P&#xa;r&#xa;e&#xa;v&#xa;i&#xa;e&#xa;w"
+                 Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                 Theme="{StaticResource SubtitleTextBlockStyle}"
+                 TextAlignment="Center"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"/>
+    </Border>
+    <local:PaletteView Grid.Column="3" DataContext="{Binding PaletteInfo}" />
+  </Grid>
+</UserControl>

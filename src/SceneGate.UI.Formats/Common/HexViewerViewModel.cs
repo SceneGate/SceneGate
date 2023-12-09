@@ -44,6 +44,16 @@ public partial class HexViewerViewModel : ObservableObject, IFormatViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="HexViewerViewModel" /> class.
     /// </summary>
+    /// <param name="binary">Data to view.</param>
+    public HexViewerViewModel(IBinary binary)
+        : this(binary.Stream)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HexViewerViewModel" /> class.
+    /// </summary>
+    /// <param name="stream">Data to view.</param>
     public HexViewerViewModel(Stream stream)
     {
         // Make sure that the shift-jis encoding is initialized.

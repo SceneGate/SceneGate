@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -42,6 +43,9 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     [ObservableProperty]
     private string? selectedHexColor;
 
+    [ObservableProperty]
+    private bool isModelPropertyVisible;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PaletteViewModel"/> class.
     /// </summary>
@@ -50,22 +54,29 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     /// </remarks>
     public PaletteViewModel()
     {
-        var random = new Random(42);
-        byte[] colorBytes = new byte[256 * 2];
-        random.NextBytes(colorBytes);
-        Rgb[] colors = colorBytes.DecodeColorsAs<Bgr555>();
+        if (Design.IsDesignMode) {
+            var random = new Random(42);
+            byte[] colorBytes = new byte[256 * 2];
+            random.NextBytes(colorBytes);
+            Rgb[] colors = colorBytes.DecodeColorsAs<Bgr555>();
 
-        IPalette[] testPalettes = [
-            new Palette(colors),
-            new Palette(colors[..128]),
-            new Palette(colors[..16]),
-            new Palette(colors[16..30]),
-            new Palette(colors[0..0]),
-            new Palette(colors[..20]),
-        ];
+            IPalette[] testPalettes = [
+                new Palette(colors),
+                new Palette(colors[..128]),
+                new Palette(colors[..16]),
+                new Palette(colors[16..30]),
+                new Palette(colors[0..0]),
+                new Palette(colors[..20]),
+            ];
 
-        SourceFormat = testPalettes[0];
-        Palettes = new(testPalettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
+            SourceFormat = testPalettes[0];
+            Palettes = new(testPalettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
+        } else {
+            SourceFormat = null!;
+            Palettes = null!;
+        }
+
+        IsModelPropertyVisible = true;
 
         AskOutputFile = new AsyncInteraction<IStorageFile?>();
         AskOutputFolder = new AsyncInteraction<IStorageFolder?>();
@@ -77,12 +88,10 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     /// </summary>
     /// <param name="palette">The palette to represent.</param>
     public PaletteViewModel(IPalette palette)
+        : this()
     {
         SourceFormat = palette;
         Palettes = [new PaletteRepresentation(0, palette)];
-        AskOutputFile = new AsyncInteraction<IStorageFile?>();
-        AskOutputFolder = new AsyncInteraction<IStorageFolder?>();
-        AskInputFile = new AsyncInteraction<IStorageFile?>();
     }
 
     /// <summary>
@@ -90,12 +99,10 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     /// </summary>
     /// <param name="palettes">The collection of palettes to represent.</param>
     public PaletteViewModel(IPaletteCollection palettes)
+        : this()
     {
         SourceFormat = palettes;
         Palettes = new(palettes.Palettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
-        AskOutputFile = new AsyncInteraction<IStorageFile?>();
-        AskOutputFolder = new AsyncInteraction<IStorageFolder?>();
-        AskInputFile = new AsyncInteraction<IStorageFile?>();
     }
 
     /// <summary>
@@ -127,6 +134,15 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     {
         SelectedHsvColor = value.ToHsv();
         SelectedHexColor = $"{value.R:X2}{value.G:X2}{value.B:X2}";
+    }
+
+    /// <summary>
+    /// Replace the current displayed palettes with a new set.
+    /// </summary>
+    /// <param name="palettes">The new set of palettes to display.</param>
+    public void ReplacePalettes(IPaletteCollection palettes)
+    {
+        Palettes = new (palettes.Palettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
     }
 
     /// <summary>

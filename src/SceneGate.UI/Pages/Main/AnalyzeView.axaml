@@ -47,7 +47,8 @@
                 SelectedItem="{Binding SelectedNode}"
                 ItemsSource="{Binding Nodes}"
                 SelectionMode="Single"
-                DoubleTapped="NodeTreeViewDoubleTapped">
+                DoubleTapped="NodeTreeViewDoubleTapped"
+                KeyUp="NodeTreeViewKeyUp">
         <TreeView.ItemTemplate>
           <TreeDataTemplate ItemsSource="{Binding Children}">
             <!-- Setting background so contextmenu works everywhere -->
@@ -74,16 +75,41 @@
                 <fluent:SymbolIcon Symbol="Sync" />
               </Button>
               <Grid.ContextFlyout>
-                <MenuFlyout>
-                  <MenuItem Header="Save to file"
-                            Command="{ReflectionBinding $parent[TreeView].DataContext.SaveBinaryNodeCommand}" />
-                  <MenuItem Header="Convert"
-                            Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}" />
-                  <MenuItem Header="Show"
-                            Command="{ReflectionBinding $parent[TreeView].DataContext.OpenNodeViewCommand}" />
-                  <MenuItem Header="Copy path"
-                            Command="{ReflectionBinding $parent[TreeView].DataContext.CopyPathCommand}" />
-                </MenuFlyout>
+                <fluent:FAMenuFlyout>
+                  <fluent:MenuFlyoutItem
+                    Text="Copy path"
+                    IconSource="FolderLink"
+                    Command="{ReflectionBinding $parent[TreeView].DataContext.CopyPathCommand}" />
+                  <fluent:MenuFlyoutItem
+                    Text="Save to file"
+                    IconSource="SaveAs"
+                    Command="{ReflectionBinding $parent[TreeView].DataContext.SaveBinaryNodeCommand}" />
+                  <fluent:MenuFlyoutItem
+                    Text="Convert"
+                    IconSource="Sync"
+                    Command="{ReflectionBinding $parent[TreeView].DataContext.ConvertNodeCommand}" />
+                  <fluent:MenuFlyoutItem
+                    Text="Open with default"
+                    IconSource="View"
+                    HotKey="Space"
+                    Command="{ReflectionBinding $parent[TreeView].DataContext.OpenNodeViewCommand}" />
+                  <fluent:MenuFlyoutSubItem Text="Open as...">
+                    <fluent:MenuFlyoutItem Text="Model object"
+                                           IconSource="Code"
+                                           Command="{ReflectionBinding $parent[TreeView].DataContext.OpenAsObjectCommand}"/>
+                    <fluent:MenuFlyoutItem Text="Binary"
+                                           IconSource="Page"
+                                           HotKey="H"
+                                           Command="{ReflectionBinding $parent[TreeView].DataContext.OpenWithHexViewerCommand}"/>
+                    <fluent:MenuFlyoutItem Text="Raw palette"
+                                           IconSource="ColorBackground"
+                                           HotKey="P"
+                                           Command="{ReflectionBinding $parent[TreeView].DataContext.OpenAsRawPaletteCommand}"/>
+                    <fluent:MenuFlyoutItem Text="Raw image"
+                                           IconSource="Image"
+                                           IsEnabled="False" />
+                  </fluent:MenuFlyoutSubItem>
+                </fluent:FAMenuFlyout>
               </Grid.ContextFlyout>
             </Grid>
           </TreeDataTemplate>
