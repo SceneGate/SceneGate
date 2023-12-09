@@ -13,6 +13,7 @@ using SceneGate.UI.Formats.Mvvm;
 using Texim.Colors;
 using Texim.Formats;
 using Texim.Palettes;
+using Yarhl.FileFormat;
 using Yarhl.IO;
 
 /// <summary>
@@ -20,6 +21,9 @@ using Yarhl.IO;
 /// </summary>
 public partial class PaletteViewModel : ObservableObject, IFormatViewModel
 {
+    [ObservableProperty]
+    private IFormat sourceFormat;
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveAllPalettesCommand))]
     private ObservableCollection<PaletteRepresentation> palettes;
@@ -31,6 +35,12 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
 
     [ObservableProperty]
     private Color selectedColor;
+
+    [ObservableProperty]
+    private HsvColor selectedHsvColor;
+
+    [ObservableProperty]
+    private string? selectedHexColor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PaletteViewModel"/> class.
@@ -54,9 +64,12 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
             new Palette(colors[..20]),
         ];
 
+        SourceFormat = testPalettes[0];
         Palettes = new(testPalettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
+
         AskOutputFile = new AsyncInteraction<IStorageFile?>();
         AskOutputFolder = new AsyncInteraction<IStorageFolder?>();
+        AskInputFile = new AsyncInteraction<IStorageFile?>();
     }
 
     /// <summary>
@@ -65,9 +78,11 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     /// <param name="palette">The palette to represent.</param>
     public PaletteViewModel(IPalette palette)
     {
+        SourceFormat = palette;
         Palettes = [new PaletteRepresentation(0, palette)];
         AskOutputFile = new AsyncInteraction<IStorageFile?>();
         AskOutputFolder = new AsyncInteraction<IStorageFolder?>();
+        AskInputFile = new AsyncInteraction<IStorageFile?>();
     }
 
     /// <summary>
@@ -76,9 +91,11 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     /// <param name="palettes">The collection of palettes to represent.</param>
     public PaletteViewModel(IPaletteCollection palettes)
     {
+        SourceFormat = palettes;
         Palettes = new(palettes.Palettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
         AskOutputFile = new AsyncInteraction<IStorageFile?>();
         AskOutputFolder = new AsyncInteraction<IStorageFolder?>();
+        AskInputFile = new AsyncInteraction<IStorageFile?>();
     }
 
     /// <summary>
@@ -91,6 +108,11 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     /// </summary>
     public AsyncInteraction<IStorageFolder?> AskOutputFolder { get; }
 
+    /// <summary>
+    /// Gets the interaction to ask the usre for the input file to import.
+    /// </summary>
+    public AsyncInteraction<IStorageFile?> AskInputFile { get; }
+
     partial void OnPalettesChanged(ObservableCollection<PaletteRepresentation> value)
     {
         SelectedPalette = value.FirstOrDefault();
@@ -99,6 +121,12 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     partial void OnSelectedPaletteChanged(PaletteRepresentation? value)
     {
         SelectedColor = value?.Colors.FirstOrDefault() ?? default;
+    }
+
+    partial void OnSelectedColorChanged(Color value)
+    {
+        SelectedHsvColor = value.ToHsv();
+        SelectedHexColor = $"{value.R:X2}{value.G:X2}{value.B:X2}";
     }
 
     [RelayCommand(CanExecute = nameof(CanSavePalette))]
@@ -170,16 +198,15 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
     private bool CanSaveAllPalettes() => Palettes.Count > 0;
 
     [RelayCommand(CanExecute = nameof(CanImportPalette))]
-    private Task ImportPaletteAsync()
+    private async Task ImportPaletteAsync()
     {
-        throw new NotImplementedException();
+        IStorageFile? file = await AskInputFile.HandleAsync().ConfigureAwait(false);
+        if (file is null) {
+            return;
+        }
+
+        throw new NotImplementedException("Converters not implemented in Texim yet");
     }
 
     private bool CanImportPalette() => SelectedPalette is not null;
-
-    [RelayCommand]
-    private Task ImportAllPalettesAsync()
-    {
-        throw new NotImplementedException();
-    }
 }

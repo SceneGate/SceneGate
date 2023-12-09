@@ -5,9 +5,10 @@
         xmlns:cd="using:SceneGate.UI.ControlsData">
 
   <Design.PreviewWith>
-    <Border Padding="30" MinWidth="350" Height="300">
+    <Border Padding="30" MinWidth="350" Height="500">
       <ColorView
-        Classes="ReadOnly"
+        Classes="ReadOnly NoHeader"
+        IsAlphaVisible="False"
         IsColorSpectrumVisible="False"
         IsColorPaletteVisible="False"/>
     </Border>
@@ -36,7 +37,12 @@
       <Setter Property="IsReadOnly" Value="True" />
     </Style>
   </Style>
-  
+
+  <!-- ColorView without tab header -->
+  <Style Selector="ColorView.NoHeader ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+
   <Style Selector="TreeView.Compact TreeViewItem">
     <Setter Property="MinHeight" Value="22" />
   </Style>

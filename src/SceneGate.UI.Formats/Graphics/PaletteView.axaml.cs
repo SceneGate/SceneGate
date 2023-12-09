@@ -1,6 +1,7 @@
 ﻿namespace SceneGate.UI.Formats.Graphics;
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
@@ -26,6 +27,7 @@ public partial class PaletteView : UserControl
         var viewModel = (DataContext as PaletteViewModel)!;
         viewModel.AskOutputFile.RegisterHandler(AskOutputFileAsync);
         viewModel.AskOutputFolder.RegisterHandler(AskOutputFolderAsync);
+        viewModel.AskInputFile.RegisterHandler(AskInputFileAsync);
     }
 
     private async Task<IStorageFile?> AskOutputFileAsync()
@@ -55,6 +57,24 @@ public partial class PaletteView : UserControl
         var results = await TopLevel.GetTopLevel(this)!
             .StorageProvider
             .OpenFolderPickerAsync(options)
+            .ConfigureAwait(false);
+        return results.Count > 0 ? results[0] : null;
+    }
+
+    private async Task<IStorageFile?> AskInputFileAsync()
+    {
+        var options = new FilePickerOpenOptions {
+            Title = "Select where to save the file",
+            AllowMultiple = false,
+            FileTypeFilter = new[] {
+                FilePickerFileTypes.ImagePng,
+                new FilePickerFileType("RIFF palette for Gimp") { Patterns = [ "*.pal" ] },
+            },
+        };
+
+        var results = await TopLevel.GetTopLevel(this)!
+            .StorageProvider
+            .OpenFilePickerAsync(options)
             .ConfigureAwait(false);
         return results.Count > 0 ? results[0] : null;
     }
