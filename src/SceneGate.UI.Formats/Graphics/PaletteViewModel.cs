@@ -129,8 +129,12 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
         SelectedHexColor = $"{value.R:X2}{value.G:X2}{value.B:X2}";
     }
 
+    /// <summary>
+    /// Save the current selected palette into a disk file as RIFF or PNG format.
+    /// </summary>
+    /// <returns>The asynchronous operation.</returns>
     [RelayCommand(CanExecute = nameof(CanSavePalette))]
-    private async Task SavePaletteAsync()
+    public async Task SavePaletteAsync()
     {
         if (SelectedPalette is null) {
             return;
@@ -157,8 +161,13 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
 
     private bool CanSavePalette() => SelectedPalette is { IsError: false };
 
+    /// <summary>
+    /// Save all the palettes into files on a selected folder.
+    /// </summary>
+    /// <param name="formatName">The name of the format. Either: PNG or RIFF.</param>
+    /// <returns>The asynchronous operation.</returns>
     [RelayCommand(CanExecute = nameof(CanSaveAllPalettes))]
-    private async Task SaveAllPalettesAsync(string formatName)
+    public async Task SaveAllPalettesAsync(string formatName)
     {
         IStorageFolder? folder = await AskOutputFolder.HandleAsync().ConfigureAwait(false);
         if (folder is null) {
@@ -197,8 +206,13 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
 
     private bool CanSaveAllPalettes() => Palettes.Count > 0;
 
+    /// <summary>
+    /// Import the content of a disk file palette into the current view.
+    /// </summary>
+    /// <returns>Asynchronous task.</returns>
+    /// <exception cref="NotImplementedException">No formats supported yet.</exception>
     [RelayCommand(CanExecute = nameof(CanImportPalette))]
-    private async Task ImportPaletteAsync()
+    public async Task ImportPaletteAsync()
     {
         IStorageFile? file = await AskInputFile.HandleAsync().ConfigureAwait(false);
         if (file is null) {
