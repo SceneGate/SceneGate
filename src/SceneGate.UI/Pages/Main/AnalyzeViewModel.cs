@@ -133,8 +133,10 @@ public partial class AnalyzeViewModel : ViewModelBase
             return;
         }
 
-        // Already opened
-        if (FormatViewTabs.Any(x => x.Node == node)) {
+        // Already opened - select it
+        NodeFormatTab? existingTab = FormatViewTabs.FirstOrDefault(x => x.Node == node);
+        if (existingTab is not null) {
+            SelectedTab = existingTab;
             return;
         }
 
