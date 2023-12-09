@@ -11,56 +11,55 @@
   </Design.DataContext>
 
   <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*"
-        RowDefinitions="Auto,*"
-        MaxWidth="1050">
+        RowDefinitions="Auto,*">
 
     <TextBox Grid.Row="0" Grid.Column="1"
-             Text="{Binding PositionText}"
-             IsReadOnly="True"
-             Background="Transparent"
-             BorderThickness="0"
-             VerticalContentAlignment="Center"
-             FontSize="13"
-             FontFamily="{StaticResource CaskaydiaFont}" />
+              Text="{Binding PositionText}"
+              IsReadOnly="True"
+              Background="Transparent"
+              BorderThickness="0"
+              VerticalContentAlignment="Center"
+              FontSize="13"
+              FontFamily="{StaticResource CaskaydiaFont}" />
 
     <TextBox Grid.Row="1" Grid.Column="0"
-             Text="{Binding OffsetsText}"
-             Classes="NonScrollable"
-             IsReadOnly="True"
-             Background="Transparent"
-             FontSize="13"
-             FontFamily="{StaticResource CaskaydiaFont}"/>
+              Text="{Binding OffsetsText}"
+              Classes="NonScrollable"
+              IsReadOnly="True"
+              Background="Transparent"
+              FontSize="13"
+              FontFamily="{StaticResource CaskaydiaFont}"/>
 
     <TextBox Grid.Row="1" Grid.Column="1"
-             Name="hexView"
-             Text="{Binding HexText}"
-             Classes="NonScrollable"
-             CaretIndex="{Binding HexCursorPos, Mode=TwoWay}"
-             IsReadOnly="True"
-             Background="Transparent"
-             FontSize="13"
-             FontFamily="{StaticResource CaskaydiaFont}"
-             PointerWheelChanged="ViewsPointerWheelChanged"
-             KeyUp="ViewsKeyUp"
-             KeyDown="ViewsKeyDown"
-             SizeChanged="HexViewSizeChanged" />
+              Name="hexView"
+              Text="{Binding HexText}"
+              Classes="NonScrollable"
+              CaretIndex="{Binding HexCursorPos, Mode=TwoWay}"
+              IsReadOnly="True"
+              Background="Transparent"
+              FontSize="13"
+              FontFamily="{StaticResource CaskaydiaFont}"
+              PointerWheelChanged="ViewsPointerWheelChanged"
+              KeyUp="ViewsKeyUp"
+              KeyDown="ViewsKeyDown"
+              SizeChanged="HexViewSizeChanged" />
 
     <TextBox Grid.Row="1" Grid.Column="2"
-             Text="{Binding AsciiText}"
-             Classes="NonScrollable"
-             CaretIndex="{Binding AsciiCursorPos, Mode=TwoWay}"
-             IsReadOnly="True"
-             Background="Transparent"
-             FontSize="13"
-             FontFamily="{StaticResource CaskaydiaFont}"
-             PointerWheelChanged="ViewsPointerWheelChanged"
-             KeyUp="ViewsKeyUp"
-             KeyDown="ViewsKeyDown" />
+              Text="{Binding AsciiText}"
+              Classes="NonScrollable"
+              CaretIndex="{Binding AsciiCursorPos, Mode=TwoWay}"
+              IsReadOnly="True"
+              Background="Transparent"
+              FontSize="13"
+              FontFamily="{StaticResource CaskaydiaFont}"
+              PointerWheelChanged="ViewsPointerWheelChanged"
+              KeyUp="ViewsKeyUp"
+              KeyDown="ViewsKeyDown" />
     
     <ScrollBar Grid.Row="1" Grid.Column="3"
-               Orientation="Vertical"
-               Maximum="{Binding MaximumScroll}"
-               Value="{Binding CurrentScroll}"/>
+                 Orientation="Vertical"
+                 Maximum="{Binding MaximumScroll}"
+                 Value="{Binding CurrentScroll}"/>
 
     <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="4"
                 Spacing="15"
@@ -81,15 +80,15 @@
         </DataGrid.Columns>
       </DataGrid>
 
-      <StackPanel Orientation="Horizontal" Spacing="10">
+      <StackPanel Orientation="Horizontal" Spacing="10" Margin="5 0">
         <RadioButton Content="Little endian" GroupName="Endianness" IsChecked="True" />
         <RadioButton Content="Big endian" GroupName="Endianness" IsChecked="{Binding IsBigEndian}" />
       </StackPanel>
-      <DockPanel Margin="0 0 10 0">
-        <TextBlock DockPanel.Dock="Left" Text="Custom encoding name: " VerticalAlignment="Center" />
+      <StackPanel Margin="5 0 10 0" Spacing="5">
+        <TextBlock Text="Custom encoding name: " Margin="3 0"/>
         <TextBox Watermark="code page name"
                  Text="{Binding CustomEncodingName}" />
-      </DockPanel>
+      </StackPanel>
     </StackPanel>
   </Grid>
 </UserControl>

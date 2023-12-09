@@ -24,6 +24,10 @@ public partial class PaletteView : UserControl
     {
         base.OnDataContextChanged(e);
 
+        if (DataContext is null) {
+            return;
+        }
+
         var viewModel = (DataContext as PaletteViewModel)!;
         viewModel.AskOutputFile.RegisterHandler(AskOutputFileAsync);
         viewModel.AskOutputFolder.RegisterHandler(AskOutputFolderAsync);

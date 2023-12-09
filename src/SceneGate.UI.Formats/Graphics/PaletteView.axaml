@@ -23,7 +23,6 @@
 
     <Grid Grid.Row="0" Grid.Column="0"
           RowDefinitions="Auto,Auto,1*,Auto,Auto,1*"
-          MaxWidth="430"
           HorizontalAlignment="Left"
           Margin="10 0">
       <Border Grid.Row="0"
@@ -32,7 +31,7 @@
               Padding="5">
         <TextBlock Text="Format properties"
                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                   Theme="{StaticResource TitleTextBlockStyle}"
+                   Theme="{StaticResource SubtitleTextBlockStyle}"
                    HorizontalAlignment="Center"/>
       </Border>
       <Border Grid.Row="1"

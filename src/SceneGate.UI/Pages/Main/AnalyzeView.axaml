@@ -187,18 +187,15 @@
                     IsAddTabButtonVisible="False"
                     TabItems="{Binding FormatViewTabs}"
                     TabCloseRequested="TabViewTabCloseRequested"
-                    SelectedItem="{Binding SelectedTab}">
+                    SelectedItem="{Binding SelectedTab}"
+                    VerticalAlignment="Stretch">
       <fluent:TabView.TabItemTemplate>
         <DataTemplate DataType="ctrlData:NodeFormatTab">
-          <fluent:TabViewItem Header="{Binding Name}">
+          <fluent:TabViewItem Header="{Binding Name}"
+                              Content="{Binding Content}">
             <fluent:TabViewItem.IconSource>
               <fluent:SymbolIconSource Symbol="{Binding Kind, Converter={StaticResource Format2Icon}}" />
             </fluent:TabViewItem.IconSource>
-            
-            <ScrollViewer Content="{Binding Content}"
-                          HorizontalScrollBarVisibility="Auto"
-                          VerticalScrollBarVisibility="Auto" />
-            
           </fluent:TabViewItem>
         </DataTemplate>
       </fluent:TabView.TabItemTemplate>
