@@ -41,6 +41,9 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
     private int colorsPerPalette;
 
     [ObservableProperty]
+    private ColorKind colorKind;
+
+    [ObservableProperty]
     private string hexContent;
 
     /// <summary>
@@ -59,6 +62,7 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
             length = 512;
             maximumLength = 512;
             colorsPerPalette = 16;
+            colorKind = ColorKind.BGR555;
         } else {
             stream = null!;
             binaryFormat = null!;
@@ -95,6 +99,7 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
         maximumOffset = stream.Length - length;
         maximumLength = length;
         colorsPerPalette = length >= (256 * 2) ? 256 : 16;
+        colorKind = ColorKind.BGR555;
 
         ReadRawPalette();
     }
@@ -107,6 +112,11 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
         : this(new BinaryFormat(stream))
     {
     }
+
+    /// <summary>
+    /// Gets the list of supported color kinds.
+    /// </summary>
+    public static ColorKind[] AllColorKinds => Enum.GetValues<ColorKind>();
 
     partial void OnOffsetChanged(long value)
     {
@@ -125,6 +135,11 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
     }
 
     partial void OnColorsPerPaletteChanged(int value)
+    {
+        ReadRawPalette();
+    }
+
+    partial void OnColorKindChanged(ColorKind value)
     {
         ReadRawPalette();
     }
@@ -162,7 +177,7 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
             Offset = Offset,
             Size = Length,
             ColorsPerPalette = ColorsPerPalette,
-            ColorEncoding = Bgr555.Instance,
+            ColorEncoding = ColorKind.GetEncoding(),
         };
         var raw2Palette = new RawBinary2PaletteCollection(options);
 

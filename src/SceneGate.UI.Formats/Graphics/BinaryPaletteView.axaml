@@ -140,11 +140,9 @@
                            Margin="0 5"
                            CornerRadius="0 4 4 0"
                            SelectedIndex="0"
-                           IsEditable="False">
-          <fluent:FAComboBoxItem Content="BGR555" />
-          <fluent:FAComboBoxItem Content="RGB32" />
-          <fluent:FAComboBoxItem Content="RGBA32" />
-        </fluent:FAComboBox>
+                           IsEditable="False"
+                           SelectedItem="{Binding ColorKind}"
+                           ItemsSource="{Binding AllColorKinds}"/>
       </Grid>
 
       <TextBlock Grid.Row="2"
