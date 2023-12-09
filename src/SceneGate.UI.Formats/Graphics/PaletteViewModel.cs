@@ -136,7 +136,11 @@ public partial class PaletteViewModel : ObservableObject, IFormatViewModel
         SelectedHexColor = $"{value.R:X2}{value.G:X2}{value.B:X2}";
     }
 
-    public void UpdatePalettes(IPaletteCollection palettes)
+    /// <summary>
+    /// Replace the current displayed palettes with a new set.
+    /// </summary>
+    /// <param name="palettes">The new set of palettes to display.</param>
+    public void ReplacePalettes(IPaletteCollection palettes)
     {
         Palettes = new (palettes.Palettes.Select((p, idx) => new PaletteRepresentation(idx, p)));
     }

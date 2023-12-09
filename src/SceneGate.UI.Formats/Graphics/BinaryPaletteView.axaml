@@ -54,6 +54,7 @@
                        CornerRadius="0,4,4,0"
                        Value="{Binding Offset}"
                        Minimum="0"
+                       Maximum="{Binding MaximumOffset}"
                        FontFamily="{StaticResource CaskaydiaFont}"
                        VerticalContentAlignment="Center">
           <NumericUpDown.TextConverter>
@@ -83,6 +84,7 @@
                        CornerRadius="0,4,4,0"
                        Value="{Binding Length}"
                        Minimum="0"
+                       Maximum="{Binding MaximumLength}"
                        FontFamily="{StaticResource CaskaydiaFont}"
                        VerticalContentAlignment="Center">
           <NumericUpDown.TextConverter>
