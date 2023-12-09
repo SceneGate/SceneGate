@@ -50,8 +50,11 @@
                      VerticalAlignment="Center" />
         </Border>
         <NumericUpDown Grid.Row="0" Grid.Column="1"
+                       Name="OffsetNumericBox"
                        Margin="0 5"
+                       Width="150"
                        CornerRadius="0,4,4,0"
+                       FormatString="0"
                        Value="{Binding Offset}"
                        Minimum="0"
                        Maximum="{Binding MaximumOffset}"
@@ -64,7 +67,8 @@
         <CheckBox Grid.Row="0" Grid.Column="2"
                   Margin="10 5"
                   IsChecked="True"
-                  Content="Hexadecimal" />
+                  Content="Hexadecimal"
+                  IsCheckedChanged="OffsetHexCheckboxChecked"/>
 
         <!-- Length -->
         <Border Grid.Row="1" Grid.Column="0"
@@ -80,21 +84,21 @@
                      VerticalAlignment="Center" />
         </Border>
         <NumericUpDown Grid.Row="1" Grid.Column="1"
+                       Name="LengthNumericBox"
                        Margin="0 5"
                        CornerRadius="0,4,4,0"
+                       FormatString="0"
                        Value="{Binding Length}"
                        Minimum="0"
                        Maximum="{Binding MaximumLength}"
                        FontFamily="{StaticResource CaskaydiaFont}"
                        VerticalContentAlignment="Center">
-          <NumericUpDown.TextConverter>
-            <controls:HexadecimalValueConverter />
-          </NumericUpDown.TextConverter>
         </NumericUpDown>
         <CheckBox Grid.Row="1" Grid.Column="2"
                   Margin="10 5"
-                  IsChecked="True"
-                  Content="Hexadecimal" />
+                  IsChecked="False"
+                  Content="Hexadecimal"
+                  IsCheckedChanged="LengthHexCheckboxChecked"/>
 
         <!-- Colors per palette -->
         <Border Grid.Row="2" Grid.Column="0"

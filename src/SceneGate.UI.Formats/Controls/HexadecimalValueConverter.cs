@@ -27,7 +27,7 @@ public class HexadecimalValueConverter : IValueConverter
         }
 
         if (long.TryParse(str, NumberStyles.HexNumber, culture, out long x)) {
-            return System.Convert.ChangeType(x, targetType);
+            return (decimal)x;
         }
 
         return AvaloniaProperty.UnsetValue;

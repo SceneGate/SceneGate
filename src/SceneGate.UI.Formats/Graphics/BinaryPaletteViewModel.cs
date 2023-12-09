@@ -11,7 +11,7 @@ using Texim.Formats;
 using Texim.Palettes;
 using Yarhl.IO;
 
-public partial class BinaryPaletteViewModel : ObservableObject
+public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
 {
     private const int DefaultMaxLength = 256 * 2 * 16;
 
@@ -54,17 +54,17 @@ public partial class BinaryPaletteViewModel : ObservableObject
             random.NextBytes(colorBytes);
             stream = DataStreamFactory.FromArray(colorBytes);
             binaryFormat = new BinaryFormat(stream);
+
+            maximumOffset = 0;
+            length = 512;
+            maximumLength = 512;
+            colorsPerPalette = 16;
         } else {
             stream = null!;
             binaryFormat = null!;
         }
 
         hexBuilder = new StringBuilder();
-
-        maximumOffset = stream.Length - 512;
-        length = 512;
-        maximumLength = (int)stream.Length;
-        colorsPerPalette = 16;
         hexContent = string.Empty;
 
         rawPalettes = new PaletteCollection();
@@ -72,7 +72,9 @@ public partial class BinaryPaletteViewModel : ObservableObject
             IsModelPropertyVisible = false,
         };
 
-        ReadRawPalette();
+        if (Design.IsDesignMode) {
+            ReadRawPalette();
+        }
     }
 
     /// <summary>
