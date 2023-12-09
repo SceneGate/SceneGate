@@ -2,7 +2,9 @@
 
 using System;
 using SceneGate.UI.Formats.Common;
+using SceneGate.UI.Formats.Graphics;
 using SceneGate.UI.Formats.Texts;
+using Texim.Palettes;
 using Yarhl.FileFormat;
 using Yarhl.IO;
 using Yarhl.Media.Text;
@@ -15,24 +17,21 @@ public class CommonFormatsViewModelBuilder : IFormatViewModelBuilder
     /// <inheritdoc/>
     public IFormatViewModel Build(IFormat format)
     {
-        if (format is Po poFormat) {
-            return new PoViewModel(poFormat);
-        }
+        return format switch {
+            IBinary binaryFormat => new HexViewerViewModel(binaryFormat.Stream),
 
-        if (format is IBinary binaryFormat) {
-            return new HexViewerViewModel(binaryFormat.Stream);
-        }
+            Po poFormat => new PoViewModel(poFormat),
 
-        throw new NotSupportedException("Invalid format");
+            IPalette palette => new PaletteViewModel(palette),
+            IPaletteCollection palettes => new PaletteViewModel(palettes),
+
+            _ => throw new NotSupportedException("Invalid format"),
+        };
     }
 
     /// <inheritdoc/>
     public bool CanShow(IFormat format)
     {
-        if (format is Po or IBinary) {
-            return true;
-        }
-
-        return false;
+        return format is IBinary or Po or IPalette or IPaletteCollection;
     }
 }

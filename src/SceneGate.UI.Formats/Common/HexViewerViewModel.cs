@@ -52,12 +52,12 @@ public partial class HexViewerViewModel : ObservableObject, IFormatViewModel
         textBuilder = new StringBuilder();
         DataTypes =  [
             new DataTypeItem(typeof(byte), "8-bits"),
-            new DataTypeItem(typeof(ushort), "int 16-bits"),
-            new DataTypeItem(typeof(short), "signed int 16-bits"),
-            new DataTypeItem(typeof(uint), "int 32-bits"),
-            new DataTypeItem(typeof(int), "signed int 32-bits"),
-            new DataTypeItem(typeof(ulong), "int 64-bits"),
-            new DataTypeItem(typeof(long), "signed int 64-bits"),
+            new DataTypeItem(typeof(ushort), "unsigned 16-bits"),
+            new DataTypeItem(typeof(short), "signed 16-bits"),
+            new DataTypeItem(typeof(uint), "unsigned 32-bits"),
+            new DataTypeItem(typeof(int), "signed 32-bits"),
+            new DataTypeItem(typeof(ulong), "unsigned 64-bits"),
+            new DataTypeItem(typeof(long), "signed 64-bits"),
             new DataTypeItem(typeof(float), "float/single 32-bits"),
             new DataTypeItem(typeof(double), "double 64-bits"),
             new DataTypeItem(typeof(UTF8Encoding), "UTF-8"),

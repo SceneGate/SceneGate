@@ -14,6 +14,7 @@ public class NodeFormatToIconConverter : IValueConverter
             return formatKind switch {
                 NodeFormatKind.Binary => Symbol.Page,
                 NodeFormatKind.Folder => Symbol.FolderFilled,
+                NodeFormatKind.Palette => Symbol.ColorBackground,
                 NodeFormatKind.Image => Symbol.Image,
                 NodeFormatKind.Translation => Symbol.Character,
 

@@ -5,8 +5,12 @@
         xmlns:cd="using:SceneGate.UI.ControlsData">
 
   <Design.PreviewWith>
-    <Border Padding="30" MinWidth="350" Height="300">
-      <TextBox Text="a&#xa;b&#xa;c" IsReadOnly="True" MaxHeight="40" />
+    <Border Padding="30" MinWidth="350" Height="500">
+      <ColorView
+        Classes="ReadOnly NoHeader"
+        IsAlphaVisible="False"
+        IsColorSpectrumVisible="False"
+        IsColorPaletteVisible="False"/>
     </Border>
   </Design.PreviewWith>
 
@@ -20,7 +24,25 @@
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
   </Style>
-  
+
+  <!-- ReadOnly ColorView -->
+  <Style Selector="ColorView.ReadOnly">
+    <Style Selector="^ NumericUpDown">
+      <Setter Property="IsReadOnly" Value="True" />
+    </Style>
+    <Style Selector="^ ColorSlider">
+      <Setter Property="IsEnabled" Value="False" />
+    </Style>
+    <Style Selector="^ TextBox">
+      <Setter Property="IsReadOnly" Value="True" />
+    </Style>
+  </Style>
+
+  <!-- ColorView without tab header -->
+  <Style Selector="ColorView.NoHeader ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+
   <Style Selector="TreeView.Compact TreeViewItem">
     <Setter Property="MinHeight" Value="22" />
   </Style>

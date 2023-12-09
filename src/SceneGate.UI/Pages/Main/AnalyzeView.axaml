@@ -19,7 +19,7 @@
     <c:TreeGridConverterKindToIconConverter x:Key="ConverterKind2Icon" />
   </UserControl.Resources>
 
-  <Grid ColumnDefinitions="450,Auto,*">
+  <Grid ColumnDefinitions="400,Auto,*">
     <Grid Grid.Column="0"
           RowDefinitions="Auto,*,Auto,250,Auto"
           MinWidth="300">
@@ -145,7 +145,9 @@
 
       <Expander Grid.Row="4">
         <Expander.Header>
-          <TextBlock Text="Selected node metadata" FontWeight="Bold" />
+          <TextBlock Text="Metadata"
+                     FontWeight="Bold"
+                     ToolTip.Tip="Additional information of the selected node" />
         </Expander.Header>
         <ScrollViewer HorizontalScrollBarVisibility="Auto">
           <Grid ColumnDefinitions="80,*"
@@ -185,7 +187,8 @@
                     IsAddTabButtonVisible="False"
                     TabItems="{Binding FormatViewTabs}"
                     TabCloseRequested="TabViewTabCloseRequested"
-                    SelectedItem="{Binding SelectedTab}">
+                    SelectedItem="{Binding SelectedTab}"
+                    VerticalAlignment="Stretch">
       <fluent:TabView.TabItemTemplate>
         <DataTemplate DataType="ctrlData:NodeFormatTab">
           <fluent:TabViewItem Header="{Binding Name}"

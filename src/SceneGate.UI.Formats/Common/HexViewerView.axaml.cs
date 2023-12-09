@@ -31,11 +31,15 @@ public partial class HexViewerView : UserControl
 
     private void HexViewSizeChanged(object? sender, SizeChangedEventArgs e)
     {
-        ViewModel.VisibleTextRows = (int)(e.NewSize.Height / lineHeight) - 1;
+        ViewModel.VisibleTextRows = (int)(e.NewSize.Height / lineHeight) - 2;
     }
 
     private void ViewsPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
+        if (e.Delta.X != 0) {
+            return;
+        }
+
         ViewModel.CurrentScroll += (e.Delta.Y > 0) ? -1 : 1;
     }
 

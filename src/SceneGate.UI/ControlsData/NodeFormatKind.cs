@@ -8,6 +8,8 @@ public enum NodeFormatKind
 
     Folder,
 
+    Palette,
+
     Image,
 
     Translation,
