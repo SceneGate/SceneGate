@@ -32,18 +32,27 @@ public partial class ImageView : UserControl
         ViewModel.AskOutputFile.RegisterHandler(AskOutputFileAsync);
     }
 
-    private void ScrollViewerPointerWheelChanged(object? sender, Avalonia.Input.PointerWheelEventArgs e)
+    private void ZoomingPointerWheelChanged(object? sender, Avalonia.Input.PointerWheelEventArgs e)
     {
         if (e.Delta.X != 0) {
             return;
         }
 
+        // Only with Control pressed
+        if (!e.KeyModifiers.HasFlag(Avalonia.Input.KeyModifiers.Control)) {
+            return;
+        }
+
         if (e.Delta.Y > 0 && (ViewModel?.CanZoomIn() ?? false)) {
             ViewModel.ZoomIn();
+
+            e.PreventGestureRecognition();
         }
 
         if (e.Delta.Y < 0 && (ViewModel?.CanZoomOut() ?? false)) {
             ViewModel.ZoomOut();
+
+            e.PreventGestureRecognition();
         }
     }
 
@@ -60,7 +69,7 @@ public partial class ImageView : UserControl
             Title = "Select where to save the file",
             ShowOverwritePrompt = true,
             FileTypeChoices = new[] {
-                FilePickerFileTypes.ImageAll,
+                FilePickerFileTypes.ImagePng,
             },
         };
 

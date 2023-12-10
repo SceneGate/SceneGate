@@ -21,13 +21,14 @@
 
       <ScrollViewer HorizontalScrollBarVisibility="Auto"
                     VerticalScrollBarVisibility="Auto"
-                    Padding="0 0 20 20"
-                    PointerWheelChanged="ScrollViewerPointerWheelChanged">
+                    Name="ImageScrollViewer"
+                    Padding="0 0 20 20">
         <Border BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 Background="{StaticResource ColorControlCheckeredBackgroundBrush}"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Center">
+                VerticalAlignment="Center"
+                PointerWheelChanged="ZoomingPointerWheelChanged">
           <Image Source="{Binding Bitmap}"
                  Width="{Binding Width}"
                  Height="{Binding Height}" />
