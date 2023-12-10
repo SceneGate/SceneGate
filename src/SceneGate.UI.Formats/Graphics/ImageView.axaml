@@ -70,15 +70,20 @@
       </SplitView.Pane>
     </SplitView>
 
-    <fluent:CommandBar Grid.Row="0" HorizontalAlignment="Center">
+    <fluent:CommandBar Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       DefaultLabelPosition="Bottom">
       <fluent:CommandBar.PrimaryCommands>
-        <fluent:CommandBarButton Label="Save"
-                                 IconSource="Save"
-                                 Command="{Binding SaveImageCommand}"/>
         <fluent:CommandBarToggleButton Name="InfoToggleButton"
                                        Label="Object info"
                                        IconSource="Tag"
                                        IsChecked="True" />
+        <fluent:CommandBarButton Label="Save"
+                                 IconSource="Save"
+                                 Command="{Binding SaveImageCommand}"/>
+        <fluent:CommandBarButton Label="Import"
+                                 IconSource="Upload"
+                                 IsEnabled="False"/>
         <fluent:CommandBarButton Label="Zoom out"
                                  IconSource="ZoomOut"
                                  Click="ZoomOutClick" />

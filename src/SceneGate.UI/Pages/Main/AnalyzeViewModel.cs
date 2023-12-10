@@ -25,6 +25,7 @@ public partial class AnalyzeViewModel : ViewModelBase
 {
     private readonly IReadOnlyList<ConverterTypeInfo> converters;
     private readonly IFormatViewModelBuilder[] formatsViewModelBuilders;
+    private readonly Dictionary<Type, IFormat> formatsCache;
 
     [ObservableProperty]
     private ObservableCollection<TreeGridNode> nodes;
@@ -56,6 +57,8 @@ public partial class AnalyzeViewModel : ViewModelBase
     public AnalyzeViewModel()
     {
         TypeLocator.Default.LoadContext.TryLoadFromBaseLoadDirectory();
+
+        formatsCache = new();
 
         converters = ConverterLocator.Default.Converters;
         formatsViewModelBuilders = TypeLocator.Default
@@ -142,11 +145,13 @@ public partial class AnalyzeViewModel : ViewModelBase
         }
 
         // We get the view model from our plugins locator (custom assembly scanner)
-        IFormatViewModelBuilder? vmBuilder = Array.Find(formatsViewModelBuilders, b => b.CanShow(format));
+        IFormatViewModelBuilder? vmBuilder = Array.Find(
+            formatsViewModelBuilders,
+            b => b.CanShow(format, formatsCache.Keys));
 
         // The plugin will build the view model
         IFormatViewModel formatViewModel = (vmBuilder is not null)
-            ? vmBuilder.Build(format)
+            ? vmBuilder.Build(format, formatsCache)
             : new ObjectViewModel(format);
 
         // We bind the view model to the content of the tab.
@@ -154,6 +159,7 @@ public partial class AnalyzeViewModel : ViewModelBase
         // to find its best view / worst case it prints a not found in a textblock.
         var tab = new NodeFormatTab(node, selection.Kind, formatViewModel);
         FormatViewTabs.Add(tab);
+        UpdateFormatsCache(node);
 
         SelectedTab = tab;
     }
@@ -172,6 +178,7 @@ public partial class AnalyzeViewModel : ViewModelBase
 
         var tab = new NodeFormatTab(selection.Node, selection.Kind, formatViewModel);
         FormatViewTabs.Add(tab);
+        UpdateFormatsCache(selection.Node);
 
         SelectedTab = tab;
     }
@@ -205,6 +212,7 @@ public partial class AnalyzeViewModel : ViewModelBase
             }
 
             await node.TransformAsync(converterType).ConfigureAwait(false);
+            UpdateFormatsCache(node.Node);
 
             Dispatcher.UIThread.Post(() => {
                 // We can't keep it open as the previous format may have been disposed
@@ -353,6 +361,23 @@ public partial class AnalyzeViewModel : ViewModelBase
 
         if (SelectedConverter is { IsCompatible: false }) {
             SelectedConverter = null;
+        }
+    }
+
+    private void UpdateFormatsCache(Node node)
+    {
+        IFormat? format = node.Format;
+        if (format is null) {
+            return;
+        }
+
+        // TODO: remove before converting the old formats, we will need to keep refs of nodes
+        // TODO: remove if the node disappear (after packing)
+        // TODO: refactor out of this class
+        Type formatType = format.GetType();
+        formatsCache[formatType] = format;
+        foreach (Type formatInterface in formatType.GetInterfaces()) {
+            formatsCache[formatInterface] = format;
         }
     }
 }

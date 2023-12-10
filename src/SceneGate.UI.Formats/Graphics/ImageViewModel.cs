@@ -12,6 +12,7 @@ using SceneGate.UI.Formats.Mvvm;
 using Texim.Colors;
 using Texim.Formats;
 using Texim.Images;
+using Texim.Palettes;
 using Yarhl.FileFormat;
 using Yarhl.IO;
 
@@ -58,6 +59,21 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
         : this()
     {
         Image = fullImage;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ImageViewModel"/> class.
+    /// </summary>
+    /// <param name="indexedImage">Image to display.</param>
+    /// <param name="palette">Palette for the indexed image.</param>
+    public ImageViewModel(IIndexedImage indexedImage, IPaletteCollection palette)
+        : this()
+    {
+        ArgumentNullException.ThrowIfNull(indexedImage);
+        ArgumentNullException.ThrowIfNull(palette);
+
+        Image = new Indexed2FullImage(palette).Convert(indexedImage);
+        SourceFormat = indexedImage;
     }
 
     /// <summary>
