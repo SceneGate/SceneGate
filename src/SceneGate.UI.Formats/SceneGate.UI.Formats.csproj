@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia.AvaloniaEdit" />
+    <PackageReference Include="Avalonia.Controls.PanAndZoom" />
     <PackageReference Include="Avalonia.Xaml.Interactions" />
     <PackageReference Include="AvaloniaEdit.TextMate" />
     <PackageReference Include="bodong.Avalonia.PropertyGrid" />

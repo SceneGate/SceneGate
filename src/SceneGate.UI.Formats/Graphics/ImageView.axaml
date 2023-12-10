@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             xmlns:paz="using:Avalonia.Controls.PanAndZoom"
              xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
              xmlns:local="using:SceneGate.UI.Formats.Graphics"
              mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
@@ -16,23 +17,32 @@
     <SplitView Grid.Row="1"
                IsPaneOpen="{Binding IsChecked, ElementName=InfoToggleButton}"
                PanePlacement="Right"
-               OpenPaneLength="400"
+               OpenPaneLength="350"
                DisplayMode="Inline">
 
       <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                    VerticalScrollBarVisibility="Auto"
-                    Name="ImageScrollViewer"
-                    Padding="0 0 20 20">
-        <Border BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
-                BorderThickness="1"
-                Background="{StaticResource ColorControlCheckeredBackgroundBrush}"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                PointerWheelChanged="ZoomingPointerWheelChanged">
-          <Image Source="{Binding Bitmap}"
-                 Width="{Binding Width}"
-                 Height="{Binding Height}" />
-        </Border>
+                    VerticalScrollBarVisibility="Auto">
+        <paz:ZoomBorder Name="ZoomImageBorder"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Stretch="None"
+                        ZoomSpeed="1.2"
+                        ClipToBounds="True"
+                        Focusable="True"
+                        EnablePan="True"
+                        PanButton="Left"
+                        EnableZoom="True">
+          <Border BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
+                  BorderThickness="1"
+                  Background="{StaticResource ColorControlCheckeredBackgroundBrush}"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+            <Image Source="{Binding Bitmap}"
+                   Width="{Binding Width}"
+                   Height="{Binding Height}"
+                   Stretch="None"/>
+          </Border>
+        </paz:ZoomBorder>
       </ScrollViewer>
 
       <SplitView.Pane>
@@ -71,16 +81,17 @@
                                        IsChecked="True" />
         <fluent:CommandBarButton Label="Zoom out"
                                  IconSource="ZoomOut"
-                                 Command="{Binding ZoomOutCommand}" />
+                                 Click="ZoomOutClick" />
         <fluent:CommandBarButton Label="Zoom in"
                                  IconSource="ZoomIn"
-                                 Command="{Binding ZoomInCommand}" />
+                                 Click="ZoomInClick" />
         <fluent:CommandBarElementContainer VerticalAlignment="Center"
                                            DoubleTapped="ZoomLabelDoubleTapped"
                                            ToolTip.Tip="Double click to restore zoom">
           <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{Binding Zoom}" />
-            <TextBlock Text=" %" />
+            <TextBlock Text="Zoom: " />
+            <TextBlock Text="{Binding ZoomX, ElementName=ZoomImageBorder, StringFormat={}{0:F2}}"
+                       Width="40"/>
           </StackPanel>
         </fluent:CommandBarElementContainer>
       </fluent:CommandBar.PrimaryCommands>

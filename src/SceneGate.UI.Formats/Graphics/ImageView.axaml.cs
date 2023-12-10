@@ -32,35 +32,19 @@ public partial class ImageView : UserControl
         ViewModel.AskOutputFile.RegisterHandler(AskOutputFileAsync);
     }
 
-    private void ZoomingPointerWheelChanged(object? sender, Avalonia.Input.PointerWheelEventArgs e)
-    {
-        if (e.Delta.X != 0) {
-            return;
-        }
-
-        // Only with Control pressed
-        if (!e.KeyModifiers.HasFlag(Avalonia.Input.KeyModifiers.Control)) {
-            return;
-        }
-
-        if (e.Delta.Y > 0 && (ViewModel?.CanZoomIn() ?? false)) {
-            ViewModel.ZoomIn();
-
-            e.PreventGestureRecognition();
-        }
-
-        if (e.Delta.Y < 0 && (ViewModel?.CanZoomOut() ?? false)) {
-            ViewModel.ZoomOut();
-
-            e.PreventGestureRecognition();
-        }
-    }
-
     private void ZoomLabelDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
     {
-        if (ViewModel is not null) {
-            ViewModel.Zoom = 100;
-        }
+        ZoomImageBorder.ResetMatrix();
+    }
+
+    private void ZoomInClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        ZoomImageBorder.ZoomIn();
+    }
+
+    private void ZoomOutClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        ZoomImageBorder.ZoomOut();
     }
 
     private async Task<IStorageFile?> AskOutputFileAsync()
