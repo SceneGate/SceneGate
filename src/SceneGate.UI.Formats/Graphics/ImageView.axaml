@@ -18,10 +18,21 @@
                PanePlacement="Right"
                OpenPaneLength="400"
                DisplayMode="Inline">
- 
-      <Image Source="{Binding Bitmap}"
-             Width="{Binding Width}"
-             Height="{Binding Height}" />
+
+      <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto"
+                    Padding="0 0 20 20"
+                    PointerWheelChanged="ScrollViewer_PointerWheelChanged">
+        <Border BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                Background="{StaticResource ColorControlCheckeredBackgroundBrush}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+          <Image Source="{Binding Bitmap}"
+                 Width="{Binding Width}"
+                 Height="{Binding Height}" />
+        </Border>
+      </ScrollViewer>
 
       <SplitView.Pane>
         <Border BorderThickness="2 2 0 0"
@@ -55,10 +66,17 @@
                                        Label="Object info"
                                        IconSource="Tag"
                                        IsChecked="True" />
-        <fluent:CommandBarButton Label="Zoom in" IconSource="ZoomOut" />
-        <fluent:CommandBarButton Label="Zoom out" IconSource="ZoomIn" />
+        <fluent:CommandBarButton Label="Zoom out"
+                                 IconSource="ZoomOut"
+                                 Command="{Binding ZoomOutCommand}" />
+        <fluent:CommandBarButton Label="Zoom in"
+                                 IconSource="ZoomIn"
+                                 Command="{Binding ZoomInCommand}" />
         <fluent:CommandBarElementContainer VerticalAlignment="Center">
-          <TextBlock Text="100%" VerticalAlignment="Center" />
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Zoom}" />
+            <TextBlock Text=" %" />
+          </StackPanel>
         </fluent:CommandBarElementContainer>
       </fluent:CommandBar.PrimaryCommands>
     </fluent:CommandBar>

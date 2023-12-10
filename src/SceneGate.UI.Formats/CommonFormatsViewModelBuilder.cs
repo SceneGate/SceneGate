@@ -4,6 +4,7 @@ using System;
 using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Formats.Graphics;
 using SceneGate.UI.Formats.Texts;
+using Texim.Images;
 using Texim.Palettes;
 using Yarhl.FileFormat;
 using Yarhl.IO;
@@ -25,6 +26,8 @@ public class CommonFormatsViewModelBuilder : IFormatViewModelBuilder
             IPalette palette => new PaletteViewModel(palette),
             IPaletteCollection palettes => new PaletteViewModel(palettes),
 
+            IFullImage fullImage => new ImageViewModel(fullImage),
+
             _ => throw new NotSupportedException("Invalid format"),
         };
     }
@@ -32,6 +35,6 @@ public class CommonFormatsViewModelBuilder : IFormatViewModelBuilder
     /// <inheritdoc/>
     public bool CanShow(IFormat format)
     {
-        return format is IBinary or Po or IPalette or IPaletteCollection;
+        return format is IBinary or Po or IPalette or IPaletteCollection or IFullImage;
     }
 }
