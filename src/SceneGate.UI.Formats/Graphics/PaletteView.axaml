@@ -5,7 +5,7 @@
              xmlns:fluent="using:FluentAvalonia.UI.Controls"
              xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
              xmlns:local="using:SceneGate.UI.Formats.Graphics"
-             mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="SceneGate.UI.Formats.Graphics.PaletteView"
              x:DataType="local:PaletteViewModel">
 
@@ -19,10 +19,11 @@
 
   <Grid ColumnDefinitions="*,Auto,Auto"
         RowDefinitions="*"
-        Margin="5">
+        Margin="5"
+        SizeChanged="MainGridSizeChanged">
 
     <Grid Grid.Row="0" Grid.Column="0"
-          IsVisible="{Binding IsModelPropertyVisible}"
+          Name="ModelPropertyGrid"
           RowDefinitions="Auto,Auto,1*,Auto,Auto,1*"
           HorizontalAlignment="Left"
           Margin="10 0">

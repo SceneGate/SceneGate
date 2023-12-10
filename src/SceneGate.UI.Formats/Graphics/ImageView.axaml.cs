@@ -29,6 +29,7 @@ public partial class ImageView : UserControl
             return;
         }
 
+        ShowPaletteButton.IsChecked = ViewModel.IsIndexedImage;
         ViewModel.AskOutputFile.RegisterHandler(AskOutputFileAsync);
     }
 

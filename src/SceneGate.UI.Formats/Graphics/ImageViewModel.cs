@@ -30,6 +30,12 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
     [ObservableProperty]
     private Bitmap? bitmap;
 
+    [ObservableProperty]
+    private bool isIndexedImage;
+
+    [ObservableProperty]
+    private Bitmap? paletteImage;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ImageViewModel"/> class.
     /// </summary>
@@ -43,6 +49,12 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
 
             sourceFormat = null!;
             Image = new FullImage(256, 192) { Pixels = pixels };
+
+            var testPalette = new Palette(pixels[..256]);
+            using BinaryFormat palettePng = new Palette2Bitmap().Convert(testPalette);
+            palettePng.Stream.Position = 0;
+            PaletteImage = new Bitmap(palettePng.Stream);
+            IsIndexedImage = true;
         } else {
             image = null!;
             sourceFormat = null!;
@@ -74,6 +86,11 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
 
         Image = new Indexed2FullImage(palette).Convert(indexedImage);
         SourceFormat = indexedImage;
+
+        IsIndexedImage = true;
+        using BinaryFormat palettePng = new Palette2Bitmap().Convert(palette.Palettes[0]);
+        palettePng.Stream.Position = 0;
+        PaletteImage = new Bitmap(palettePng.Stream);
     }
 
     /// <summary>

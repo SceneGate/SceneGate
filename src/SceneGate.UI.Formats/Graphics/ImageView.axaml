@@ -17,7 +17,7 @@
     <SplitView Grid.Row="1"
                IsPaneOpen="{Binding IsChecked, ElementName=InfoToggleButton}"
                PanePlacement="Right"
-               OpenPaneLength="350"
+               OpenPaneLength="410"
                DisplayMode="Inline">
 
       <ScrollViewer HorizontalScrollBarVisibility="Auto"
@@ -50,32 +50,56 @@
                 BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
                 Background="{DynamicResource ControlFillColorDefaultBrush}"
                 CornerRadius="4 0 0 0">
-          <StackPanel Orientation="Vertical" Spacing="10" Margin="10">
+          <Grid RowDefinitions="Auto,*" Margin="10">
             <DockPanel Margin="5 0 0 0">
               <ToggleButton DockPanel.Dock="Right"
                             Theme="{StaticResource TransparentButton}"
                             FontSize="20"
+                            ToolTip.Tip="Close"
                             IsChecked="{Binding IsChecked, ElementName=InfoToggleButton}">
                 <fluent:SymbolIcon Symbol="Cancel" />
               </ToggleButton>
               <TextBlock Text="Info"
                          Theme="{StaticResource TitleTextBlockStyle}"/>
             </DockPanel>
-            <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}"
-                              Margin="0 10 0 0"
-                              AllowFilter="False"
-                              AllowQuickFilter="False" />
-          </StackPanel>
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto"
+                          Margin="0 10 0 0">
+              <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}"
+                                AllowFilter="False"
+                                AllowQuickFilter="False" />
+            </ScrollViewer>
+          </Grid>
         </Border>
       </SplitView.Pane>
     </SplitView>
 
+    <Border Grid.Row="1"
+            BorderThickness="2"
+            BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            CornerRadius="4"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            IsVisible="{Binding IsChecked, ElementName=ShowPaletteButton}"
+            Margin="10"
+            Padding="10">
+        <Image Source="{Binding PaletteImage}"
+               Stretch="None"/>
+    </Border>
+    
     <fluent:CommandBar Grid.Row="0"
                        HorizontalAlignment="Center"
-                       DefaultLabelPosition="Bottom">
+                       DefaultLabelPosition="Right">
       <fluent:CommandBar.PrimaryCommands>
+        <fluent:CommandBarToggleButton Name="ShowPaletteButton"
+                                       IconSource="ColorBackground"
+                                       Label="Palette"
+                                       IsChecked="True"
+                                       IsVisible="{Binding IsIndexedImage}" />
         <fluent:CommandBarToggleButton Name="InfoToggleButton"
-                                       Label="Object info"
+                                       Label="Info"
                                        IconSource="Tag"
                                        IsChecked="True" />
         <fluent:CommandBarButton Label="Save"
@@ -84,18 +108,22 @@
         <fluent:CommandBarButton Label="Import"
                                  IconSource="Upload"
                                  IsEnabled="False"/>
-        <fluent:CommandBarButton Label="Zoom out"
-                                 IconSource="ZoomOut"
+        <fluent:CommandBarButton IconSource="ZoomOut"
                                  Click="ZoomOutClick" />
-        <fluent:CommandBarButton Label="Zoom in"
-                                 IconSource="ZoomIn"
+        <fluent:CommandBarButton IconSource="ZoomIn"
                                  Click="ZoomInClick" />
         <fluent:CommandBarElementContainer VerticalAlignment="Center"
                                            DoubleTapped="ZoomLabelDoubleTapped"
                                            ToolTip.Tip="Double click to restore zoom">
           <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Zoom: " />
+            <TextBlock Text="Zoom: "
+                       FontFamily="{DynamicResource ContentControlThemeFontFamily}"
+                       FontSize="12"
+                       VerticalAlignment="Center" />
             <TextBlock Text="{Binding ZoomX, ElementName=ZoomImageBorder, StringFormat={}{0:F2}}"
+                       FontFamily="{DynamicResource ContentControlThemeFontFamily}"
+                       FontSize="12"
+                       VerticalAlignment="Center"
                        Width="40"/>
           </StackPanel>
         </fluent:CommandBarElementContainer>
