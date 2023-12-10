@@ -1,10 +1,14 @@
 ﻿namespace SceneGate.UI.Formats.Graphics;
 
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SceneGate.UI.Formats.Mvvm;
 using Texim.Colors;
 using Texim.Formats;
 using Texim.Images;
@@ -59,6 +63,8 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
             image = null!;
             sourceFormat = null!;
         }
+
+        AskOutputFile = new AsyncInteraction<IStorageFile?>();
     }
 
     /// <summary>
@@ -70,6 +76,11 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
     {
         Image = fullImage;
     }
+
+    /// <summary>
+    /// Ask the user to select the output file to save.
+    /// </summary>
+    public AsyncInteraction<IStorageFile?> AskOutputFile { get; }
 
     /// <summary>
     /// Zoom in the image.
@@ -102,6 +113,32 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
     /// </summary>
     /// <returns>Value indicating if the image can zoom out.</returns>
     public bool CanZoomOut() => Zoom > MinZoom;
+
+    /// <summary>
+    /// Save the current image to disk.
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand(CanExecute = nameof(CanSaveImage))]
+    public async Task SaveImageAsync()
+    {
+        if (Bitmap is null) {
+            return;
+        }
+
+        IStorageFile? file = await AskOutputFile.HandleAsync().ConfigureAwait(false);
+        if (file is null) {
+            return;
+        }
+
+        using Stream output = await file.OpenWriteAsync().ConfigureAwait(false);
+        Bitmap.Save(output);
+    }
+
+    /// <summary>
+    /// Gets a value indicating if it can save the image.
+    /// </summary>
+    /// <returns>Value indicating if it can save the image..</returns>
+    public bool CanSaveImage() => Bitmap is not null;
 
     partial void OnImageChanged(IFullImage value)
     {

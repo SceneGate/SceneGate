@@ -22,7 +22,7 @@
       <ScrollViewer HorizontalScrollBarVisibility="Auto"
                     VerticalScrollBarVisibility="Auto"
                     Padding="0 0 20 20"
-                    PointerWheelChanged="ScrollViewer_PointerWheelChanged">
+                    PointerWheelChanged="ScrollViewerPointerWheelChanged">
         <Border BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 Background="{StaticResource ColorControlCheckeredBackgroundBrush}"
@@ -61,7 +61,9 @@
 
     <fluent:CommandBar Grid.Row="0" HorizontalAlignment="Center">
       <fluent:CommandBar.PrimaryCommands>
-        <fluent:CommandBarButton Label="Save" IconSource="Save" />
+        <fluent:CommandBarButton Label="Save"
+                                 IconSource="Save"
+                                 Command="{Binding SaveImageCommand}"/>
         <fluent:CommandBarToggleButton Name="InfoToggleButton"
                                        Label="Object info"
                                        IconSource="Tag"
@@ -72,7 +74,9 @@
         <fluent:CommandBarButton Label="Zoom in"
                                  IconSource="ZoomIn"
                                  Command="{Binding ZoomInCommand}" />
-        <fluent:CommandBarElementContainer VerticalAlignment="Center">
+        <fluent:CommandBarElementContainer VerticalAlignment="Center"
+                                           DoubleTapped="ZoomLabelDoubleTapped"
+                                           ToolTip.Tip="Double click to restore zoom">
           <StackPanel Orientation="Horizontal">
             <TextBlock Text="{Binding Zoom}" />
             <TextBlock Text=" %" />
