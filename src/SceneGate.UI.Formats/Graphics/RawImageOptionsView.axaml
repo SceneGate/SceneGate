@@ -1,0 +1,205 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             xmlns:controls="using:SceneGate.UI.Formats.Controls"
+             xmlns:local="using:SceneGate.UI.Formats.Graphics"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="500"
+             x:Class="SceneGate.UI.Formats.Graphics.RawImageOptionsView"
+             x:DataType="local:RawImageOptionsViewModel">
+
+  <Design.DataContext>
+    <local:RawImageOptionsViewModel />
+  </Design.DataContext>
+  
+  <Grid ColumnDefinitions="Auto,Auto,Auto"
+        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*"
+        Margin="10 3">
+
+    <!-- Offset -->
+    <Border Grid.Row="0" Grid.Column="0"
+            Height="32"
+            Margin="0 5"
+            Background="{DynamicResource TextControlBackgroundDisabled}"
+            BorderBrush="{DynamicResource TextControlBorderBrush}"
+            BorderThickness="1,1,0,1"
+            CornerRadius="4,0,0,4">
+      <TextBlock Text="Offset"
+                 Padding="5 0"
+                 FontWeight="SemiBold"
+                 VerticalAlignment="Center" />
+    </Border>
+    <NumericUpDown Grid.Row="0" Grid.Column="1"
+                   Name="OffsetNumericBox"
+                   Margin="0 5"
+                   MinWidth="150"
+                   CornerRadius="0,4,4,0"
+                   FormatString="0"
+                   Value="{Binding Offset}"
+                   Minimum="0"
+                   Maximum="{Binding MaximumOffset}"
+                   FontFamily="{StaticResource CaskaydiaFont}"
+                   VerticalContentAlignment="Center">
+      <NumericUpDown.TextConverter>
+        <controls:HexadecimalValueConverter />
+      </NumericUpDown.TextConverter>
+    </NumericUpDown>
+    <CheckBox Grid.Row="0" Grid.Column="2"
+              Margin="10 5"
+              IsChecked="True"
+              Content="Hexadecimal"
+              IsCheckedChanged="OffsetHexCheckboxChecked"/>
+
+    <!-- Size -->
+    <Border Grid.Row="1" Grid.Column="0"
+            Height="32"
+            Margin="0 5"
+            Background="{DynamicResource TextControlBackgroundDisabled}"
+            BorderBrush="{DynamicResource TextControlBorderBrush}"
+            BorderThickness="1,1,0,1"
+            CornerRadius="4,0,0,4">
+      <TextBlock Text="Image size"
+                 Padding="5 0"
+                 FontWeight="SemiBold"
+                 VerticalAlignment="Center" />
+    </Border>
+    <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+          ColumnDefinitions="*,Auto,*"
+          Margin="0 5">
+      <fluent:NumberBox Grid.Column="0"
+                        ToolTip.Tip="Image width"
+                        CornerRadius="0"
+                        SpinButtonPlacementMode="Hidden"
+                        HorizontalAlignment="Stretch"
+                        Value="{Binding Width}"
+                        Minimum="0"
+                        TextAlignment="Center"
+                        FontFamily="{StaticResource CaskaydiaFont}"/>
+      <Border Grid.Column="1"
+              Height="32"
+              Background="{DynamicResource TextControlBackgroundDisabled}"
+              BorderBrush="{DynamicResource TextControlBorderBrush}"
+              BorderThickness="1,1,0,1"
+              CornerRadius="0">
+        <TextBlock Text="X"
+                   Padding="10 0"
+                   FontWeight="SemiBold"
+                   VerticalAlignment="Center" />
+      </Border>
+      <fluent:NumberBox Grid.Column="2"
+                        ToolTip.Tip="Image height"
+                        CornerRadius="0 4 4 0"
+                        SpinButtonPlacementMode="Hidden"
+                        HorizontalAlignment="Stretch"
+                        Value="{Binding Height}"
+                        Minimum="0"
+                        TextAlignment="Center"
+                        FontFamily="{StaticResource CaskaydiaFont}"/>
+    </Grid>
+
+    <!-- Bpp -->
+    <Border Grid.Row="2" Grid.Column="0"
+                Margin="0 5"
+                Height="32"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+      <TextBlock Text="Pixel format"
+                 Padding="5 0"
+                 FontWeight="SemiBold"
+                 VerticalAlignment="Center" />
+    </Border>
+    <fluent:FAComboBox Grid.Row="2" Grid.Column="1"
+                       Margin="0 5"
+                       CornerRadius="0 4 4 0"
+                       SelectedIndex="0"
+                       IsEditable="False"
+                       HorizontalAlignment="Stretch">
+      <fluent:FAComboBoxItem Content="4bpp" />
+    </fluent:FAComboBox>
+
+    <!-- Swizzling -->
+    <Border Grid.Row="3" Grid.Column="0"
+                Margin="0 5"
+                Height="32"
+                Background="{DynamicResource TextControlBackgroundDisabled}"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1,1,0,1"
+                CornerRadius="4,0,0,4">
+      <TextBlock Text="Swizzling"
+                 Padding="5 0"
+                 FontWeight="SemiBold"
+                 VerticalAlignment="Center" />
+    </Border>
+    <fluent:FAComboBox Grid.Row="3" Grid.Column="1"
+                       Margin="0 5"
+                       CornerRadius="0 4 4 0"
+                       SelectedIndex="0"
+                       IsEditable="False"
+                       HorizontalAlignment="Stretch">
+      <fluent:FAComboBoxItem Content="None" />
+      <fluent:FAComboBoxItem Content="Tiled" />
+    </fluent:FAComboBox>
+
+    <!-- Tile size -->
+    <Border Grid.Row="4" Grid.Column="0"
+            Height="32"
+            Margin="0 5"
+            Background="{DynamicResource TextControlBackgroundDisabled}"
+            BorderBrush="{DynamicResource TextControlBorderBrush}"
+            BorderThickness="1,1,0,1"
+            CornerRadius="4,0,0,4">
+      <TextBlock Text="Tile size"
+                 Padding="5 0"
+                 FontWeight="SemiBold"
+                 VerticalAlignment="Center" />
+    </Border>
+    <Grid Grid.Row="4" Grid.Column="1"
+          ColumnDefinitions="*,Auto,*"
+          Margin="0 5"
+          IsEnabled="{Binding IsTiled}">
+      <fluent:NumberBox Grid.Column="0"
+                        ToolTip.Tip="Image width"
+                        CornerRadius="0"
+                        SpinButtonPlacementMode="Hidden"
+                        HorizontalAlignment="Stretch"
+                        Value="{Binding TileWidth}"
+                        Minimum="0"
+                        TextAlignment="Center"
+                        FontFamily="{StaticResource CaskaydiaFont}"/>
+      <Border Grid.Column="1"
+              Height="32"
+              Background="{DynamicResource TextControlBackgroundDisabled}"
+              BorderBrush="{DynamicResource TextControlBorderBrush}"
+              BorderThickness="1,1,0,1"
+              CornerRadius="0">
+        <TextBlock Text="X"
+                   Padding="10 0"
+                   FontWeight="SemiBold"
+                   VerticalAlignment="Center" />
+      </Border>
+      <fluent:NumberBox Grid.Column="2"
+                        ToolTip.Tip="Image height"
+                        CornerRadius="0 4 4 0"
+                        SpinButtonPlacementMode="Hidden"
+                        HorizontalAlignment="Stretch"
+                        Value="{Binding TileHeight}"
+                        Minimum="0"
+                        TextAlignment="Center"
+                        FontFamily="{StaticResource CaskaydiaFont}"/>
+    </Grid>
+
+    <TextBlock Grid.Row="5"
+               Text="Image bytes:"
+               FontWeight="SemiBold"
+               Margin="5 5 0 0" />
+    <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3"
+             Margin="0 5 0 7"
+             Text="{Binding HexContent}"
+             IsReadOnly="True"
+             FontSize="13"
+             FontFamily="{StaticResource CaskaydiaFont}" />
+  </Grid>
+</UserControl>
