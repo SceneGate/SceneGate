@@ -38,8 +38,6 @@
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center">
             <Image Source="{Binding Bitmap}"
-                   Width="{Binding Width}"
-                   Height="{Binding Height}"
                    Stretch="None"/>
           </Border>
         </paz:ZoomBorder>
@@ -97,7 +95,7 @@
                                        IconSource="ColorBackground"
                                        Label="Palette"
                                        IsChecked="True"
-                                       IsVisible="{Binding IsIndexedImage}" />
+                                       IsVisible="{Binding CanShowPalette}" />
         <fluent:CommandBarToggleButton Name="InfoToggleButton"
                                        Label="Info"
                                        IconSource="Tag"

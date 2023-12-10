@@ -6,6 +6,7 @@ using System.Linq;
 using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Formats.Graphics;
 using SceneGate.UI.Formats.Texts;
+using Texim.Compressions.Nitro;
 using Texim.Images;
 using Texim.Palettes;
 using Yarhl.FileFormat;
@@ -20,6 +21,14 @@ public class CommonFormatsViewModelBuilder : IFormatViewModelBuilder
     /// <inheritdoc/>
     public IFormatViewModel Build(IFormat format, IReadOnlyDictionary<Type, IFormat> formatsCache)
     {
+        // This line should go in Ekona.UI
+        if (format is IScreenMap map) {
+            return new ImageViewModel(
+                map,
+                (IIndexedImage)formatsCache[typeof(IIndexedImage)],
+                (IPaletteCollection)formatsCache[typeof(IPaletteCollection)]);
+        }
+
         return format switch {
             IBinary binaryFormat => new HexViewerViewModel(binaryFormat.Stream),
 
@@ -40,6 +49,14 @@ public class CommonFormatsViewModelBuilder : IFormatViewModelBuilder
     /// <inheritdoc/>
     public bool CanShow(IFormat format, IReadOnlyCollection<Type> formatsCache)
     {
+        // This line should go in Ekona.UI
+        bool canShowMapImage = format is IScreenMap
+            && formatsCache.Contains(typeof(IIndexedImage))
+            && formatsCache.Contains(typeof(IPaletteCollection));
+        if (canShowMapImage) {
+            return true;
+        }
+
         if (format is IIndexedImage && formatsCache.Contains(typeof(IPaletteCollection))) {
             return true;
         }

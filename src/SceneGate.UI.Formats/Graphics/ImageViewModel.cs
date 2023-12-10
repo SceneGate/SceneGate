@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SceneGate.UI.Formats.Mvvm;
 using Texim.Colors;
+using Texim.Compressions.Nitro;
 using Texim.Formats;
 using Texim.Images;
 using Texim.Palettes;
@@ -31,7 +32,7 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
     private Bitmap? bitmap;
 
     [ObservableProperty]
-    private bool isIndexedImage;
+    private bool canShowPalette;
 
     [ObservableProperty]
     private Bitmap? paletteImage;
@@ -54,7 +55,7 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
             using BinaryFormat palettePng = new Palette2Bitmap().Convert(testPalette);
             palettePng.Stream.Position = 0;
             PaletteImage = new Bitmap(palettePng.Stream);
-            IsIndexedImage = true;
+            CanShowPalette = true;
         } else {
             image = null!;
             sourceFormat = null!;
@@ -77,20 +78,41 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
     /// Initializes a new instance of the <see cref="ImageViewModel"/> class.
     /// </summary>
     /// <param name="indexedImage">Image to display.</param>
-    /// <param name="palette">Palette for the indexed image.</param>
-    public ImageViewModel(IIndexedImage indexedImage, IPaletteCollection palette)
+    /// <param name="palettes">Palette for the indexed image.</param>
+    public ImageViewModel(IIndexedImage indexedImage, IPaletteCollection palettes)
         : this()
     {
         ArgumentNullException.ThrowIfNull(indexedImage);
-        ArgumentNullException.ThrowIfNull(palette);
+        ArgumentNullException.ThrowIfNull(palettes);
 
-        Image = new Indexed2FullImage(palette).Convert(indexedImage);
+        Image = new Indexed2FullImage(palettes).Convert(indexedImage);
         SourceFormat = indexedImage;
 
-        IsIndexedImage = true;
-        using BinaryFormat palettePng = new Palette2Bitmap().Convert(palette.Palettes[0]);
+        CanShowPalette = true;
+        using BinaryFormat palettePng = new Palette2Bitmap().Convert(palettes.Palettes[0]);
         palettePng.Stream.Position = 0;
         PaletteImage = new Bitmap(palettePng.Stream);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ImageViewModel"/> class.
+    /// </summary>
+    /// <param name="map">Image compression information.</param>
+    /// <param name="indexedImage">Image to display.</param>
+    /// <param name="palettes">Palette for the indexed image.</param>
+    public ImageViewModel(IScreenMap map, IIndexedImage indexedImage, IPaletteCollection palettes)
+        : this()
+    {
+        ArgumentNullException.ThrowIfNull(map);
+        ArgumentNullException.ThrowIfNull(indexedImage);
+        ArgumentNullException.ThrowIfNull(palettes);
+
+        indexedImage = new MapDecompression(map).Convert(indexedImage);
+        Image = new Indexed2FullImage(palettes).Convert(indexedImage);
+        SourceFormat = indexedImage;
+
+        // Don't show the palette as there are many
+        CanShowPalette = false;
     }
 
     /// <summary>
