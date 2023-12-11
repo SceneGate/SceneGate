@@ -2,9 +2,7 @@
 
 using System;
 using System.Buffers;
-using System.IO;
 using System.Text;
-using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Texim.Formats;
 using Texim.Images;
@@ -26,28 +24,28 @@ public partial class RawImageOptionsViewModel : ObservableObject
     private long offset;
 
     [ObservableProperty]
-    private long maximumOffset;
+    [NotifyPropertyChangedFor(nameof(MaximumOffset))]
+    private int? width;
 
     [ObservableProperty]
-    private int width;
+    [NotifyPropertyChangedFor(nameof(MaximumOffset))]
+    private int? height;
 
     [ObservableProperty]
-    private int height;
+    [NotifyPropertyChangedFor(nameof(MaximumOffset))]
+    private PixelEncodingKind pixelEncoding;
 
     [ObservableProperty]
-    private int pixelEncoding;
-
-    [ObservableProperty]
-    private int swizzlingKind;
+    private SwizzlingKind swizzlingKind;
 
     [ObservableProperty]
     private bool isTiled;
 
     [ObservableProperty]
-    private int tileWidth;
+    private int? tileWidth;
 
     [ObservableProperty]
-    private int tileHeight;
+    private int? tileHeight;
 
     [ObservableProperty]
     private string hexContent;
@@ -55,47 +53,68 @@ public partial class RawImageOptionsViewModel : ObservableObject
     /// <summary>
     /// Initializes a new instance of the <see cref="RawImageOptionsViewModel"/> class.
     /// </summary>
-    public RawImageOptionsViewModel()
-    {
-        Offset = 0;
-        TileWidth = 8;
-        TileHeight = 8;
-        hexContent = string.Empty;
-        hexBuilder = new StringBuilder();
-
-        if (Design.IsDesignMode) {
-            Width = 256;
-            Height = 192;
-
-            var random = new Random(42);
-            byte[] colorBytes = new byte[Width * Height];
-            random.NextBytes(colorBytes);
-            DataStream stream = DataStreamFactory.FromArray(colorBytes);
-            binaryFormat = new BinaryFormat(stream);
-
-            ReadImage();
-        } else {
-            binaryFormat = null!;
-        }
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RawImageOptionsViewModel"/> class.
-    /// </summary>
     /// <param name="binaryFormat">The binary data to see as image.</param>
     public RawImageOptionsViewModel(IBinary binaryFormat)
-        : this()
     {
         ArgumentNullException.ThrowIfNull(binaryFormat);
 
-        // TODO: guess sizes
+        hexContent = string.Empty;
+        hexBuilder = new StringBuilder();
+
         this.binaryFormat = binaryFormat;
-        MaximumOffset = binaryFormat.Stream.Length;
+        offset = 0;
+
+        pixelEncoding = PixelEncodingKind.Indexed8Bpp;
+        width = (binaryFormat.Stream.Length > 256 / (pixelEncoding.GetBitsPerPixel() / 8)) ? 256 : 8; 
+        height = (int)Math.Ceiling(binaryFormat.Stream.Length / (pixelEncoding.GetBitsPerPixel() / 8.0) / width.Value);
+        height = Math.Clamp(height.Value, 8, 512);
+
+        swizzlingKind = SwizzlingKind.None;
+        isTiled = false;
+        tileWidth = 8;
+        tileHeight = 8;
 
         ReadImage();
     }
 
-    private int Size => (int)Math.Ceiling(Width * Height * Indexed4Bpp.Instance.BitsPerPixel / 8.0);
+    /// <summary>
+    /// Get all the possible options for the pixel encoding.
+    /// </summary>
+    public static PixelEncodingKind[] AllPixelEncodings => Enum.GetValues<PixelEncodingKind>();
+
+    /// <summary>
+    /// Get all the possible options for the swizzling kinds.
+    /// </summary>
+    public static SwizzlingKind[] AllSwizzlingKinds => Enum.GetValues<SwizzlingKind>();
+
+    /// <summary>
+    /// Gets the maximum offset value.
+    /// </summary>
+    public long MaximumOffset => binaryFormat.Stream.Length - Size;
+
+    private int Size => (int)Math.Clamp(
+        Math.Ceiling(Width * Height * PixelEncoding.GetBitsPerPixel() / 8.0 ?? 0),
+        0,
+        binaryFormat.Stream.Length);
+
+    partial void OnOffsetChanged(long value) => ReadImage();
+
+    partial void OnWidthChanged(int? value) => ReadImage();
+
+    partial void OnHeightChanged(int? value) => ReadImage();
+
+    partial void OnPixelEncodingChanged(PixelEncodingKind value) => ReadImage();
+
+    partial void OnSwizzlingKindChanged(SwizzlingKind value)
+    {
+        // It doesn't affect to size, so no need to re-read hex content.
+        IsTiled = value is SwizzlingKind.TiledHorizontal;
+        ConvertImage();
+    }
+
+    partial void OnTileWidthChanged(int? value) => ConvertImage();
+
+    partial void OnTileHeightChanged(int? value) => ConvertImage();
 
     private void ReadImage()
     {
@@ -105,15 +124,28 @@ public partial class RawImageOptionsViewModel : ObservableObject
 
     private void ConvertImage()
     {
+        if (Width is null || Height is null || TileWidth is null || TileHeight is null) {
+            return;
+        }
+
         var options = new RawIndexedImageParams {
-            Width = Width,
-            Height = Height,
+            Width = Width ?? 1,
+            Height = Height ?? 1,
             Offset = Offset,
-            PixelEncoding = Indexed8Bpp.Instance,
+            PixelEncoding = PixelEncoding.GetIndexedEncoding(),
             Size = Size,
-            Swizzling = new TileSwizzling<IndexedPixel>(new(TileWidth, TileHeight), Width),
         };
-        Image = new RawBinary2IndexedImage(options).Convert(binaryFormat);
+
+        if (SwizzlingKind is SwizzlingKind.TiledHorizontal) {
+            options.Swizzling = new TileSwizzling<IndexedPixel>(new(TileWidth ?? 1, TileHeight ?? 1), Width ?? 1);
+        }
+
+        try {
+            Image = new RawBinary2IndexedImage(options).Convert(binaryFormat);
+        } catch {
+            // TODO: log
+            Image = null;
+        }
     }
 
     private void ReadHexContent()
@@ -122,14 +154,14 @@ public partial class RawImageOptionsViewModel : ObservableObject
         byte[] buffer = ArrayPool<byte>.Shared.Rent(Size);
         int read = binaryFormat.Stream.Read(buffer, 0, Size);
 
-        hexBuilder.Clear();
+        _ = hexBuilder.Clear();
         for (int i = 0; i < read; i++) {
             if (i + 1 == read) {
-                hexBuilder.AppendFormat("{0:X2}", buffer[i]);
+                _ = hexBuilder.AppendFormat("{0:X2}", buffer[i]);
             } else if (i != 0 && ((i + 1) % 16 == 0)) {
-                hexBuilder.AppendFormat("{0:X2}\n", buffer[i]);
+                _ = hexBuilder.AppendFormat("{0:X2}\n", buffer[i]);
             } else {
-                hexBuilder.AppendFormat("{0:X2} ", buffer[i]);
+                _ = hexBuilder.AppendFormat("{0:X2} ", buffer[i]);
             }
         }
 

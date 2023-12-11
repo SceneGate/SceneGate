@@ -10,7 +10,7 @@
              x:DataType="local:RawImageOptionsViewModel">
 
   <Design.DataContext>
-    <local:RawImageOptionsViewModel />
+    <local:DesignRawImageOptionsViewModel />
   </Design.DataContext>
   
   <Grid ColumnDefinitions="Auto,Auto,Auto"
@@ -67,15 +67,16 @@
     <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
           ColumnDefinitions="*,Auto,*"
           Margin="0 5">
-      <fluent:NumberBox Grid.Column="0"
-                        ToolTip.Tip="Image width"
-                        CornerRadius="0"
-                        SpinButtonPlacementMode="Hidden"
-                        HorizontalAlignment="Stretch"
-                        Value="{Binding Width}"
-                        Minimum="0"
-                        TextAlignment="Center"
-                        FontFamily="{StaticResource CaskaydiaFont}"/>
+      <NumericUpDown Grid.Column="0"
+                     ToolTip.Tip="Image width"
+                     CornerRadius="0"
+                     HorizontalAlignment="Stretch"
+                     ShowButtonSpinner="False"
+                     Value="{Binding Width}"
+                     FormatString="0"
+                     Minimum="1"
+                     TextAlignment="Center"
+                     FontFamily="{StaticResource CaskaydiaFont}"/>
       <Border Grid.Column="1"
               Height="32"
               Background="{DynamicResource TextControlBackgroundDisabled}"
@@ -87,15 +88,16 @@
                    FontWeight="SemiBold"
                    VerticalAlignment="Center" />
       </Border>
-      <fluent:NumberBox Grid.Column="2"
-                        ToolTip.Tip="Image height"
-                        CornerRadius="0 4 4 0"
-                        SpinButtonPlacementMode="Hidden"
-                        HorizontalAlignment="Stretch"
-                        Value="{Binding Height}"
-                        Minimum="0"
-                        TextAlignment="Center"
-                        FontFamily="{StaticResource CaskaydiaFont}"/>
+      <NumericUpDown Grid.Column="2"
+                     ToolTip.Tip="Image height"
+                     CornerRadius="0 4 4 0"
+                     ShowButtonSpinner="False"
+                     HorizontalAlignment="Stretch"
+                     Value="{Binding Height}"
+                     FormatString="0"
+                     Minimum="1"
+                     TextAlignment="Center"
+                     FontFamily="{StaticResource CaskaydiaFont}"/>
     </Grid>
 
     <!-- Bpp -->
@@ -116,9 +118,9 @@
                        CornerRadius="0 4 4 0"
                        SelectedIndex="0"
                        IsEditable="False"
-                       HorizontalAlignment="Stretch">
-      <fluent:FAComboBoxItem Content="4bpp" />
-    </fluent:FAComboBox>
+                       HorizontalAlignment="Stretch"
+                       ItemsSource="{Binding AllPixelEncodings}"
+                       SelectedItem="{Binding PixelEncoding}" />
 
     <!-- Swizzling -->
     <Border Grid.Row="3" Grid.Column="0"
@@ -138,10 +140,9 @@
                        CornerRadius="0 4 4 0"
                        SelectedIndex="0"
                        IsEditable="False"
-                       HorizontalAlignment="Stretch">
-      <fluent:FAComboBoxItem Content="None" />
-      <fluent:FAComboBoxItem Content="Tiled" />
-    </fluent:FAComboBox>
+                       HorizontalAlignment="Stretch"
+                       ItemsSource="{Binding AllSwizzlingKinds}"
+                       SelectedItem="{Binding SwizzlingKind}" />
 
     <!-- Tile size -->
     <Border Grid.Row="4" Grid.Column="0"
@@ -160,15 +161,16 @@
           ColumnDefinitions="*,Auto,*"
           Margin="0 5"
           IsEnabled="{Binding IsTiled}">
-      <fluent:NumberBox Grid.Column="0"
-                        ToolTip.Tip="Image width"
-                        CornerRadius="0"
-                        SpinButtonPlacementMode="Hidden"
-                        HorizontalAlignment="Stretch"
-                        Value="{Binding TileWidth}"
-                        Minimum="0"
-                        TextAlignment="Center"
-                        FontFamily="{StaticResource CaskaydiaFont}"/>
+      <NumericUpDown Grid.Column="0"
+                     ToolTip.Tip="Image width"
+                     CornerRadius="0"
+                     ShowButtonSpinner="False"
+                     HorizontalAlignment="Stretch"
+                     Value="{Binding TileWidth}"
+                     FormatString="0"
+                     Minimum="1"
+                     TextAlignment="Center"
+                     FontFamily="{StaticResource CaskaydiaFont}"/>
       <Border Grid.Column="1"
               Height="32"
               Background="{DynamicResource TextControlBackgroundDisabled}"
@@ -180,15 +182,16 @@
                    FontWeight="SemiBold"
                    VerticalAlignment="Center" />
       </Border>
-      <fluent:NumberBox Grid.Column="2"
-                        ToolTip.Tip="Image height"
-                        CornerRadius="0 4 4 0"
-                        SpinButtonPlacementMode="Hidden"
-                        HorizontalAlignment="Stretch"
-                        Value="{Binding TileHeight}"
-                        Minimum="0"
-                        TextAlignment="Center"
-                        FontFamily="{StaticResource CaskaydiaFont}"/>
+      <NumericUpDown Grid.Column="2"
+                     ToolTip.Tip="Image height"
+                     CornerRadius="0 4 4 0"
+                     ShowButtonSpinner="False"
+                     HorizontalAlignment="Stretch"
+                     Value="{Binding TileHeight}"
+                     FormatString="0"
+                     Minimum="1"
+                     TextAlignment="Center"
+                     FontFamily="{StaticResource CaskaydiaFont}"/>
     </Grid>
 
     <TextBlock Grid.Row="5"

@@ -3,13 +3,11 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SceneGate.UI.Formats.Mvvm;
-using Texim.Colors;
 using Texim.Compressions.Nitro;
 using Texim.Formats;
 using Texim.Images;
@@ -147,11 +145,16 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
         ArgumentNullException.ThrowIfNull(palettes);
 
         this.palettes = palettes;
+        maximumPaletteIndex = palettes.Palettes.Count - 1;
 
         isSinglePalette = true;
         canChangeToMultiPalette = false;
         isRawImage = true;
         rawImageOptions = new RawImageOptionsViewModel(binaryImage);
+
+        // Get the image created during the constructor, then update via event.
+        indexedImage = rawImageOptions.Image;
+        UpdateIndexedImage();
 
         rawImageOptions.PropertyChanged += (_, e) => {
             if (e.PropertyName == nameof(RawImageOptionsViewModel.Image)) {
@@ -228,6 +231,7 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
     private void UpdateIndexedImage()
     {
         if (indexedImage is null || palettes is null) {
+            Bitmap = null;
             return;
         }
 
