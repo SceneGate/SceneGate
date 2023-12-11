@@ -69,8 +69,8 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
             random.NextBytes(bytes);
             Rgb[] pixels = bytes.DecodeColorsAs<Rgb32>();
 
-            sourceFormat = null!;
             Image = new FullImage(256, 192) { Pixels = pixels };
+            sourceFormat = Image;
 
             var palette = new Palette(pixels[..256]);
             using BinaryFormat palettePng = new Palette2Bitmap().Convert(palette);

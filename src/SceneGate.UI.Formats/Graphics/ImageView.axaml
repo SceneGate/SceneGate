@@ -72,9 +72,7 @@
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Auto"
                           Margin="0 10 0 0" >
-              <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}"
-                                AllowFilter="False"
-                                AllowQuickFilter="False" />
+              <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}" Classes="Simple ReadOnly" />
             </ScrollViewer>
           </Grid>
         </Border>

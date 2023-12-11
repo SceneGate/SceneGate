@@ -5,7 +5,7 @@
              xmlns:fluent="using:FluentAvalonia.UI.Controls"
              xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
              xmlns:local="using:SceneGate.UI.Formats.Graphics"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
              x:Class="SceneGate.UI.Formats.Graphics.PaletteView"
              x:DataType="local:PaletteViewModel">
 
@@ -40,9 +40,7 @@
               CornerRadius="0 0 4 4"
               Background="{DynamicResource ControlFillColorInputActiveBrush}"
               Padding="5 10 5 5">
-        <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}"
-                          AllowFilter="False"
-                          AllowQuickFilter="False" />
+        <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}" Classes="Simple ReadOnly" />
       </Border>
 
       <Border Grid.Row="3"
@@ -58,9 +56,7 @@
               CornerRadius="0 0 4 4"
               Background="{DynamicResource ControlFillColorInputActiveBrush}"
               Padding="5 10 5 5">
-        <pgc:PropertyGrid SelectedObject="{Binding SelectedPalette.Palette}"
-                          AllowFilter="False"
-                          AllowQuickFilter="False" />
+        <pgc:PropertyGrid SelectedObject="{Binding SelectedPalette.Palette}" Classes="Simple ReadOnly" />
       </Border>
     </Grid>
 

@@ -191,6 +191,11 @@ public partial class AnalyzeViewModel : ViewModelBase
         }
 
         FormatViewTabs.Remove(tab);
+
+        // It seems there is a bug when closing not-the-last-tab, force a refresh
+        NodeFormatTab? newTab = SelectedTab;
+        SelectedTab = null;
+        SelectedTab = newTab;
     }
 
     [RelayCommand(CanExecute = nameof(CanConvertNode))]
