@@ -102,6 +102,8 @@ public partial class AnalyzeView : UserControl
             viewModel.OpenWithHexViewerCommand.Execute(null);
         } else if (e.Key == Key.P && viewModel.OpenAsRawPaletteCommand.CanExecute(null)) {
             viewModel.OpenAsRawPaletteCommand.Execute(null);
+        } else if (e.Key == Key.I && viewModel.OpenAsRawImageCommand.CanExecute(null)) {
+            viewModel.OpenAsRawImageCommand.Execute(null);
         }
     }
 

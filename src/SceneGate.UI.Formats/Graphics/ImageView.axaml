@@ -10,7 +10,7 @@
              x:Class="SceneGate.UI.Formats.Graphics.ImageView"
              x:DataType="local:ImageViewModel">
   <Design.DataContext>
-    <local:ImageViewModel />
+    <local:DesignImageViewModel />
   </Design.DataContext>
 
   <Grid RowDefinitions="Auto,*">
@@ -56,7 +56,7 @@
                 BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
                 Background="{DynamicResource ControlFillColorDefaultBrush}"
                 CornerRadius="4 0 0 0">
-          <Grid RowDefinitions="Auto,*" Margin="10">
+          <Grid RowDefinitions="Auto,*" Margin="5">
             <DockPanel Margin="5 0 0 0">
               <ToggleButton DockPanel.Dock="Right"
                             Theme="{StaticResource TransparentButton}"
@@ -72,7 +72,13 @@
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Auto"
                           Margin="0 10 0 0" >
-              <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}" Classes="Simple ReadOnly" />
+              <Panel>
+                <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}"
+                                  Classes="Simple ReadOnly"
+                                  IsVisible="{Binding !IsRawImage}"/>
+                <local:RawImageOptionsView DataContext="{Binding RawImageOptions}"
+                                           IsVisible="{ReflectionBinding $parent.DataContext.IsRawImage}"/>
+              </Panel>
             </ScrollViewer>
           </Grid>
         </Border>

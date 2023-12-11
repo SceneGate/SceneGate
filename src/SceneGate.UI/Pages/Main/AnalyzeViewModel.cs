@@ -15,6 +15,7 @@ using SceneGate.UI.Formats;
 using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Formats.Graphics;
 using SceneGate.UI.Formats.Mvvm;
+using Texim.Palettes;
 using Yarhl.FileFormat;
 using Yarhl.FileSystem;
 using Yarhl.IO;
@@ -329,6 +330,24 @@ public partial class AnalyzeViewModel : ViewModelBase
     }
 
     private bool CanOpenAsRawPalette() => SelectedNode?.Node.Format is IBinary;
+
+    [RelayCommand(CanExecute = nameof(CanOpenAsRawImage))]
+    private void OpenAsRawImage()
+    {
+        if (SelectedNode?.Node.Format is not IBinary format) {
+            return;
+        }
+
+        if (formatsCache[typeof(IPaletteCollection)] is not IPaletteCollection palettes) {
+            return;
+        }
+
+        var viewModel = new ImageViewModel(format, palettes);
+        OpenNodeViewWith(viewModel);
+    }
+
+    private bool CanOpenAsRawImage() =>
+        SelectedNode?.Node.Format is IBinary && formatsCache.ContainsKey(typeof(IPaletteCollection));
 
     partial void OnNodeNameFilterChanged(string? value)
     {

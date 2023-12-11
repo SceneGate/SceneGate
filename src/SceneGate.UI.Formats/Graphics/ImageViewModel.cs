@@ -22,14 +22,14 @@ using Yarhl.IO;
 /// </summary>
 public partial class ImageViewModel : ObservableObject, IFormatViewModel
 {
-    private readonly IIndexedImage? indexedImage;
     private readonly IPaletteCollection? palettes;
+    private IIndexedImage? indexedImage;
 
     [ObservableProperty]
     private IFullImage? image;
 
     [ObservableProperty]
-    private IFormat sourceFormat;
+    private IFormat? sourceFormat;
 
     [ObservableProperty]
     private Bitmap? bitmap;
@@ -52,38 +52,22 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
     [ObservableProperty]
     private bool isFirstColorTransparent;
 
+    [ObservableProperty]
+    private bool isRawImage;
+
+    [ObservableProperty]
+    private RawImageOptionsViewModel? rawImageOptions;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ImageViewModel"/> class.
     /// </summary>
-    public ImageViewModel()
+    private ImageViewModel()
     {
         isFirstColorTransparent = false;
         paletteIndex = 0;
 
         AskOutputFile = new AsyncInteraction<IStorageFile?>();
         CopyImageToClipboard = new AsyncInteraction<Bitmap, object?>();
-
-        if (Design.IsDesignMode) {
-            byte[] bytes = new byte[256 * 192 * 4];
-            var random = new Random(42);
-            random.NextBytes(bytes);
-            Rgb[] pixels = bytes.DecodeColorsAs<Rgb32>();
-
-            Image = new FullImage(256, 192) { Pixels = pixels };
-            sourceFormat = Image;
-
-            var palette = new Palette(pixels[..256]);
-            using BinaryFormat palettePng = new Palette2Bitmap().Convert(palette);
-            palettePng.Stream.Position = 0;
-            PaletteImage = new Bitmap(palettePng.Stream);
-
-            isSinglePalette = true;
-            canChangeToMultiPalette = false;
-        } else {
-            // Overwritten by the other constructors.
-            image = null!;
-            sourceFormat = null!;
-        }
     }
 
     /// <summary>
@@ -98,8 +82,10 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
         sourceFormat = fullImage;
         isSinglePalette = false;
         canChangeToMultiPalette = false;
+        isRawImage = false;
 
-        Image = fullImage;
+        image = fullImage;
+        UpdateImage();
     }
 
     /// <summary>
@@ -116,6 +102,7 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
         sourceFormat = indexedImage;
         isSinglePalette = true;
         canChangeToMultiPalette = true;
+        isRawImage = false;
 
         this.indexedImage = indexedImage;
         this.palettes = palettes;
@@ -140,11 +127,38 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
         sourceFormat = map;
         isSinglePalette = false;
         canChangeToMultiPalette = false;
+        isRawImage = false;
 
         this.indexedImage = new MapDecompression(map).Convert(indexedImage);
         this.palettes = palettes;
 
         UpdateIndexedImage();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ImageViewModel"/> class.
+    /// </summary>
+    /// <param name="binaryImage">Binary data to display as image.</param>
+    /// <param name="palettes">Palette for the indexed image.</param>
+    public ImageViewModel(IBinary binaryImage, IPaletteCollection palettes)
+        : this()
+    {
+        ArgumentNullException.ThrowIfNull(binaryImage);
+        ArgumentNullException.ThrowIfNull(palettes);
+
+        this.palettes = palettes;
+
+        isSinglePalette = true;
+        canChangeToMultiPalette = false;
+        isRawImage = true;
+        rawImageOptions = new RawImageOptionsViewModel(binaryImage);
+
+        rawImageOptions.PropertyChanged += (_, e) => {
+            if (e.PropertyName == nameof(RawImageOptionsViewModel.Image)) {
+                indexedImage = rawImageOptions.Image;
+                UpdateIndexedImage();
+            }
+        };
     }
 
     /// <summary>

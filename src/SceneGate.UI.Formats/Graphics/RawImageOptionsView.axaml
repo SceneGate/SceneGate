@@ -15,7 +15,7 @@
   
   <Grid ColumnDefinitions="Auto,Auto,Auto"
         RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*"
-        Margin="10 3">
+        Margin="5 3">
 
     <!-- Offset -->
     <Border Grid.Row="0" Grid.Column="0"
