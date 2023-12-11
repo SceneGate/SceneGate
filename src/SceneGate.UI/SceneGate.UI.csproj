@@ -15,6 +15,7 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <AvaloniaResource Include="../../LICENSE" Link="Assets\LICENSE" />
+    <AvaloniaResource Include="../../docs/images/logo_128.png" Link="Assets\logo-128.png" />
   </ItemGroup>
 
   <ItemGroup>

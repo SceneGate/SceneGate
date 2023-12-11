@@ -24,8 +24,8 @@ using Yarhl.Plugins.FileFormat;
 
 public partial class AnalyzeViewModel : ViewModelBase
 {
-    private readonly IReadOnlyList<ConverterTypeInfo> converters;
-    private readonly IFormatViewModelBuilder[] formatsViewModelBuilders;
+    private readonly object listLock = new object();
+    private readonly List<IFormatViewModelBuilder> formatsViewModelBuilders;
     private readonly Dictionary<Type, IFormat> formatsCache;
 
     [ObservableProperty]
@@ -57,18 +57,26 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     public AnalyzeViewModel()
     {
-        TypeLocator.Default.LoadContext.TryLoadFromBaseLoadDirectory();
-
         formatsCache = new();
-
-        converters = ConverterLocator.Default.Converters;
         formatsViewModelBuilders = TypeLocator.Default
             .FindImplementationsOf(typeof(IFormatViewModelBuilder))
             .Select(i => (IFormatViewModelBuilder)Activator.CreateInstance(i.Type)!)
-            .ToArray();
+            .ToList();
+
+        AppDomain.CurrentDomain.AssemblyLoad += (sender, e) => {
+            // TODO Yarhl: Scan given assembly only
+            ConverterLocator.Default.ScanAssemblies();
+            Dispatcher.UIThread.Post(FindNewConverterNodes);
+
+            lock (listLock) {
+                formatsViewModelBuilders.AddRange(TypeLocator.Default
+                    .FindImplementationsOf(typeof(IFormatViewModelBuilder), e.LoadedAssembly)
+                    .Select(i => (IFormatViewModelBuilder)Activator.CreateInstance(i.Type)!));
+            }
+        };
 
         ConverterNodes = new ObservableCollection<TreeGridConverter>();
-        CreateConverterNodes();
+        FindNewConverterNodes();
 
         nodes = new ObservableCollection<TreeGridNode>();
         formatViewTabs = new ObservableCollection<NodeFormatTab>();
@@ -146,9 +154,10 @@ public partial class AnalyzeViewModel : ViewModelBase
         }
 
         // We get the view model from our plugins locator (custom assembly scanner)
-        IFormatViewModelBuilder? vmBuilder = Array.Find(
-            formatsViewModelBuilders,
-            b => b.CanShow(format, formatsCache.Keys));
+        IFormatViewModelBuilder? vmBuilder;
+        lock (listLock) {
+            vmBuilder = formatsViewModelBuilders.Find(b => b.CanShow(format, formatsCache.Keys));
+        }
 
         // The plugin will build the view model
         IFormatViewModel formatViewModel = (vmBuilder is not null)
@@ -370,9 +379,9 @@ public partial class AnalyzeViewModel : ViewModelBase
         UpdateCompatibleConverters();
     }
 
-    private void CreateConverterNodes()
+    private void FindNewConverterNodes()
     {
-        foreach (ConverterTypeInfo converter in converters) {
+        foreach (ConverterTypeInfo converter in ConverterLocator.Default.Converters) {
             TreeGridConverter.InsertConverterHierarchy(converter, ConverterNodes, groupByNamespace: false);
         }
     }

@@ -1,9 +1,9 @@
 ﻿namespace SceneGate.UI;
 
-using System;
 using System.Diagnostics;
 using System.Reflection;
 using FluentAvalonia.UI.Windowing;
+using SceneGate.UI.Pages.Main;
 
 public partial class MainWindow : AppWindow
 {
@@ -23,5 +23,7 @@ public partial class MainWindow : AppWindow
 
         string versionText = (version == DevVersion) ? "DEVELOPMENT BUILD" : $"v{version}";
         Title = $"SceneGate ~~ {versionText}";
+
+        SplashScreen = new SplashScreen();
     }
 }
