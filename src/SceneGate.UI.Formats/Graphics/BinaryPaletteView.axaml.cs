@@ -26,15 +26,6 @@ public partial class BinaryPaletteView : UserControl
         RefreshNumericBox(OffsetNumericBox);
     }
 
-    private void LengthHexCheckboxChecked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        var checkbox = sender as CheckBox;
-        LengthNumericBox.TextConverter = (checkbox?.IsChecked ?? false)
-            ? new HexadecimalValueConverter()
-            : null;
-        RefreshNumericBox(LengthNumericBox);
-    }
-
     private void RefreshNumericBox(NumericUpDown box)
     {
         // Due to a bug in Avalonia, it doesn't refresh the text when the converter changes

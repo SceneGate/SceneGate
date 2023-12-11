@@ -70,7 +70,7 @@
                   Content="Hexadecimal"
                   IsCheckedChanged="OffsetHexCheckboxChecked"/>
 
-        <!-- Length -->
+        <!-- Palettes count -->
         <Border Grid.Row="1" Grid.Column="0"
                 Margin="0 5"
                 Height="32"
@@ -78,27 +78,21 @@
                 BorderBrush="{DynamicResource TextControlBorderBrush}"
                 BorderThickness="1,1,0,1"
                 CornerRadius="4,0,0,4">
-          <TextBlock Text="Length"
+          <TextBlock Text="Number palettes"
                      Padding="5 0"
                      FontWeight="SemiBold"
                      VerticalAlignment="Center" />
         </Border>
         <NumericUpDown Grid.Row="1" Grid.Column="1"
-                       Name="LengthNumericBox"
                        Margin="0 5"
                        CornerRadius="0,4,4,0"
                        FormatString="0"
-                       Value="{Binding Length}"
+                       Value="{Binding PalettesCount}"
                        Minimum="0"
-                       Maximum="{Binding MaximumLength}"
+                       Maximum="{Binding MaximumPalettes}"
                        FontFamily="{StaticResource CaskaydiaFont}"
                        VerticalContentAlignment="Center">
         </NumericUpDown>
-        <CheckBox Grid.Row="1" Grid.Column="2"
-                  Margin="10 5"
-                  IsChecked="False"
-                  Content="Hexadecimal"
-                  IsCheckedChanged="LengthHexCheckboxChecked"/>
 
         <!-- Colors per palette -->
         <Border Grid.Row="2" Grid.Column="0"
@@ -141,6 +135,7 @@
                            CornerRadius="0 4 4 0"
                            SelectedIndex="0"
                            IsEditable="False"
+                           HorizontalAlignment="Stretch"
                            SelectedItem="{Binding ColorKind}"
                            ItemsSource="{Binding AllColorKinds}"/>
       </Grid>

@@ -6,14 +6,14 @@ using System.IO;
 using System.Text;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Texim.Colors;
 using Texim.Formats;
 using Texim.Palettes;
 using Yarhl.IO;
 
 public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
 {
-    private const int DefaultMaxLength = 256 * 2 * 16;
+    private const int DefaultMaxPalettes = 16;
+    private const int DefaultMaxLength = 256 * 2 * DefaultMaxPalettes;
 
     private readonly Stream stream;
     private readonly IBinary binaryFormat;
@@ -26,21 +26,21 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
     private PaletteViewModel paletteInfo;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MaximumPalettes))]
     private long offset;
 
     [ObservableProperty]
-    private long maximumOffset;
+    [NotifyPropertyChangedFor(nameof(MaximumOffset))]
+    private int palettesCount;
 
     [ObservableProperty]
-    private int length;
-
-    [ObservableProperty]
-    private int maximumLength;
-
-    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MaximumPalettes))]
+    [NotifyPropertyChangedFor(nameof(MaximumOffset))]
     private int colorsPerPalette;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MaximumPalettes))]
+    [NotifyPropertyChangedFor(nameof(MaximumOffset))]
     private ColorKind colorKind;
 
     [ObservableProperty]
@@ -58,9 +58,7 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
             stream = DataStreamFactory.FromArray(colorBytes);
             binaryFormat = new BinaryFormat(stream);
 
-            maximumOffset = 0;
-            length = 512;
-            maximumLength = 512;
+            palettesCount = 8;
             colorsPerPalette = 16;
             colorKind = ColorKind.BGR555;
         } else {
@@ -93,13 +91,14 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
         stream = binary.Stream;
         binaryFormat = binary;
 
-        // Try to auto-detect some good default settings
+        // Try to auto-detect some good default settings from the file length
+        // we load by default a maximum of 16 palettes of 256 colors.
+        int length = stream.Length > DefaultMaxLength ? DefaultMaxLength : (int)stream.Length;
+
         offset = 0;
-        length = stream.Length > DefaultMaxLength ? DefaultMaxLength : (int)stream.Length;
-        maximumOffset = stream.Length - length;
-        maximumLength = length;
-        colorsPerPalette = length >= (256 * 2) ? 256 : 16;
         colorKind = ColorKind.BGR555;
+        colorsPerPalette = length >= (256 * colorKind.GetBytesPerColor()) ? 256 : 16;
+        palettesCount = length / colorKind.GetBytesPerColor() / colorsPerPalette;
 
         ReadRawPalette();
     }
@@ -118,31 +117,26 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
     /// </summary>
     public static ColorKind[] AllColorKinds => Enum.GetValues<ColorKind>();
 
-    partial void OnOffsetChanged(long value)
-    {
-        MaximumLength = (stream.Length - value) > DefaultMaxLength
-            ? DefaultMaxLength
-            : (int)(stream.Length - value);
+    /// <summary>
+    /// Gets the maximum offset.
+    /// </summary>
+    public long MaximumOffset => stream.Length - Length;
 
-        ReadRawPalette();
-    }
+    /// <summary>
+    /// Gets the maximum number of palettes it's possible to read from the stream.
+    /// </summary>
+    public int MaximumPalettes =>
+        (int)Math.Ceiling((stream.Length - Offset) / ColorKind.GetBytesPerColor() / (double)ColorsPerPalette);
 
-    partial void OnLengthChanged(int value)
-    {
-        MaximumOffset = stream.Length - value;
+    private int Length => ColorsPerPalette * ColorKind.GetBytesPerColor() * PalettesCount;
 
-        ReadRawPalette();
-    }
+    partial void OnOffsetChanged(long value) => ReadRawPalette();
 
-    partial void OnColorsPerPaletteChanged(int value)
-    {
-        ReadRawPalette();
-    }
+    partial void OnPalettesCountChanged(int value) => ReadRawPalette();
 
-    partial void OnColorKindChanged(ColorKind value)
-    {
-        ReadRawPalette();
-    }
+    partial void OnColorsPerPaletteChanged(int value) => ReadRawPalette();
+
+    partial void OnColorKindChanged(ColorKind value) => ReadRawPalette();
 
     private void ReadRawPalette()
     {
