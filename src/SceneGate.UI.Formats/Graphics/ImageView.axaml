@@ -32,6 +32,13 @@
                         EnablePan="True"
                         PanButton="Left"
                         EnableZoom="True">
+          <paz:ZoomBorder.ContextFlyout>
+            <fluent:FAMenuFlyout>
+              <!-- Avalonia doesn't support yet copying images to clipboard -->
+              <fluent:MenuFlyoutItem Text="Copy image" IconSource="Copy" IsVisible="False" />
+            </fluent:FAMenuFlyout>
+          </paz:ZoomBorder.ContextFlyout>
+
           <Border BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
                   BorderThickness="1"
                   Background="{StaticResource ColorControlCheckeredBackgroundBrush}"
@@ -40,6 +47,7 @@
             <Image Source="{Binding Bitmap}"
                    Stretch="None"/>
           </Border>
+
         </paz:ZoomBorder>
       </ScrollViewer>
 
@@ -63,7 +71,7 @@
             <ScrollViewer Grid.Row="1"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Auto"
-                          Margin="0 10 0 0">
+                          Margin="0 10 0 0" >
               <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}"
                                 AllowFilter="False"
                                 AllowQuickFilter="False" />
@@ -80,9 +88,14 @@
             CornerRadius="4"
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
-            IsVisible="{Binding IsChecked, ElementName=ShowPaletteButton}"
             Margin="10"
             Padding="10">
+      <Border.IsVisible>
+        <MultiBinding Converter="{x:Static BoolConverters.And}">
+          <Binding ElementName="ShowPaletteButton" Path="IsChecked" />
+          <Binding Path="IsSinglePalette" />
+        </MultiBinding>
+      </Border.IsVisible>
         <Image Source="{Binding PaletteImage}"
                Stretch="None"/>
     </Border>
@@ -95,17 +108,19 @@
                                        IconSource="ColorBackground"
                                        Label="Palette"
                                        IsChecked="True"
-                                       IsVisible="{Binding CanShowPalette}" />
+                                       IsEnabled="{Binding IsSinglePalette}" />
         <fluent:CommandBarToggleButton Name="InfoToggleButton"
                                        Label="Info"
                                        IconSource="Tag"
                                        IsChecked="True" />
+        <fluent:CommandBarSeparator />
         <fluent:CommandBarButton Label="Save"
                                  IconSource="Save"
                                  Command="{Binding SaveImageCommand}"/>
         <fluent:CommandBarButton Label="Import"
                                  IconSource="Upload"
                                  IsEnabled="False"/>
+        <fluent:CommandBarSeparator />
         <fluent:CommandBarButton IconSource="ZoomOut"
                                  Click="ZoomOutClick" />
         <fluent:CommandBarButton IconSource="ZoomIn"
@@ -125,7 +140,32 @@
                        Width="40"/>
           </StackPanel>
         </fluent:CommandBarElementContainer>
+        <fluent:CommandBarSeparator />
       </fluent:CommandBar.PrimaryCommands>
+
+      <fluent:CommandBar.SecondaryCommands>
+        <fluent:CommandBarToggleButton Label="Use first color for alpha"
+                                       IconSource="View"
+                                       IsEnabled="{Binding IsSinglePalette}"
+                                       IsChecked="{Binding IsFirstColorTransparent}" />
+        <fluent:CommandBarSeparator />
+        <fluent:CommandBarToggleButton Label="Use all palettes"
+                                       IconSource="ColorBackgroundFilled"
+                                       IsEnabled="{Binding CanChangeToMultiPalette}"
+                                       IsChecked="{Binding !IsSinglePalette}" />
+        <fluent:CommandBarElementContainer IsEnabled="{Binding IsSinglePalette}">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <TextBlock Text="Palette: "
+                       VerticalAlignment="Center" />
+            <fluent:NumberBox Value="{Binding PaletteIndex}"
+                              Margin="5 0"
+                              SpinButtonPlacementMode="Compact"
+                              Width="85"
+                              Minimum="0"
+                              Maximum="{Binding MaximumPaletteIndex}" />
+          </StackPanel>
+        </fluent:CommandBarElementContainer>
+      </fluent:CommandBar.SecondaryCommands>
     </fluent:CommandBar>
   </Grid>
 </UserControl>

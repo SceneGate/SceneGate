@@ -3,6 +3,9 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 
 /// <summary>
@@ -29,21 +32,22 @@ public partial class ImageView : UserControl
             return;
         }
 
-        ShowPaletteButton.IsChecked = ViewModel.CanShowPalette;
+        ShowPaletteButton.IsChecked = ViewModel.IsSinglePalette; // initial value, then binded
         ViewModel.AskOutputFile.RegisterHandler(AskOutputFileAsync);
+        ViewModel.CopyImageToClipboard.RegisterHandler(CopyImageToClipboardAsync);
     }
 
-    private void ZoomLabelDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
+    private void ZoomLabelDoubleTapped(object? sender, TappedEventArgs e)
     {
         ZoomImageBorder.ResetMatrix();
     }
 
-    private void ZoomInClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private void ZoomInClick(object? sender, RoutedEventArgs e)
     {
         ZoomImageBorder.ZoomIn();
     }
 
-    private void ZoomOutClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private void ZoomOutClick(object? sender, RoutedEventArgs e)
     {
         ZoomImageBorder.ZoomOut();
     }
@@ -62,5 +66,10 @@ public partial class ImageView : UserControl
             .StorageProvider
             .SaveFilePickerAsync(options)
             .ConfigureAwait(false);
+    }
+
+    private Task<object?> CopyImageToClipboardAsync(Bitmap image)
+    {
+        throw new NotSupportedException("https://github.com/AvaloniaUI/Avalonia/issues/3588");
     }
 }

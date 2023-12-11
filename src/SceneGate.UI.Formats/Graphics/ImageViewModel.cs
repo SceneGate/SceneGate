@@ -22,8 +22,11 @@ using Yarhl.IO;
 /// </summary>
 public partial class ImageViewModel : ObservableObject, IFormatViewModel
 {
+    private readonly IIndexedImage? indexedImage;
+    private readonly IPaletteCollection? palettes;
+
     [ObservableProperty]
-    private IFullImage image;
+    private IFullImage? image;
 
     [ObservableProperty]
     private IFormat sourceFormat;
@@ -32,16 +35,34 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
     private Bitmap? bitmap;
 
     [ObservableProperty]
-    private bool canShowPalette;
+    private Bitmap? paletteImage;
 
     [ObservableProperty]
-    private Bitmap? paletteImage;
+    private bool isSinglePalette;
+
+    [ObservableProperty]
+    private bool canChangeToMultiPalette;
+
+    [ObservableProperty]
+    private int paletteIndex;
+
+    [ObservableProperty]
+    private int maximumPaletteIndex;
+
+    [ObservableProperty]
+    private bool isFirstColorTransparent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ImageViewModel"/> class.
     /// </summary>
     public ImageViewModel()
     {
+        isFirstColorTransparent = false;
+        paletteIndex = 0;
+
+        AskOutputFile = new AsyncInteraction<IStorageFile?>();
+        CopyImageToClipboard = new AsyncInteraction<Bitmap, object?>();
+
         if (Design.IsDesignMode) {
             byte[] bytes = new byte[256 * 192 * 4];
             var random = new Random(42);
@@ -51,17 +72,18 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
             sourceFormat = null!;
             Image = new FullImage(256, 192) { Pixels = pixels };
 
-            var testPalette = new Palette(pixels[..256]);
-            using BinaryFormat palettePng = new Palette2Bitmap().Convert(testPalette);
+            var palette = new Palette(pixels[..256]);
+            using BinaryFormat palettePng = new Palette2Bitmap().Convert(palette);
             palettePng.Stream.Position = 0;
             PaletteImage = new Bitmap(palettePng.Stream);
-            CanShowPalette = true;
+
+            isSinglePalette = true;
+            canChangeToMultiPalette = false;
         } else {
+            // Overwritten by the other constructors.
             image = null!;
             sourceFormat = null!;
         }
-
-        AskOutputFile = new AsyncInteraction<IStorageFile?>();
     }
 
     /// <summary>
@@ -71,6 +93,12 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
     public ImageViewModel(IFullImage fullImage)
         : this()
     {
+        ArgumentNullException.ThrowIfNull(fullImage);
+
+        sourceFormat = fullImage;
+        isSinglePalette = false;
+        canChangeToMultiPalette = false;
+
         Image = fullImage;
     }
 
@@ -85,13 +113,15 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
         ArgumentNullException.ThrowIfNull(indexedImage);
         ArgumentNullException.ThrowIfNull(palettes);
 
-        Image = new Indexed2FullImage(palettes).Convert(indexedImage);
-        SourceFormat = indexedImage;
+        sourceFormat = indexedImage;
+        isSinglePalette = true;
+        canChangeToMultiPalette = true;
 
-        CanShowPalette = true;
-        using BinaryFormat palettePng = new Palette2Bitmap().Convert(palettes.Palettes[0]);
-        palettePng.Stream.Position = 0;
-        PaletteImage = new Bitmap(palettePng.Stream);
+        this.indexedImage = indexedImage;
+        this.palettes = palettes;
+        maximumPaletteIndex = palettes.Palettes.Count - 1;
+
+        UpdateIndexedImage();
     }
 
     /// <summary>
@@ -107,18 +137,25 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
         ArgumentNullException.ThrowIfNull(indexedImage);
         ArgumentNullException.ThrowIfNull(palettes);
 
-        indexedImage = new MapDecompression(map).Convert(indexedImage);
-        Image = new Indexed2FullImage(palettes).Convert(indexedImage);
-        SourceFormat = indexedImage;
+        sourceFormat = map;
+        isSinglePalette = false;
+        canChangeToMultiPalette = false;
 
-        // Don't show the palette as there are many
-        CanShowPalette = false;
+        this.indexedImage = new MapDecompression(map).Convert(indexedImage);
+        this.palettes = palettes;
+
+        UpdateIndexedImage();
     }
 
     /// <summary>
-    /// Ask the user to select the output file to save.
+    /// Gets the action to ask the user to select the output file to save.
     /// </summary>
     public AsyncInteraction<IStorageFile?> AskOutputFile { get; }
+
+    /// <summary>
+    /// Gets the action to copy the provided image to the clipboard.
+    /// </summary>
+    public AsyncInteraction<Bitmap, object?> CopyImageToClipboard { get; }
 
     /// <summary>
     /// Save the current image to disk.
@@ -146,19 +183,72 @@ public partial class ImageViewModel : ObservableObject, IFormatViewModel
     /// <returns>Value indicating if it can save the image..</returns>
     public bool CanSaveImage() => Bitmap is not null;
 
-    partial void OnImageChanged(IFullImage value)
+    /// <summary>
+    /// Copy the current image to the clipboard.
+    /// </summary>
+    /// <returns>Asynchronous task.</returns>
+    [RelayCommand(CanExecute = nameof(CanCopyImage))]
+    public async Task CopyImageAsync()
     {
-        SourceFormat = value;
-        UpdateImage();
+        if (Bitmap is null) {
+            return;
+        }
+
+        await CopyImageToClipboard.HandleAsync(Bitmap).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Gets a value indicating if it can copy the image.
+    /// </summary>
+    /// <returns>Value indicating if it can copy the image..</returns>
+    public bool CanCopyImage() => Bitmap is not null;
+
+    partial void OnIsFirstColorTransparentChanged(bool value) => UpdateIndexedImage();
+
+    partial void OnPaletteIndexChanged(int value) => UpdateIndexedImage();
+
+    partial void OnIsSinglePaletteChanged(bool value) => UpdateIndexedImage();
+
+    partial void OnImageChanged(IFullImage? value) => UpdateImage();
+
+    private void UpdateIndexedImage()
+    {
+        if (indexedImage is null || palettes is null) {
+            return;
+        }
+
+        try {
+            // TODO: detect palettes without colors
+            Indexed2FullImage converter;
+            if (IsSinglePalette) {
+                IPalette paletteToUse = palettes.Palettes[PaletteIndex];
+                converter = new Indexed2FullImage(new PaletteCollection(paletteToUse), IsFirstColorTransparent);
+
+                using BinaryFormat palettePng = new Palette2Bitmap().Convert(paletteToUse);
+                palettePng.Stream.Position = 0;
+                PaletteImage = new Bitmap(palettePng.Stream);
+            } else {
+                converter = new Indexed2FullImage(palettes);
+                PaletteImage = null;
+            }
+
+            // This will trigger UpdateImage()
+            Image = converter.Convert(indexedImage);
+        } catch {
+            // TODO: log
+            Image = null;
+            PaletteImage = null;
+        }
     }
 
     private void UpdateImage()
     {
-        ConvertToBitmap();
-    }
+        if (Image is null) {
+            // TODO: show error image
+            Bitmap = null;
+            return;
+        }
 
-    private void ConvertToBitmap()
-    {
         var converter = new FullImage2Bitmap();
         using BinaryFormat binaryPng = converter.Convert(Image);
 
