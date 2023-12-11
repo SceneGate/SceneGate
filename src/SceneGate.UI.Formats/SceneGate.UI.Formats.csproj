@@ -5,6 +5,7 @@
     <IsPackable>true</IsPackable>
 
     <TargetFramework>net8.0</TargetFramework>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
 
     <Nullable>enable</Nullable>
 
@@ -19,6 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia.AvaloniaEdit" />
+    <PackageReference Include="Avalonia.Controls.PanAndZoom" />
     <PackageReference Include="Avalonia.Xaml.Interactions" />
     <PackageReference Include="AvaloniaEdit.TextMate" />
     <PackageReference Include="bodong.Avalonia.PropertyGrid" />

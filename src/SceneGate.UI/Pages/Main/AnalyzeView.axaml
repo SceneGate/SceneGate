@@ -107,7 +107,8 @@
                                            Command="{ReflectionBinding $parent[TreeView].DataContext.OpenAsRawPaletteCommand}"/>
                     <fluent:MenuFlyoutItem Text="Raw image"
                                            IconSource="Image"
-                                           IsEnabled="False" />
+                                           HotKey="I"
+                                           Command="{ReflectionBinding $parent[TreeView].DataContext.OpenAsRawImageCommand}"/>
                   </fluent:MenuFlyoutSubItem>
                 </fluent:FAMenuFlyout>
               </Grid.ContextFlyout>

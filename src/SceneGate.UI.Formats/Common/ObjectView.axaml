@@ -17,9 +17,7 @@
   <TabControl>
     <TabItem Header="Model">
       <ScrollViewer>
-        <pgc:PropertyGrid SelectedObject="{Binding Model}"
-                          AllowFilter="False"
-                          AllowQuickFilter="False" />
+        <pgc:PropertyGrid SelectedObject="{Binding Model}" Classes="Simple ReadOnly" />
       </ScrollViewer>
     </TabItem>
 

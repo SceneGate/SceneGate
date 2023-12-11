@@ -18,7 +18,6 @@
     <DataGrid Grid.Column="0"
               ItemsSource="{Binding Entries}"
               SelectedItem="{Binding SelectedEntry}"
-              x:DataType="local:PoEntryViewModel"
               CanUserReorderColumns="False"
               CanUserSortColumns="False"
               CanUserResizeColumns="True"

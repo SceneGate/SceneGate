@@ -5,14 +5,14 @@ using Avalonia.Controls;
 using SceneGate.UI.Formats.Controls;
 
 /// <summary>
-/// View to see a binary stream as a palette.
+/// User control to define the options of a raw image.
 /// </summary>
-public partial class BinaryPaletteView : UserControl
+public partial class RawImageOptionsView : UserControl
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="BinaryPaletteView"/> class.
+    /// Initializes a new instance of the <see cref="RawImageOptionsView"/> class.
     /// </summary>
-    public BinaryPaletteView()
+    public RawImageOptionsView()
     {
         InitializeComponent();
     }

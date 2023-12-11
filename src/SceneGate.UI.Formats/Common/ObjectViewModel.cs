@@ -26,7 +26,7 @@ public partial class ObjectViewModel : ObservableObject, IFormatViewModel
     /// Initializes a new instance of the <see cref="ObjectViewModel"/> class.
     /// </summary>
     public ObjectViewModel()
-        : this(new Po())
+        : this(new PoHeader())
     {
     }
 

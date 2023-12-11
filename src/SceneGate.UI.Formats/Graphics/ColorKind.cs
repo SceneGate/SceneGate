@@ -42,4 +42,18 @@ public static class ColorKindExtensions
             ColorKind.RGBA32 => Rgba32.Instance,
             _ => throw new NotSupportedException("Unsupported color kind"),
         };
+
+    /// <summary>
+    /// Gets the number of bytes required to decode a color.
+    /// </summary>
+    /// <param name="kind">The color kind.</param>
+    /// <returns>Number of bytes to decode color.</returns>
+    /// <exception cref="NotSupportedException">Unsupported format.</exception>
+    public static int GetBytesPerColor(this ColorKind kind) =>
+        kind switch {
+            ColorKind.BGR555 => Bgr555.BytesPerColor,
+            ColorKind.RGB32 => Rgb32.BytesPerColor,
+            ColorKind.RGBA32 => Rgba32.BytesPerColor,
+            _ => throw new NotSupportedException("Unsupported color kind"),
+        };
 }

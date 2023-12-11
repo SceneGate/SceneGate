@@ -2,18 +2,46 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="using:FluentAvalonia.UI.Controls"
         xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
+        xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
         xmlns:cd="using:SceneGate.UI.ControlsData">
 
   <Design.PreviewWith>
     <Border Padding="30" MinWidth="350" Height="500">
-      <ColorView
-        Classes="ReadOnly NoHeader"
-        IsAlphaVisible="False"
-        IsColorSpectrumVisible="False"
-        IsColorPaletteVisible="False"/>
+      <ScrollViewer>
+        <pgc:PropertyGrid Classes="ReadOnly Simple">
+          <pgc:PropertyGrid.SelectedObject>
+            <TextBox/>
+          </pgc:PropertyGrid.SelectedObject>
+        </pgc:PropertyGrid>
+      </ScrollViewer>
     </Border>
   </Design.PreviewWith>
 
+  <!-- Simple and readonly styles for propertygrid -->
+  <Style Selector="pgc|PropertyGrid.Simple">
+    <Setter Property="AllowFilter" Value="False" />
+    <Setter Property="AllowQuickFilter" Value="False" />
+    <Setter Property="ShowTitle" Value="False" />
+    <Setter Property="ShowStyle" Value="Alphabetic" />
+  </Style>
+  <Style Selector="pgc|PropertyGrid.ReadOnly">
+    <Style Selector="^ TextBox">
+      <Setter Property="IsReadOnly" Value="True" />
+    </Style>
+    <Style Selector="^ NumericUpDown">
+      <Setter Property="IsReadOnly" Value="True" />
+    </Style>
+    <Style Selector="^ CheckBox">
+      <Setter Property="IsEnabled" Value="False" />
+    </Style>
+    <Style Selector="^ ComboBox">
+      <Setter Property="IsEnabled" Value="False" />
+    </Style>
+    <Style Selector="^ pgc|CheckedListEdit">
+      <Setter Property="IsEnabled" Value="False" />
+    </Style>
+  </Style>
+  
   <!-- SelectableTextBlock doesn't have a SelectionForegroundBrush so it doesn't look right on Light themes -->
   <Style Selector="SelectableTextBlock">
     <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
@@ -43,6 +71,7 @@
     <Setter Property="IsVisible" Value="False" />
   </Style>
 
+  <!-- Compact style for tree views -->
   <Style Selector="TreeView.Compact TreeViewItem">
     <Setter Property="MinHeight" Value="22" />
   </Style>

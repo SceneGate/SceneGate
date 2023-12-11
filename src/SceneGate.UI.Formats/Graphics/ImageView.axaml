@@ -1,0 +1,183 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             xmlns:paz="using:Avalonia.Controls.PanAndZoom"
+             xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
+             xmlns:local="using:SceneGate.UI.Formats.Graphics"
+             mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
+             x:Class="SceneGate.UI.Formats.Graphics.ImageView"
+             x:DataType="local:ImageViewModel">
+  <Design.DataContext>
+    <local:DesignImageViewModel />
+  </Design.DataContext>
+
+  <UserControl.Resources>
+    <StreamGeometry x:Key="document_error_regular">M18.5 20C18.5 20.275 18.276 20.5 18 20.5H12.2678C11.9806 21.051 11.6168 21.5557 11.1904 22H18C19.104 22 20 21.104 20 20V9.828C20 9.298 19.789 8.789 19.414 8.414L13.585 2.586C13.57 2.57105 13.5531 2.55808 13.5363 2.5452C13.5238 2.53567 13.5115 2.5262 13.5 2.516C13.429 2.452 13.359 2.389 13.281 2.336C13.2557 2.31894 13.2281 2.30548 13.2005 2.29207C13.1845 2.28426 13.1685 2.27647 13.153 2.268C13.1363 2.25859 13.1197 2.24897 13.103 2.23933C13.0488 2.20797 12.9944 2.17648 12.937 2.152C12.74 2.07 12.528 2.029 12.313 2.014C12.2933 2.01274 12.2738 2.01008 12.2542 2.00741C12.2271 2.00371 12.1999 2 12.172 2H6C4.896 2 4 2.896 4 4V11.4982C4.47417 11.3004 4.97679 11.1572 5.5 11.0764V4C5.5 3.725 5.724 3.5 6 3.5H12V8C12 9.104 12.896 10 14 10H18.5V20ZM13.5 4.621L17.378 8.5H14C13.724 8.5 13.5 8.275 13.5 8V4.621Z M12 17.5C12 20.5376 9.53757 23 6.5 23C3.46243 23 1 20.5376 1 17.5C1 14.4624 3.46243 12 6.5 12C9.53757 12 12 14.4624 12 17.5ZM6.5 14C6.22386 14 6 14.2239 6 14.5V18.5C6 18.7761 6.22386 19 6.5 19C6.77614 19 7 18.7761 7 18.5V14.5C7 14.2239 6.77614 14 6.5 14ZM6.5 21.125C6.84518 21.125 7.125 20.8452 7.125 20.5C7.125 20.1548 6.84518 19.875 6.5 19.875C6.15482 19.875 5.875 20.1548 5.875 20.5C5.875 20.8452 6.15482 21.125 6.5 21.125Z</StreamGeometry>
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="Auto,*">
+    <SplitView Grid.Row="1"
+               IsPaneOpen="{Binding IsChecked, ElementName=InfoToggleButton}"
+               PanePlacement="Right"
+               OpenPaneLength="410"
+               DisplayMode="Inline">
+
+      <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto">
+        <paz:ZoomBorder Name="ZoomImageBorder"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Stretch="None"
+                        ZoomSpeed="1.2"
+                        ClipToBounds="True"
+                        Focusable="True"
+                        EnablePan="True"
+                        PanButton="Left"
+                        EnableZoom="True">
+          <paz:ZoomBorder.ContextFlyout>
+            <fluent:FAMenuFlyout>
+              <!-- Avalonia doesn't support yet copying images to clipboard -->
+              <fluent:MenuFlyoutItem Text="Copy image" IconSource="Copy" IsVisible="False" />
+            </fluent:FAMenuFlyout>
+          </paz:ZoomBorder.ContextFlyout>
+
+          <Panel>
+            <Border BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    Background="{StaticResource ColorControlCheckeredBackgroundBrush}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding Bitmap, Converter={x:Static ObjectConverters.IsNotNull}}">
+              <Image Source="{Binding Bitmap}"
+                     Stretch="None"/>
+            </Border>
+            <PathIcon Data="{StaticResource document_error_regular}"
+                      IsVisible="{Binding Bitmap, Converter={x:Static ObjectConverters.IsNull}}"/>
+          </Panel>
+
+        </paz:ZoomBorder>
+      </ScrollViewer>
+
+      <SplitView.Pane>
+        <Border BorderThickness="2 2 0 0"
+                BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
+                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                CornerRadius="4 0 0 0">
+          <Grid RowDefinitions="Auto,*" Margin="5">
+            <DockPanel Margin="5 0 0 0">
+              <ToggleButton DockPanel.Dock="Right"
+                            Theme="{StaticResource TransparentButton}"
+                            FontSize="20"
+                            ToolTip.Tip="Close"
+                            IsChecked="{Binding IsChecked, ElementName=InfoToggleButton}">
+                <fluent:SymbolIcon Symbol="Cancel" />
+              </ToggleButton>
+              <TextBlock Text="Info"
+                         Theme="{StaticResource TitleTextBlockStyle}"/>
+            </DockPanel>
+            <Panel Grid.Row="1">
+              <ScrollViewer VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="Auto"
+                            IsVisible="{Binding !IsRawImage}"
+                            Margin="0 10 0 0" >
+                <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}"
+                                  Classes="Simple ReadOnly" />
+              </ScrollViewer>
+              <local:RawImageOptionsView DataContext="{Binding RawImageOptions}"
+                                          IsVisible="{ReflectionBinding $parent.DataContext.IsRawImage}"/>
+            </Panel>
+          </Grid>
+        </Border>
+      </SplitView.Pane>
+    </SplitView>
+
+    <Border Grid.Row="1"
+            BorderThickness="2"
+            BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            CornerRadius="4"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Margin="10"
+            Padding="10">
+      <Border.IsVisible>
+        <MultiBinding Converter="{x:Static BoolConverters.And}">
+          <Binding ElementName="ShowPaletteButton" Path="IsChecked" />
+          <Binding Path="IsSinglePalette" />
+        </MultiBinding>
+      </Border.IsVisible>
+        <Image Source="{Binding PaletteImage}"
+               Stretch="None"/>
+    </Border>
+    
+    <fluent:CommandBar Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       DefaultLabelPosition="Right">
+      <fluent:CommandBar.PrimaryCommands>
+        <fluent:CommandBarToggleButton Name="ShowPaletteButton"
+                                       IconSource="ColorBackground"
+                                       Label="Palette"
+                                       IsChecked="True"
+                                       IsEnabled="{Binding IsSinglePalette}" />
+        <fluent:CommandBarToggleButton Name="InfoToggleButton"
+                                       Label="Info"
+                                       IconSource="Tag"
+                                       IsChecked="True" />
+        <fluent:CommandBarSeparator />
+        <fluent:CommandBarButton Label="Save"
+                                 IconSource="Save"
+                                 Command="{Binding SaveImageCommand}"/>
+        <fluent:CommandBarButton Label="Import"
+                                 IconSource="Upload"
+                                 IsEnabled="False"/>
+        <fluent:CommandBarSeparator />
+        <fluent:CommandBarButton IconSource="ZoomOut"
+                                 Click="ZoomOutClick" />
+        <fluent:CommandBarButton IconSource="ZoomIn"
+                                 Click="ZoomInClick" />
+        <fluent:CommandBarElementContainer VerticalAlignment="Center"
+                                           DoubleTapped="ZoomLabelDoubleTapped"
+                                           ToolTip.Tip="Double click to restore zoom">
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Zoom: "
+                       FontFamily="{DynamicResource ContentControlThemeFontFamily}"
+                       FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Text="{Binding ZoomX, ElementName=ZoomImageBorder, StringFormat={}{0:F2}}"
+                       FontFamily="{DynamicResource ContentControlThemeFontFamily}"
+                       FontSize="12"
+                       VerticalAlignment="Center"
+                       Width="40"/>
+          </StackPanel>
+        </fluent:CommandBarElementContainer>
+        <fluent:CommandBarSeparator />
+      </fluent:CommandBar.PrimaryCommands>
+
+      <fluent:CommandBar.SecondaryCommands>
+        <fluent:CommandBarToggleButton Label="Use first color for alpha"
+                                       IconSource="View"
+                                       IsEnabled="{Binding IsSinglePalette}"
+                                       IsChecked="{Binding IsFirstColorTransparent}" />
+        <fluent:CommandBarSeparator />
+        <fluent:CommandBarToggleButton Label="Use all palettes"
+                                       IconSource="ColorBackgroundFilled"
+                                       IsEnabled="{Binding CanChangeToMultiPalette}"
+                                       IsChecked="{Binding !IsSinglePalette}" />
+        <fluent:CommandBarElementContainer IsEnabled="{Binding IsSinglePalette}">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <TextBlock Text="Palette: "
+                       VerticalAlignment="Center" />
+            <fluent:NumberBox Value="{Binding PaletteIndex}"
+                              Margin="5 0"
+                              SpinButtonPlacementMode="Compact"
+                              Width="85"
+                              Minimum="0"
+                              Maximum="{Binding MaximumPaletteIndex}" />
+          </StackPanel>
+        </fluent:CommandBarElementContainer>
+      </fluent:CommandBar.SecondaryCommands>
+    </fluent:CommandBar>
+  </Grid>
+</UserControl>

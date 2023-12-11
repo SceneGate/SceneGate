@@ -11,6 +11,8 @@ using Avalonia.Platform.Storage;
 /// </summary>
 public partial class PaletteView : UserControl
 {
+    private bool shouldDisplayProperties;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PaletteView"/> class.
     /// </summary>
@@ -29,6 +31,7 @@ public partial class PaletteView : UserControl
         }
 
         var viewModel = (DataContext as PaletteViewModel)!;
+        shouldDisplayProperties = viewModel.IsModelPropertyVisible;
         viewModel.AskOutputFile.RegisterHandler(AskOutputFileAsync);
         viewModel.AskOutputFolder.RegisterHandler(AskOutputFolderAsync);
         viewModel.AskInputFile.RegisterHandler(AskInputFileAsync);
@@ -81,5 +84,14 @@ public partial class PaletteView : UserControl
             .OpenFilePickerAsync(options)
             .ConfigureAwait(false);
         return results.Count > 0 ? results[0] : null;
+    }
+
+    private void MainGridSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        if (e.NewSize.Width > 900) {
+            ModelPropertyGrid.IsVisible = shouldDisplayProperties;
+        } else {
+            ModelPropertyGrid.IsVisible = false;
+        }
     }
 }

@@ -19,10 +19,11 @@
 
   <Grid ColumnDefinitions="*,Auto,Auto"
         RowDefinitions="*"
-        Margin="5">
+        Margin="5"
+        SizeChanged="MainGridSizeChanged">
 
     <Grid Grid.Row="0" Grid.Column="0"
-          IsVisible="{Binding IsModelPropertyVisible}"
+          Name="ModelPropertyGrid"
           RowDefinitions="Auto,Auto,1*,Auto,Auto,1*"
           HorizontalAlignment="Left"
           Margin="10 0">
@@ -39,9 +40,7 @@
               CornerRadius="0 0 4 4"
               Background="{DynamicResource ControlFillColorInputActiveBrush}"
               Padding="5 10 5 5">
-        <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}"
-                          AllowFilter="False"
-                          AllowQuickFilter="False" />
+        <pgc:PropertyGrid SelectedObject="{Binding SourceFormat}" Classes="Simple ReadOnly" />
       </Border>
 
       <Border Grid.Row="3"
@@ -57,9 +56,7 @@
               CornerRadius="0 0 4 4"
               Background="{DynamicResource ControlFillColorInputActiveBrush}"
               Padding="5 10 5 5">
-        <pgc:PropertyGrid SelectedObject="{Binding SelectedPalette.Palette}"
-                          AllowFilter="False"
-                          AllowQuickFilter="False" />
+        <pgc:PropertyGrid SelectedObject="{Binding SelectedPalette.Palette}" Classes="Simple ReadOnly" />
       </Border>
     </Grid>
 

@@ -3,10 +3,11 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Texim.Compressions.Nitro;
+using Texim.Images;
 using Texim.Palettes;
 using Yarhl.FileSystem;
 using Yarhl.IO;
@@ -203,6 +204,10 @@ public partial class TreeGridNode : ObservableObject
 
             IPalette => NodeFormatKind.Palette,
             IPaletteCollection => NodeFormatKind.Palette,
+
+            IFullImage => NodeFormatKind.Image,
+            IIndexedImage => NodeFormatKind.Image,
+            IScreenMap => NodeFormatKind.Image, // it should go in Ekona somehow?
 
             _ => NodeFormatKind.Unknown,
         };
