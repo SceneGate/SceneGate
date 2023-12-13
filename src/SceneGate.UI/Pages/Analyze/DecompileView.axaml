@@ -17,7 +17,7 @@
   
   <Grid RowDefinitions="Auto,*"
         Margin="10">
-    <Grid ColumnDefinitions="Auto,*"
+    <Grid ColumnDefinitions="Auto,1.5*,Auto,1*"
           RowDefinitions="Auto,Auto,Auto,Auto">
       <TextBlock Grid.Row="0" Grid.Column="0"
                  Margin="5 0 0 5"
@@ -30,15 +30,37 @@
                Text="{Binding TypeName}"
                FontFamily="{StaticResource CaskaydiaFont}"/>
 
-      <TextBlock Grid.Row="1" Grid.Column="0"
+      <TextBlock Grid.Row="0" Grid.Column="2"
            Margin="5 0 0 5"
            Text="Assembly:"
+           FontWeight="SemiBold"
+           VerticalAlignment="Center" />
+      <TextBox Grid.Row="0" Grid.Column="3"
+               Margin="5 0 0 5"
+               IsReadOnly="True"
+               Text="{Binding AssemblyName}"
+               FontFamily="{StaticResource CaskaydiaFont}"/>
+
+      <TextBlock Grid.Row="1" Grid.Column="0"
+           Margin="5 0 0 5"
+           Text="Copyright:"
            FontWeight="SemiBold"
            VerticalAlignment="Center" />
       <TextBox Grid.Row="1" Grid.Column="1"
                Margin="5 0 0 5"
                IsReadOnly="True"
-               Text="{Binding AssemblyName}"
+               Text="{Binding AssemblyCopyright}"
+               FontFamily="{StaticResource CaskaydiaFont}"/>
+
+      <TextBlock Grid.Row="1" Grid.Column="2"
+           Margin="5 0 0 5"
+           Text="Version:"
+           FontWeight="SemiBold"
+           VerticalAlignment="Center" />
+      <TextBox Grid.Row="1" Grid.Column="3"
+               Margin="5 0 0 5"
+               IsReadOnly="True"
+               Text="{Binding AssemblyVersion}"
                FontFamily="{StaticResource CaskaydiaFont}"/>
 
       <TextBlock Grid.Row="2" Grid.Column="0"
@@ -46,7 +68,7 @@
            Text="Location:"
            FontWeight="SemiBold"
            VerticalAlignment="Center" />
-      <TextBox Grid.Row="2" Grid.Column="1"
+      <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
                Margin="5 0 0 5"
                IsReadOnly="True"
                Text="{Binding AssemblyLocation}"
@@ -59,11 +81,14 @@
                  Text="Repository:"
                  FontWeight="SemiBold"
                  VerticalAlignment="Center"/>
-      <fluent:HyperlinkButton Grid.Row="3" Grid.Column="1"
-                              Margin="0"
-                              Content="{Binding RepositoryName}"
+      <TextBox Grid.Row="3" Grid.Column="1"
+               Margin="5 0 0 0"
+               IsReadOnly="True"
+               Text="{Binding RepositoryUrl}"
+               FontFamily="{StaticResource CaskaydiaFont}" />
+      <fluent:HyperlinkButton Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"
+                              Content="Go to website"
                               NavigateUri="{Binding RepositoryUrl}"
-                              ToolTip.Tip="{Binding RepositoryUrl}"
                               VerticalAlignment="Center"/>
     </Grid>
 

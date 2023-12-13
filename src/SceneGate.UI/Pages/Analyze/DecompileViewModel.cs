@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.TypeSystem;
+using System.Diagnostics.CodeAnalysis;
 
 public partial class DecompileViewModel : ViewModelBase
 {
@@ -26,6 +27,12 @@ public partial class DecompileViewModel : ViewModelBase
     private string assemblyName;
 
     [ObservableProperty]
+    private string assemblyVersion;
+
+    [ObservableProperty]
+    private string assemblyCopyright;
+
+    [ObservableProperty]
     private string assemblyLocation;
 
     public DecompileViewModel(Type targetType)
@@ -37,11 +44,36 @@ public partial class DecompileViewModel : ViewModelBase
         decompiledType = string.Empty;
 
         TypeName = targetType.FullName ?? "Unknown";
-        AssemblyName = targetType.Assembly.FullName ?? "Unknown";
-        AssemblyLocation = targetType.Assembly.Location;
 
+        GetAssemblyInfo(targetType);
         GetRepositoryInfo(targetType);
         DecompileType(targetType);
+    }
+
+#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+    [MemberNotNull(nameof(assemblyName), nameof(assemblyVersion))]
+    [MemberNotNull(nameof(assemblyLocation), nameof(assemblyCopyright))]
+#pragma warning restore MVVMTK0034
+    private void GetAssemblyInfo(Type type)
+    {
+        Assembly assembly = type.Assembly;
+        var name = new AssemblyName(assembly.FullName!);
+        AssemblyName = name.Name ?? "Unknown";
+
+        AssemblyLocation = assembly.Location;
+
+        var copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
+        AssemblyCopyright = copyright?.Copyright ?? "(not set)";
+
+        var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+        if (version is not null) {
+            AssemblyVersion = version.InformationalVersion;
+            if (AssemblyVersion.Contains('+')) {
+                AssemblyVersion = AssemblyVersion[..AssemblyVersion.IndexOf('+')];
+            }
+        } else {
+            AssemblyVersion = name.Version?.ToString() ?? "(not set)";
+        }
     }
 
     private void GetRepositoryInfo(Type type)
@@ -64,8 +96,8 @@ public partial class DecompileViewModel : ViewModelBase
         string assemblyPath = type.Assembly.Location;
         var decompiler = new CSharpDecompiler(assemblyPath, new DecompilerSettings());
         try {
-            var typeName = new FullTypeName(type.FullName);
-            DecompiledType = decompiler.DecompileTypeAsString(typeName);
+            var ilspyTypeName = new FullTypeName(type.FullName);
+            DecompiledType = decompiler.DecompileTypeAsString(ilspyTypeName);
         } catch (Exception ex) {
             DecompiledType = ex.ToString();
         }
