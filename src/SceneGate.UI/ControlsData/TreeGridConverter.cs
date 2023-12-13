@@ -84,7 +84,7 @@ public sealed partial class TreeGridConverter : ObservableObject
             converterName = converter.Type.Name;
         }
 
-        if (!current.Children.Any(x => x.Converter?.DestinationType == converter.DestinationType)) {
+        if (!current.Children.Any(x => x.Converter?.Type == converter.Type)) {
             current.Children.Add(new TreeGridConverter(converter, converterName));
         }
     }

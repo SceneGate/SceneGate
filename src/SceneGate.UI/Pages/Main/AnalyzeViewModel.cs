@@ -403,7 +403,8 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     private void FindNewConverterNodes()
     {
-        foreach (ConverterTypeInfo converter in ConverterLocator.Default.Converters) {
+        var converters = ConverterLocator.Default.Converters.ToList();
+        foreach (ConverterTypeInfo converter in converters) {
             TreeGridConverter.InsertConverterHierarchy(converter, ConverterNodes, groupByNamespace: false);
         }
     }
