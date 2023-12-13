@@ -11,7 +11,7 @@ public partial class NodeFormatTab : ObservableObject
     [ObservableProperty]
     private NodeFormatKind kind;
 
-    public NodeFormatTab(Node node, NodeFormatKind kind, IFormatViewModel content)
+    public NodeFormatTab(Node node, NodeFormatKind kind, object content)
     {
         Node = node;
         Name = node.Name;
@@ -21,5 +21,5 @@ public partial class NodeFormatTab : ObservableObject
 
     public Node Node { get; }
 
-    public IFormatViewModel Content { get; }
+    public object Content { get; }
 }

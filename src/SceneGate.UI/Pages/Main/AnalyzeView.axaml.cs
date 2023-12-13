@@ -69,7 +69,7 @@ public partial class AnalyzeView : UserControl
         errorConversionDialog.XamlRoot = VisualRoot as Visual;
         convertingDialog.XamlRoot = VisualRoot as Visual;
 
-        // As converter list doesn't change we can do it once
+        // TODO: no longer true. As converter list doesn't change we can do it once
         foreach (object? item in converterTreeView.Items) {
             Control? itemView = converterTreeView.ContainerFromItem(item!);
             if (itemView is TreeViewItem treeViewItem) {
