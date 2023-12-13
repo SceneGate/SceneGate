@@ -15,6 +15,7 @@ using SceneGate.UI.Formats;
 using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Formats.Graphics;
 using SceneGate.UI.Formats.Mvvm;
+using SceneGate.UI.Pages.Analyze;
 using Texim.Palettes;
 using Yarhl.FileFormat;
 using Yarhl.FileSystem;
@@ -300,6 +301,27 @@ public partial class AnalyzeViewModel : ViewModelBase
 
     private bool CanCopyConverterTypeName() =>
         SelectedConverter is { Kind: TreeGridConverterKind.Converter };
+
+    [RelayCommand(CanExecute = nameof(CanOpenDecompiledConverter))]
+    private void OpenDecompiledConverter()
+    {
+        ConverterTypeInfo? converter = SelectedConverter?.Converter;
+        if (converter is null) {
+            return;
+        }
+
+        var tab = new NodeFormatTab(
+            new Node(converter.Type.Name),
+            NodeFormatKind.Unknown,
+            new DecompileViewModel(converter.Type));
+
+        FormatViewTabs.Add(tab);
+        SelectedTab = tab;
+    }
+
+    private bool CanOpenDecompiledConverter() =>
+        SelectedConverter is { Kind: TreeGridConverterKind.Converter };
+
 
     [RelayCommand(CanExecute = nameof(CanOpenAsObject))]
     private void OpenAsObject()

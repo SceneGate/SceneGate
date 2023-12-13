@@ -28,6 +28,7 @@
     <PackageReference Include="Avalonia.AvaloniaEdit" />
     <PackageReference Include="bodong.Avalonia.PropertyGrid" />
     <PackageReference Include="bodong.PropertyModels" />
+    <PackageReference Include="ICSharpCode.Decompiler" />
 
     <PackageReference Include="Yarhl" />
     <PackageReference Include="Yarhl.Plugins" />

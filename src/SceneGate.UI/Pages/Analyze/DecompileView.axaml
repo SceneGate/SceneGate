@@ -1,0 +1,84 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:behaviors="using:SceneGate.UI.Formats.CodeEditor"
+             xmlns:local="using:SceneGate.UI.Pages.Analyze"
+             mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="800"
+             x:Class="SceneGate.UI.Pages.Analyze.DecompileView"
+             x:DataType="local:DecompileViewModel">
+
+  <Design.DataContext>
+    <local:DesignDecompileViewModel />
+  </Design.DataContext>
+  
+  <Grid RowDefinitions="Auto,*"
+        Margin="10">
+    <Grid ColumnDefinitions="Auto,*"
+          RowDefinitions="Auto,Auto,Auto,Auto">
+      <TextBlock Grid.Row="0" Grid.Column="0"
+                 Margin="5 0 0 5"
+                 Text="Type:"
+                 FontWeight="SemiBold"
+                 VerticalAlignment="Center" />
+      <TextBox Grid.Row="0" Grid.Column="1"
+               Margin="5 0 0 5"
+               IsReadOnly="True"
+               Text="{Binding TypeName}"
+               FontFamily="{StaticResource CaskaydiaFont}"/>
+
+      <TextBlock Grid.Row="1" Grid.Column="0"
+           Margin="5 0 0 5"
+           Text="Assembly:"
+           FontWeight="SemiBold"
+           VerticalAlignment="Center" />
+      <TextBox Grid.Row="1" Grid.Column="1"
+               Margin="5 0 0 5"
+               IsReadOnly="True"
+               Text="{Binding AssemblyName}"
+               FontFamily="{StaticResource CaskaydiaFont}"/>
+
+      <TextBlock Grid.Row="2" Grid.Column="0"
+           Margin="5 0 0 5"
+           Text="Location:"
+           FontWeight="SemiBold"
+           VerticalAlignment="Center" />
+      <TextBox Grid.Row="2" Grid.Column="1"
+               Margin="5 0 0 5"
+               IsReadOnly="True"
+               Text="{Binding AssemblyLocation}"
+               ToolTip.Tip="{Binding AssemblyLocation}"
+               TextWrapping="Wrap"
+               FontFamily="{StaticResource CaskaydiaFont}"/>
+
+      <TextBlock Grid.Row="3" Grid.Column="0"
+                 Margin="5 0 0 0"
+                 Text="Repository:"
+                 FontWeight="SemiBold"
+                 VerticalAlignment="Center"/>
+      <fluent:HyperlinkButton Grid.Row="3" Grid.Column="1"
+                              Margin="0"
+                              Content="{Binding RepositoryName}"
+                              NavigateUri="{Binding RepositoryUrl}"
+                              ToolTip.Tip="{Binding RepositoryUrl}"
+                              VerticalAlignment="Center"/>
+    </Grid>
+
+    <AvaloniaEdit:TextEditor Grid.Row="1"
+                             Margin="0 15 0 0"
+                             ShowLineNumbers="True"
+                             SyntaxHighlighting="C#"
+                             IsReadOnly="True"
+                             BorderThickness="1"
+                             BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                             FontFamily="{StaticResource CaskaydiaFont}">
+      <i:Interaction.Behaviors>
+        <behaviors:DocumentTextBindingBehavior Text="{Binding DecompiledType}"/>
+      </i:Interaction.Behaviors>
+    </AvaloniaEdit:TextEditor>
+  </Grid>
+  
+</UserControl>

@@ -3,19 +3,26 @@
         xmlns:ui="using:FluentAvalonia.UI.Controls"
         xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
         xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
+        xmlns:aedit="using:AvaloniaEdit"
+        xmlns:aedit2="using:AvaloniaEdit.Editing"
         xmlns:cd="using:SceneGate.UI.ControlsData">
 
   <Design.PreviewWith>
     <Border Padding="30" MinWidth="350" Height="500">
-      <ScrollViewer>
-        <pgc:PropertyGrid Classes="ReadOnly Simple">
-          <pgc:PropertyGrid.SelectedObject>
-            <TextBox/>
-          </pgc:PropertyGrid.SelectedObject>
-        </pgc:PropertyGrid>
-      </ScrollViewer>
+      <aedit:TextEditor Text="Test" />
     </Border>
   </Design.PreviewWith>
+
+  <!-- set the selection color for the AvaloniaEdit boxes -->
+  <Style Selector="aedit2|TextArea">
+    <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+    <Setter Property="SelectionForeground" Value="{DynamicResource TextOnAccentFillColorSelectedTextBrush}" />
+  </Style>
+
+  <!-- Adjust the ScrollViewer padding in AvaloniaEdit so scrollbar doesn't overlap text -->
+  <Style Selector="aedit|TextEditor /template/ ScrollViewer ScrollContentPresenter">
+    <Setter Property="Padding" Value="0 0 0 20" />
+  </Style>
 
   <!-- Simple and readonly styles for propertygrid -->
   <Style Selector="pgc|PropertyGrid.Simple">

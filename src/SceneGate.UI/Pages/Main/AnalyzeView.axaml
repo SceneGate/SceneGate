@@ -162,6 +162,8 @@
                   <MenuFlyout>
                     <MenuItem Header="Copy type name"
                               Command="{ReflectionBinding $parent[TreeView].DataContext.CopyConverterTypeNameCommand}"/>
+                    <MenuItem Header="Decompile"
+                              Command="{ReflectionBinding $parent[TreeView].DataContext.OpenDecompiledConverterCommand}" />
                   </MenuFlyout>
                 </StackPanel.ContextFlyout>
               </StackPanel>
