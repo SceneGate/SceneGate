@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SceneGate.UI.Formats.Binary;
 using SceneGate.UI.Formats.Common;
 using SceneGate.UI.Formats.Graphics;
 using SceneGate.UI.Formats.Texts;
@@ -30,7 +31,7 @@ public class CommonFormatsViewModelBuilder : IFormatViewModelBuilder
         }
 
         return format switch {
-            IBinary binaryFormat => new HexViewerViewModel(binaryFormat.Stream),
+            IBinary binaryFormat => new BinaryViewModel(binaryFormat),
 
             Po poFormat => new PoViewModel(poFormat),
 

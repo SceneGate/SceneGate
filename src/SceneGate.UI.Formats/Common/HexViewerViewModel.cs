@@ -248,7 +248,7 @@ public partial class HexViewerViewModel : ObservableObject, IFormatViewModel
 
         // Leave at least 3 lines
         long realMax = stream.Length - (3 * BytesPerRow);
-        if (stream.Position > realMax) {
+        if (realMax > 0 && stream.Position > realMax) {
             stream.Position = realMax;
         }
     }
