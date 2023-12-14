@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:behaviors="using:SceneGate.UI.Formats.CodeEditor"
+             xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+             xmlns:local="using:SceneGate.UI.Formats.Common"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SceneGate.UI.Formats.Common.TextView"
+             x:DataType="local:TextViewModel">
+
+  <Design.DataContext>
+    <local:DesignTextViewModel />
+  </Design.DataContext>
+  
+  <Grid ColumnDefinitions="*"
+        RowDefinitions="Auto,*"
+        Margin="5" >
+
+    <Grid Grid.Row="0"
+          ColumnDefinitions="Auto,Auto,*,Auto">
+      <Border Grid.Row="0"
+        Height="32"
+        Background="{DynamicResource TextControlBackgroundDisabled}"
+        BorderBrush="{DynamicResource TextControlBorderBrush}"
+        BorderThickness="1,1,0,1"
+        CornerRadius="4,0,0,4">
+        <TextBlock Text="Encoding"
+                   Padding="5 0"
+                   FontWeight="SemiBold"
+                   VerticalAlignment="Center" />
+      </Border>
+      <TextBox Grid.Column="1"
+               CornerRadius="0,4,4,0"
+               MinWidth="250"
+               Text="{Binding EncodingName}"/>
+      
+      <CheckBox Grid.Column="3"
+                Name="wordWrapCheckbox"
+                IsChecked="true"
+                Content="Word wrap" />
+    </Grid>
+    
+    <AvaloniaEdit:TextEditor Grid.Row="1"
+                             Margin="0 10"
+                             ShowLineNumbers="True"
+                             WordWrap="{Binding IsChecked, ElementName=wordWrapCheckbox}"
+                             BorderThickness="1"
+                             BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                             IsReadOnly="True"
+                             FontFamily="{StaticResource CaskaydiaFont}">
+      <i:Interaction.Behaviors>
+        <behaviors:DocumentTextBindingBehavior Text="{Binding Text}"/>
+      </i:Interaction.Behaviors>
+    </AvaloniaEdit:TextEditor>
+
+  </Grid>
+</UserControl>
