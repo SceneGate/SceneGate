@@ -1,5 +1,5 @@
 ﻿// From: https://github.com/AvaloniaUI/AvaloniaEdit/wiki/MVVM#create-behaviour
-namespace SceneGate.UI.Formats.CodeEditor;
+namespace SceneGate.UI.Formats.Controls;
 
 using System;
 using Avalonia;

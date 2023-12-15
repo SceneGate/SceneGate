@@ -5,7 +5,7 @@
              xmlns:fluent="using:FluentAvalonia.UI.Controls"
              xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
              xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-             xmlns:behaviors="using:SceneGate.UI.Formats.CodeEditor"
+             xmlns:controls="using:SceneGate.UI.Formats.Controls"
              xmlns:local="using:SceneGate.UI.Pages.Analyze"
              mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="800"
              x:Class="SceneGate.UI.Pages.Analyze.DecompileView"
@@ -101,7 +101,7 @@
                              BorderBrush="{DynamicResource ControlElevationBorderBrush}"
                              FontFamily="{StaticResource CaskaydiaFont}">
       <i:Interaction.Behaviors>
-        <behaviors:DocumentTextBindingBehavior Text="{Binding DecompiledType}"/>
+        <controls:DocumentTextBindingBehavior Text="{Binding DecompiledType}"/>
       </i:Interaction.Behaviors>
     </AvaloniaEdit:TextEditor>
   </Grid>

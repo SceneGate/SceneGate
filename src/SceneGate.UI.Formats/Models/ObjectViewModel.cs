@@ -1,4 +1,4 @@
-﻿namespace SceneGate.UI.Formats.Common;
+﻿namespace SceneGate.UI.Formats.Models;
 
 using System;
 using System.Text.Json;

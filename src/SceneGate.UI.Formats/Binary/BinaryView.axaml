@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:SceneGate.UI.Formats.Binary"
-             xmlns:common="using:SceneGate.UI.Formats.Common"
              mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
              x:Class="SceneGate.UI.Formats.Binary.BinaryView"
              x:DataType="local:BinaryViewModel">

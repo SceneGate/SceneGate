@@ -1,4 +1,4 @@
-﻿namespace SceneGate.UI.Formats.Common;
+﻿namespace SceneGate.UI.Formats.Binary;
 
 using System;
 using System.Globalization;
@@ -36,12 +36,12 @@ public partial class TextView : UserControl
     private void HexCheckboxChecked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         var checkbox = sender as CheckBox;
-        OffsetNumericBox.TextConverter = (checkbox?.IsChecked ?? false)
+        OffsetNumericBox.TextConverter = checkbox?.IsChecked ?? false
             ? new HexadecimalValueConverter()
             : null;
         RefreshNumericBox(OffsetNumericBox);
 
-        LengthNumericBox.TextConverter = (checkbox?.IsChecked ?? false)
+        LengthNumericBox.TextConverter = checkbox?.IsChecked ?? false
             ? new HexadecimalValueConverter()
             : null;
         RefreshNumericBox(LengthNumericBox);

@@ -1,15 +1,15 @@
-﻿namespace SceneGate.UI.Formats.Common;
+﻿namespace SceneGate.UI.Formats.Binary;
 
 using System;
 using System.Buffers;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Data;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SceneGate.UI.Formats.Binary;
 using SceneGate.UI.Formats.Mvvm;
 using Yarhl.IO;
 using Yarhl.Media.Text.Encodings;

@@ -3,13 +3,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-             xmlns:behaviors="using:SceneGate.UI.Formats.CodeEditor"
              xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
              xmlns:fluent="using:FluentAvalonia.UI.Controls"
              xmlns:controls="using:SceneGate.UI.Formats.Controls"
-             xmlns:local="using:SceneGate.UI.Formats.Common"
+             xmlns:local="using:SceneGate.UI.Formats.Binary"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="SceneGate.UI.Formats.Common.TextView"
+             x:Class="SceneGate.UI.Formats.Binary.TextView"
              x:DataType="local:TextViewModel">
 
   <Design.DataContext>
@@ -134,7 +133,7 @@
                              IsReadOnly="True"
                              FontFamily="{StaticResource CaskaydiaFont}">
       <i:Interaction.Behaviors>
-        <behaviors:DocumentTextBindingBehavior Text="{Binding Text}"/>
+        <controls:DocumentTextBindingBehavior Text="{Binding Text}"/>
       </i:Interaction.Behaviors>
     </AvaloniaEdit:TextEditor>
 

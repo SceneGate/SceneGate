@@ -2,7 +2,6 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using SceneGate.UI.Formats.Common;
 using Yarhl.IO;
 
 /// <summary>
