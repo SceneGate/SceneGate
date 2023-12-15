@@ -5,6 +5,8 @@
              xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
              xmlns:behaviors="using:SceneGate.UI.Formats.CodeEditor"
              xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+             xmlns:fluent="using:FluentAvalonia.UI.Controls"
+             xmlns:controls="using:SceneGate.UI.Formats.Controls"
              xmlns:local="using:SceneGate.UI.Formats.Common"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SceneGate.UI.Formats.Common.TextView"
@@ -19,8 +21,72 @@
         Margin="5" >
 
     <Grid Grid.Row="0"
-          ColumnDefinitions="Auto,Auto,*,Auto">
-      <Border Grid.Row="0"
+          RowDefinitions="Auto,Auto"
+          ColumnDefinitions="Auto,Auto,Auto,Auto,Auto">
+
+      <!-- Offset -->
+      <Border Grid.Row="0" Grid.Column="0"
+              Height="32"
+              Margin="0 5"
+              Background="{DynamicResource TextControlBackgroundDisabled}"
+              BorderBrush="{DynamicResource TextControlBorderBrush}"
+              BorderThickness="1,1,0,1"
+              CornerRadius="4,0,0,4">
+        <TextBlock Text="Offset"
+                   Padding="5 0"
+                   FontWeight="SemiBold"
+                   VerticalAlignment="Center" />
+      </Border>
+      <NumericUpDown Grid.Row="0" Grid.Column="1"
+                     Name="OffsetNumericBox"
+                     Margin="0 5"
+                     MinWidth="160"
+                     CornerRadius="0,4,4,0"
+                     FormatString="0"
+                     Value="{Binding Offset}"
+                     Minimum="0"
+                     Maximum="{Binding MaximumOffset}"
+                     FontFamily="{StaticResource CaskaydiaFont}"
+                     VerticalContentAlignment="Center">
+        <NumericUpDown.TextConverter>
+          <controls:HexadecimalValueConverter />
+        </NumericUpDown.TextConverter>
+      </NumericUpDown>
+
+      <Border Grid.Row="0" Grid.Column="2"
+              Height="32"
+              Margin="10 5 0 5"
+              Background="{DynamicResource TextControlBackgroundDisabled}"
+              BorderBrush="{DynamicResource TextControlBorderBrush}"
+              BorderThickness="1,1,0,1"
+              CornerRadius="4,0,0,4">
+        <TextBlock Text="Length"
+                   Padding="5 0"
+                   FontWeight="SemiBold"
+                   VerticalAlignment="Center" />
+      </Border>
+      <NumericUpDown Grid.Row="0" Grid.Column="3"
+                     Name="LengthNumericBox"
+                     Margin="0 5"
+                     MinWidth="160"
+                     CornerRadius="0,4,4,0"
+                     FormatString="0"
+                     Value="{Binding Length}"
+                     Minimum="0"
+                     Maximum="{Binding MaximumLength}"
+                     FontFamily="{StaticResource CaskaydiaFont}"
+                     VerticalContentAlignment="Center">
+        <NumericUpDown.TextConverter>
+          <controls:HexadecimalValueConverter />
+        </NumericUpDown.TextConverter>
+      </NumericUpDown>
+      <CheckBox Grid.Row="0" Grid.Column="4"
+                Margin="10 5"
+                IsChecked="True"
+                Content="Hexadecimal"
+                IsCheckedChanged="HexCheckboxChecked"/>
+      
+      <Border Grid.Row="1"
         Height="32"
         Background="{DynamicResource TextControlBackgroundDisabled}"
         BorderBrush="{DynamicResource TextControlBorderBrush}"
@@ -31,9 +97,10 @@
                    FontWeight="SemiBold"
                    VerticalAlignment="Center" />
       </Border>
-      <TextBox Grid.Column="1"
+      <TextBox Grid.Row="1" Grid.Column="1"
+               Margin="0 5"
                CornerRadius="0,4,4,0"
-               MinWidth="250"
+               MinWidth="160"
                Text="{Binding EncodingName}">
         <TextBox.Styles>
           <Style Selector="DataValidationErrors">
@@ -42,7 +109,8 @@
         </TextBox.Styles>
       </TextBox>
       
-      <CheckBox Grid.Column="3"
+      <CheckBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
+                Margin="10 5"
                 Name="wordWrapCheckbox"
                 IsChecked="true"
                 Content="Word wrap" />
