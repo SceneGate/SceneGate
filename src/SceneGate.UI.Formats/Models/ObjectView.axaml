@@ -5,10 +5,10 @@
              xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
              xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
              xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
-             xmlns:local="using:SceneGate.UI.Formats.Common"
-             xmlns:behaviors="using:SceneGate.UI.Formats.CodeEditor"
+             xmlns:local="using:SceneGate.UI.Formats.Models"
+             xmlns:controls="using:SceneGate.UI.Formats.Controls"
              mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
-             x:Class="SceneGate.UI.Formats.Common.ObjectView"
+             x:Class="SceneGate.UI.Formats.Models.ObjectView"
              x:DataType="local:ObjectViewModel">
   <Design.DataContext>
     <local:ObjectViewModel />
@@ -27,7 +27,7 @@
                                IsReadOnly="True"
                                FontFamily="{StaticResource CaskaydiaFont}">
         <i:Interaction.Behaviors>
-          <behaviors:DocumentTextBindingBehavior Text="{Binding YamlText}"/>
+          <controls:DocumentTextBindingBehavior Text="{Binding YamlText}"/>
         </i:Interaction.Behaviors>
       </AvaloniaEdit:TextEditor>
     </TabItem>
@@ -38,7 +38,7 @@
                                IsReadOnly="True"
                                FontFamily="{StaticResource CaskaydiaFont}">
         <i:Interaction.Behaviors>
-          <behaviors:DocumentTextBindingBehavior Text="{Binding JsonText}"/>
+          <controls:DocumentTextBindingBehavior Text="{Binding JsonText}"/>
         </i:Interaction.Behaviors>
       </AvaloniaEdit:TextEditor>
     </TabItem>

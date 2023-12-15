@@ -1,4 +1,4 @@
-﻿namespace SceneGate.UI.Formats.Common;
+﻿namespace SceneGate.UI.Formats.Binary;
 
 using Avalonia.Controls;
 using Avalonia.Input;

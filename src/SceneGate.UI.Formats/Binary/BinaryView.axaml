@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:SceneGate.UI.Formats.Binary"
+             mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="600"
+             x:Class="SceneGate.UI.Formats.Binary.BinaryView"
+             x:DataType="local:BinaryViewModel">
+
+  <Design.DataContext>
+    <local:DesignBinaryViewModel />
+  </Design.DataContext>
+  
+  <TabControl>
+    <TabItem Header="Hexadecimal" Content="{Binding Hexadecimal}" />
+
+    <TabItem Header="Text" Content="{Binding Text}" />
+  </TabControl>
+  
+</UserControl>
