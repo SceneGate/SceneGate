@@ -3,14 +3,20 @@
 using System;
 using Yarhl.IO;
 
+/// <summary>
+/// Design test data for <see cref="TextViewModel"/>.
+/// </summary>
 public sealed class DesignTextViewModel : TextViewModel
 {
+    /// <summary>
+    /// Initializes a new instance for the <see cref="DesignTextViewModel"/> class.
+    /// </summary>
     public DesignTextViewModel()
         : base(CreateRandomText())
     {
     }
 
-    private static IBinary CreateRandomText()
+    private static BinaryFormat CreateRandomText()
     {
         var random = new Random(42);
         byte[] buffer = new byte[1024];

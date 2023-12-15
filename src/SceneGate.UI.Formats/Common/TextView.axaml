@@ -34,7 +34,13 @@
       <TextBox Grid.Column="1"
                CornerRadius="0,4,4,0"
                MinWidth="250"
-               Text="{Binding EncodingName}"/>
+               Text="{Binding EncodingName}">
+        <TextBox.Styles>
+          <Style Selector="DataValidationErrors">
+            <Setter Property="Theme" Value="{DynamicResource TooltipDataValidationErrors}" />
+          </Style>
+        </TextBox.Styles>
+      </TextBox>
       
       <CheckBox Grid.Column="3"
                 Name="wordWrapCheckbox"

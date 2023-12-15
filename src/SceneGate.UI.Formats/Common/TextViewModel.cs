@@ -4,12 +4,16 @@ using System;
 using System.Buffers;
 using System.IO;
 using System.Text;
+using Avalonia.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Yarhl.IO;
 
+/// <summary>
+/// View model for <see cref="TextView"/>.
+/// </summary>
 public partial class TextViewModel : ObservableObject, IFormatViewModel
 {
-    private const int MaxBufferLength = 100 * 1024;
+    private const int MaxBufferLength = 10 * 1024;
 
     private readonly Stream stream;
     private readonly byte[] buffer;
@@ -23,6 +27,10 @@ public partial class TextViewModel : ObservableObject, IFormatViewModel
     [ObservableProperty]
     private string encodingName;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TextViewModel"/> class.
+    /// </summary>
+    /// <param name="binary">Binary content to display.</param>
     public TextViewModel(IBinary binary)
     {
         ArgumentNullException.ThrowIfNull(binary);
@@ -35,29 +43,28 @@ public partial class TextViewModel : ObservableObject, IFormatViewModel
         text = string.Empty;
         encodingName = "UTF-8";
         encoding = Encoding.UTF8;
+
         DecodeText();
     }
 
-    partial void OnEncodingNameChanging(string value)
+    partial void OnEncodingNameChanged(string value)
     {
         try {
             encoding = Encoding.GetEncoding(
                 value,
                 EncoderFallback.ReplacementFallback,
                 DecoderFallback.ReplacementFallback);
-        } catch {
-        }
-    }
 
-    partial void OnEncodingNameChanged(string value)
-    {
-        DecodeText();
+            DecodeText();
+        } catch (ArgumentException) {
+            throw new DataValidationException("Invalid encoding name");
+        }
     }
 
     private void ReadBuffer()
     {
         stream.Position = 0;
-        stream.Read(buffer, 0, bufferLength);
+        _ = stream.Read(buffer, 0, bufferLength);
     }
 
     private void DecodeText()
