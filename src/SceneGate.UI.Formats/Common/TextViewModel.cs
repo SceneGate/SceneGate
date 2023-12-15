@@ -5,8 +5,12 @@ using System.Buffers;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Avalonia.Data;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using SceneGate.UI.Formats.Mvvm;
 using Yarhl.IO;
 using Yarhl.Media.Text.Encodings;
 
@@ -62,13 +66,36 @@ public partial class TextViewModel : ObservableObject, IFormatViewModel
         textBuilder = new StringBuilder();
         text = string.Empty;
         DecodeText();
+
+        AskFileOutput = new AsyncInteraction<IStorageFile?>();
     }
 
     /// <summary>
     /// Gets all the available encodings.
     /// </summary>
     public static string[] SuggestedEncodings => [
-        "shift-jis", "utf-8", "utf-16", "utf-32", "euc-jp"];
+        "shift-jis", "utf-8", "utf-16", "utf-16be", "utf-32", "euc-jp"];
+
+    /// <summary>
+    /// Gets the interaction to ask the user for the output file.
+    /// </summary>
+    public AsyncInteraction<IStorageFile?> AskFileOutput { get; }
+
+    /// <summary>
+    /// Export the visible content into a file.
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task ExportAsync()
+    {
+        IStorageFile? file = await AskFileOutput.HandleAsync().ConfigureAwait(false);
+        if (file is null) {
+            return;
+        }
+
+        using Stream output = await file.OpenWriteAsync().ConfigureAwait(false);
+        await output.WriteAsync(buffer, 0, Length).ConfigureAwait(false);
+    }
 
     partial void OnEncodingNameChanged(string value)
     {
