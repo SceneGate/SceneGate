@@ -2,9 +2,13 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.IO;
+using System.Threading.Tasks;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SceneGate.UI.Formats.Mvvm;
+using Yarhl.IO;
 using Yarhl.Media.Text;
 
 /// <summary>
@@ -12,33 +16,11 @@ using Yarhl.Media.Text;
 /// </summary>
 public partial class PoViewModel : ObservableObject, IFormatViewModel
 {
+    private readonly Po po;
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(PasteOriginalTranslationCommand))]
     private PoEntryViewModel? selectedEntry;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PoViewModel"/> class with
-    /// test content.
-    /// </summary>
-    public PoViewModel()
-    {
-        Entries = new ObservableCollection<PoEntryViewModel>();
-        Header = new ObservableCollection<PoHeaderProperty>();
-
-        var testModel = new Po(new PoHeader("ProjectId", "admin@email.com", "es-ES"));
-        testModel.Add(new PoEntry("Entry 1") { Context = "id:1", Translated = "Entrada 1" });
-        testModel.Add(new PoEntry("Line 1\nLine2") {
-            Context = "id:2",
-            Translated = "Línea 1\nLínea 2",
-            ExtractedComments = "This is an extracted comment",
-            Flags = "max-size:10, language-c",
-            Reference = "block:4,header:CA,FE,C0,C0",
-            TranslatorComment = "The translator does not agree",
-        });
-        Show(testModel);
-
-        SelectedEntry = Entries[1];
-    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PoViewModel" /> class.
@@ -48,8 +30,10 @@ public partial class PoViewModel : ObservableObject, IFormatViewModel
     {
         Entries = new ObservableCollection<PoEntryViewModel>();
         Header = new ObservableCollection<PoHeaderProperty>();
+        AskOutputFile = new AsyncInteraction<IStorageFile?>();
 
-        Show(model);
+        po = model;
+        Show();
 
         if (Entries.Count > 0) {
             SelectedEntry = Entries[0];
@@ -65,6 +49,29 @@ public partial class PoViewModel : ObservableObject, IFormatViewModel
     /// Gets the collection of properties in the PO header.
     /// </summary>
     public ObservableCollection<PoHeaderProperty> Header { get; }
+
+    /// <summary>
+    /// Gets the interaction to ask the user for the output file.
+    /// </summary>
+    public AsyncInteraction<IStorageFile?> AskOutputFile { get; }
+
+    /// <summary>
+    /// Export the PO model into a text file on disk.
+    /// </summary>
+    /// <returns>Asynchrnous task.</returns>
+    [RelayCommand]
+    public async Task ExportAsync()
+    {
+        IStorageFile? file = await AskOutputFile.HandleAsync().ConfigureAwait(false);
+        if (file is null) {
+            return;
+        }
+
+        using BinaryFormat binary = new Po2Binary().Convert(po);
+
+        using Stream output = await file.OpenWriteAsync().ConfigureAwait(false);
+        binary.Stream.WriteTo(output);
+    }
 
     /// <summary>
     /// Copy the source text as translation.
@@ -85,7 +92,7 @@ public partial class PoViewModel : ObservableObject, IFormatViewModel
         return SelectedEntry is not null;
     }
 
-    private void Show(Po po)
+    private void Show()
     {
         Header.Add(new PoHeaderProperty("Project ID", po.Header.ProjectIdVersion));
         Header.Add(new PoHeaderProperty("Report bugs to", po.Header.ReportMsgidBugsTo));

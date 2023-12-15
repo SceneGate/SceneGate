@@ -9,7 +9,7 @@
              x:DataType="local:PoViewModel">
 
   <Design.DataContext>
-    <local:PoViewModel />
+    <local:DesignPoViewModel />
   </Design.DataContext>
   
   <Grid RowDefinitions="*,Auto,250"
@@ -105,16 +105,30 @@
                AcceptsReturn="True" />
     </Grid>
 
-    <StackPanel Grid.Column="2" Grid.Row="2"
-                Orientation="Vertical"
-                Margin="10 5">
-      <TextBlock Text="Extracted comments"
-                 Margin="0 5"
-                 Theme="{StaticResource BodyTextBlockStyle}"
-                 FontWeight="Bold" />
-      <TextBlock Text="{Binding SelectedEntry.ExtractedComments}"
-                 TextWrapping="Wrap" />
-    </StackPanel>
+    <DockPanel Grid.Column="2" Grid.Row="2">
+      <StackPanel DockPanel.Dock="Top"
+                  Orientation="Vertical"
+                  Margin="10 5">
+        <TextBlock Text="Extracted comments"
+                   Margin="0 5"
+                   Theme="{StaticResource BodyTextBlockStyle}"
+                   FontWeight="Bold" />
+        <TextBlock Text="{Binding SelectedEntry.ExtractedComments}"
+                   TextWrapping="Wrap" />
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Bottom"
+                  Margin="15 5">
+        <Button Command="{Binding ExportCommand}">
+          <StackPanel Orientation="Horizontal">
+            <fluent:SymbolIcon Symbol="Save" />
+            <TextBlock Margin="10 0 0 0" Text="Export" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+    </DockPanel>
   </Grid>
   
 </UserControl>
