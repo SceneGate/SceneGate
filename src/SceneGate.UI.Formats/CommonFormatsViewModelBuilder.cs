@@ -34,6 +34,8 @@ public class CommonFormatsViewModelBuilder : IFormatViewModelBuilder
 
             Po poFormat => new PoViewModel(poFormat),
 
+            IndexedPaletteImage indexedPalette => new ImageViewModel(indexedPalette, indexedPalette),
+
             IPalette palette => new PaletteViewModel(palette),
             IPaletteCollection palettes => new PaletteViewModel(palettes),
 
@@ -61,6 +63,8 @@ public class CommonFormatsViewModelBuilder : IFormatViewModelBuilder
             return true;
         }
 
-        return format is IBinary or Po or IPalette or IPaletteCollection or IFullImage;
+        return format is IBinary
+            or Po
+            or IPalette or IPaletteCollection or IFullImage or IndexedPaletteImage;
     }
 }

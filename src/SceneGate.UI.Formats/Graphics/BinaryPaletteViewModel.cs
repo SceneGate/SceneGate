@@ -12,7 +12,7 @@ using Yarhl.IO;
 
 public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
 {
-    private const int DefaultMaxPalettes = 16;
+    private const int DefaultMaxPalettes = 1;
     private const int DefaultMaxLength = 256 * 2 * DefaultMaxPalettes;
 
     private readonly Stream stream;
@@ -92,7 +92,7 @@ public partial class BinaryPaletteViewModel : ObservableObject, IFormatViewModel
         binaryFormat = binary;
 
         // Try to auto-detect some good default settings from the file length
-        // we load by default a maximum of 16 palettes of 256 colors.
+        // we load by default a maximum of 1 palettes of 256 colors.
         int length = stream.Length > DefaultMaxLength ? DefaultMaxLength : (int)stream.Length;
 
         offset = 0;

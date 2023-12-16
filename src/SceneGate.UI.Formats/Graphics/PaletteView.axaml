@@ -61,6 +61,7 @@
     </Grid>
 
     <StackPanel Grid.Row="0" Grid.Column="1">
+      <!-- TODO: Replace. This is the cause of the performance issue -->
       <ColorView IsColorPreviewVisible="False"
                  IsColorSpectrumVisible="False"
                  IsColorComponentsVisible="False"
