@@ -20,6 +20,15 @@
   &nbsp;
 </p>
 
+> [!CAUTION]  
+> **This project is still in a very early development phase (pre-alpha).** Until we do a first release, there will be **no downloads available**.
+> The current version **crashes frequently** and lacks many usability features for non-developer users.
+> 
+> If you are a Tinke user, be aware this project is not a replacement yet. It has a long way to go until it has the same feature set.
+> 
+> For now, this application is **only useful if you are a .NET/C# developer**, you are already familiar with [Yarhl](https://github.com/sceneGate/yarhl) and you want to test your converters.
+> The best way to get the latest dev version of the app, it's to [build it locally](#Build). **Creating a fork and running the CI may not work.**
+
 **Work-in-progress** tool for reverse engineering, file format analysis, modding
 and localization.
 
